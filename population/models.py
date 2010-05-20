@@ -24,6 +24,7 @@ class MainDataEntry(models.Model):
   class Meta:
     verbose_name = "Population Data Entry"
     verbose_name_plural = "Population Data Entries"
+    ordering = ['begin_date', 'end_date']
   
   source_id = models.IntegerField("Source ID", null = True, blank = True)
   begin_date = models.DateField("Start Date", null = True, blank = True, help_text = "Examples: If data refers to specific day, enter that day (e.g., April 3, 1900) as the begin and end date. If data encompasses a full calendar year enter January 1, 1900 as Begin date and December 31, 1900, as End date.")
@@ -50,7 +51,7 @@ class MainDataEntry(models.Model):
   iso = models.CharField("ISO", max_length = 100, null = True, blank = True) 
   wb = models.CharField("WB", max_length = 100, null = True, blank = True)
 
-  def __unicode(self) :
+  def __unicode__(self) :
     return "%s (%s - %s)" % (self.location, self.begin_date, self.end_date)
 
   

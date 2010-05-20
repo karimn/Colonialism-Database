@@ -1,0 +1,9 @@
+
+{% block content %}
+    <h2>Data Entries</h2>
+    <ul>
+        {% for data_entry in object_list %}
+            <li>{{ data_entry.location }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

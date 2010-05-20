@@ -11,7 +11,7 @@ urlpatterns = patterns('',
     # to INSTALLED_APPS to enable admin documentation:
     # (r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
-    (r'^population/$', 'colonialismdb.population.views.index'),
+    (r'^population/', include('colonialismdb.population.urls')),
 
     (r'^admin/', include(admin.site.urls)),
 )
