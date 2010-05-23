@@ -1,4 +1,4 @@
-from django.db import models 
+from django.db import models, connection
 
 # Create your models here.
 
@@ -12,6 +12,23 @@ class Location(models.Model):
     else:
       return self.name 
 
+  @staticmethod
+  def get_location_ids_in(locations):
+    ids = [str(loc.pk) for loc in locations]
+
+    query = """WITH RECURSIVE in_region(id) AS
+           ((SELECT id 
+            FROM population_location
+            WHERE id IN (%s)) UNION
+            (SELECT pl.id
+            FROM in_region ir, population_location pl
+            WHERE pl.in_location_id = ir.id))
+           SELECT id FROM in_region""" % ','.join(ids)
+
+    cursor = connection.cursor() 
+    cursor.execute(query) # TODO capture exception on query failure
+
+    return [lid[0] for lid in cursor.fetchall()]
 
 class MainDataEntry(models.Model):
   RELIGION_CHOICES = ((0, 'None'), (1, 'Christian'), (2, 'Muslim'), (3, 'Jew'))
