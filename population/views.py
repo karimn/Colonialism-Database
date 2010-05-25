@@ -9,28 +9,32 @@ def index(request):
   return HttpResponseRedirect('query/')
 
 def query(request):
-  if 'location' in request.GET:
+  if 'submitted' in request.GET:
     form = forms.MainPopulationQueryForm(request.GET)
 
     if form.is_valid():
-            
-      locations = form.cleaned_data['location']
+      query = models.MainDataEntry.objects.all()
 
-      if len(locations) == 0:
-        return list_detail.object_list(
-            request,
-            queryset = models.MainDataEntry.objects.all(),
-            template_name = 'population/query_results.html')
+      locations = form.cleaned_data['location']
+      
+      if len(locations) != 0:
+        location_ids = models.Location.get_location_ids_in(locations)
+        query = query.filter(location__in = location_ids)
 
       #import pdb; pdb.set_trace()
 
-      location_ids = models.Location.get_location_ids_in(locations)
+      if form.cleaned_data['begin_date']:
+        query = query.filter(begin_date__gte=form.cleaned_data['begin_date'])
+
+      if form.cleaned_data['end_date']:
+        query = query.filter(end_date__lte=form.cleaned_data['end_date'])
       
       return list_detail.object_list(
           request,
-          queryset = models.MainDataEntry.objects.filter(location__in = location_ids),
+          queryset = query,
           template_name = 'population/query_results.html')
 
-  form = forms.MainPopulationQueryForm()
+  else:
+    form = forms.MainPopulationQueryForm()
 
   return render_to_response('population/index.html', { 'form' : form, })

@@ -41,7 +41,8 @@ class MainDataEntry(models.Model):
   class Meta:
     verbose_name = "Population Data Entry"
     verbose_name_plural = "Population Data Entries"
-    ordering = ['begin_date', 'end_date']
+    #order_with_respect_to = 'location'
+    ordering = ['location', 'begin_date', 'end_date']
   
   source_id = models.IntegerField("Source ID", null = True, blank = True)
   begin_date = models.DateField("Start Date", null = True, blank = True, help_text = "Examples: If data refers to specific day, enter that day (e.g., April 3, 1900) as the begin and end date. If data encompasses a full calendar year enter January 1, 1900 as Begin date and December 31, 1900, as End date.")

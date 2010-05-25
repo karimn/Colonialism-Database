@@ -1,6 +1,12 @@
 <h1>Population Data</h1>
 
 <form action="/population/query/" method="get">
-  {{ form.as_p }}
+  {% for field in form %}
+        <div class="fieldWrapper">
+            {{ field.label_tag }}: {{ field }}
+            {{ field.errors }}
+        </div>
+  {% endfor %}
   <input type="submit" value="Submit"/>
+  <input type="hidden" name="submitted" value="1">
 </form>
