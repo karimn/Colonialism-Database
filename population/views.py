@@ -28,6 +28,21 @@ def query(request):
 
       if form.cleaned_data['end_date']:
         query = query.filter(end_date__lte=form.cleaned_data['end_date'])
+
+      count_types = form.cleaned_data['count_type']
+
+      if (len(count_types) > 1) or ((len(count_types) == 1) and count_types[0] != 'all'):
+        if 'individ' in count_types:
+          query = query.filter(individuals_population_value__isnull = False)
+
+        if 'fam' in count_types:
+          query = query.filter(families_population_value__isnull = False)
+
+        if 'males' in count_types:
+          query = query.filter(male_population_value__isnull = False)
+
+        if 'females' in count_types:
+          query = query.filter(female_population_value__isnull = False)
       
       return list_detail.object_list(
           request,

@@ -3,7 +3,7 @@
     <h2>Data Entries</h2>
     <ul>
         {% for data_entry in object_list %}
-            <li>{{ data_entry.location }}</li>
+        <li>{{ data_entry }}, {{ data_entry.individuals_population_value }}, {{ data_entry.families_population_value }}, {{ data_entry.male_population_value }}, {{data_entry.female_population_value }}</li>
         {% endfor %}
     </ul>
 {% endblock %}
