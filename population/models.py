@@ -4,6 +4,9 @@ class Location(models.Model):
   name = models.CharField("Name", max_length = 50)
   in_location = models.ForeignKey('self', null = True, blank = True, default = None, verbose_name = "In")
 
+  #class Meta:
+    #order_with_respect_to = 'in_location'
+
   def __unicode__(self): 
     if self.in_location:
       return self.name + ", " + unicode(self.in_location)
