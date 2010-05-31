@@ -1,5 +1,6 @@
 import csv
 import datetime
+import sys
 
 from colonialismdb.population.models import Location, MainDataEntry
 
@@ -32,17 +33,23 @@ def get_or_add_location(place_name, in1 = None, in2 = None, in3 = None):
   return prev_loc
 
 
-
-reader = csv.reader(open("/home/karim/Dropbox/Colonialism/tbl_MasterTABLE.txt", "r"), delimiter=',')
+infile = sys.argv[1]
+reader = csv.reader(open(infile, "r"), delimiter=',', quotechar = '"')
 
 for i, row in enumerate(reader):
-  rdict = dict(zip(('begin_date', 'end_date', 'place_origin', 'place_english', 'alternate_location_name', 'large1', 'large2', 'large3', 'religion', 'race', 'ethnicity', 'ethnic_origin', 'age_start', 'age_end', 'remarks', 'link', 'individuals_population_value', 'families_population_value', 'male_population_value', 'female_population_value', 'value_unit', 'is_total', 'population_condition', 'polity', 'iso', 'wb'), row[3:]))
-  rdict['source_id'] = row[1]
+  rdict = dict(zip(('begin_date', 'end_date', 'place_origin', 'place_english', 'alternate_location_name', 'large1', 'large2', 'large3', 'religion', 'race', 'ethnicity', 'ethnic_origin', 'age_start', 'age_end', 'remarks', 'link', 'individuals_population_value', 'families_population_value', 'male_population_value', 'female_population_value', 'value_unit', 'is_total', 'population_condition', 'polity', 'iso', 'wb'), row[2:]))
+  rdict['source_id'] = row[0]
 
-  #if rdict['place_english'] : print i, rdict['place_origin'], rdict['place_alter']
+  #if rdict['place_english'] or rdict['alternate_location_name'] : 
+  #  print i, rdict['place_origin'], ", ", rdict['alternate_location_name'], ", ", rdict['place_english']
+
+  #continue 
+
   print i, rdict['place_origin'], ", ", rdict['large1'], ", ", rdict['large2'], ", ", rdict['large3']
 
   location = get_or_add_location(rdict['place_origin'], rdict['large1'], rdict['large2'], rdict['large3'])
+
+  import pdb; pdb.set_trace()
 
   del rdict['place_origin']
   del rdict['large1']
