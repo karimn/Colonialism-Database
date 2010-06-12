@@ -78,5 +78,6 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.admin',
-    'colonialismdb.population'
+    'colonialismdb.population',
+    'colonialismdb.common'
 )
