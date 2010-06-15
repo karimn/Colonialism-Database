@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models, connection
 
 class Location(models.Model):
@@ -56,15 +58,48 @@ class Location(models.Model):
     return [lid[0] for lid in cursor.fetchall()]
 
 class Religion(models.Model):
+  def __unicode__(self):
+    return self.name
+
   name = models.CharField(max_length = 50, unique = True)
 
 class Race(models.Model):
+  def __unicode__(self):
+    return self.name
+
   name = models.CharField(max_length = 50, unique = True)
 
 class Ethnicity(models.Model):
+  def __unicode__(self):
+    return self.name
+
+  class Meta:
+    verbose_name_plural = 'Ethnicities'
+
   name = models.CharField(max_length = 50, unique = True)
 
 class EthnicOrigin(models.Model):
+  def __unicode__(self):
+    return self.name
+
   name = models.CharField(max_length = 50, unique = True)
 
+class LogEntry(models.Model):
+  STATUS_CHOICES = ((0, 'Inactive'), (1, 'Active'), (2, 'Deleted'))
+  CHANGE_CHOICES = ((0, 'Addition'), (1, 'Activation'), (2, 'Deletion'), (3, 'Modification'), (4, 'Migration'))
 
+  class Meta:
+    verbose_name_plural = 'LogEntries'
+
+  def __unicode__(self):
+    return 'Status: %s, Change: %s' % (self.satus, self.change)
+
+  status = models.IntegerField(choices = STATUS_CHOICES, default = 0)
+  change = models.IntegerField(choices = CHANGE_CHOICES)
+
+  remarks = models.TextField(null = True)
+
+  # TODO user
+  datetime = models.DateTimeField('Date/Time', initial = datetime.datetime.now)
+
+  previous = models.ForeignKey('self', null = True, default = None)
