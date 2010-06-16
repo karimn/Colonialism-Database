@@ -4,9 +4,14 @@ import sys
 import re
 
 from colonialismdb.population.models import MainDataEntry
-from colonialismdb.common.models import Location, Religion, Ethnicity, EthnicOrigin, Race
+from colonialismdb.common.models import Location, Religion, Ethnicity, EthnicOrigin, Race, LogEntry
 from django.db.utils import DatabaseError
 from django.core.exceptions import ValidationError
+from django.contrib.auth.models import User
+
+mig_user = User.objects.get(username = 'karim')
+default_log = LogEntry(status = 1, change = 4, user = mig_user)
+default_log.save()
 
 class LocationTooComplicated(Exception):
   def __init__(self, problem):
@@ -21,7 +26,7 @@ def get_or_add_religion(religion):
   try:
     return Religion.objects.get(name = religion)
   except Religion.DoesNotExist:
-    new_rel = Religion(name = religion)
+    new_rel = Religion(name = religion, log = default_log)
     new_rel.save()
     return new_rel
 
@@ -31,7 +36,7 @@ def get_or_add_race(race):
   try:
     return Race.objects.get(name = race)
   except Race.DoesNotExist:
-    new_race = Race(name = race)
+    new_race = Race(name = race, log = default_log)
     new_race.save()
     return new_race
 
@@ -41,7 +46,7 @@ def get_or_add_ethnicity(eth):
   try:
     return Ethnicity.objects.get(name = eth)
   except Ethnicity.DoesNotExist:
-    new_eth = Ethnicity(name = eth)
+    new_eth = Ethnicity(name = eth, log = default_log)
     new_eth.save()
     return new_eth
 
@@ -51,7 +56,7 @@ def get_or_add_ethnic_origin(eth):
   try:
     return EthnicOrigin.objects.get(name = eth)
   except EthnicOrigin.DoesNotExist:
-    new_eth = EthnicOrigin(name = eth)
+    new_eth = EthnicOrigin(name = eth, log = default_log)
     new_eth.save()
     return new_eth
 
@@ -79,7 +84,7 @@ def get_or_add_location(place_name, in1 = None, in2 = None, in3 = None):
       if not loc:
         raise LocationTooComplicated('Found multiple matches for parent location %s' % in_loc_name)
     except Location.DoesNotExist:
-      loc = Location(name = in_loc_name, in_location = prev_loc)
+      loc = Location(name = in_loc_name, in_location = prev_loc, log = default_log)
       loc.save()
       location_created = True
     else:
@@ -99,7 +104,7 @@ def get_or_add_location(place_name, in1 = None, in2 = None, in3 = None):
       return places[0]
 
     elif len(places) == 0:
-      new_loc = Location(name = place_name, in_location = prev_loc)
+      new_loc = Location(name = place_name, in_location = prev_loc, log = default_log)
       new_loc.save()
 
       return new_loc
@@ -214,6 +219,9 @@ for i, row in enumerate(reader):
         if over_match:
           del rdict['age_end']
           rdict['age_start'] = over_match.group(1) 
+
+  rdict['log'] = LogEntry(status = 1, change = 4, user = mig_user, remarks = '|'.join(row).decode(string_encoding))
+  rdict['log'].save()
           
   try:
     entry = MainDataEntry(**rdict)

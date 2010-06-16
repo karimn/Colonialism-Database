@@ -1,11 +1,11 @@
 from django.db import models
-from colonialismdb.common.models import Location, Religion, Race, Ethnicity, EthnicOrigin
+from colonialismdb.common.models import Location, Religion, Race, Ethnicity, EthnicOrigin, BaseDataEntry, LogEntry
 
-class MainDataEntry(models.Model):
+class MainDataEntry(BaseDataEntry):
   UNIT_CHOICES = (('hundreds', 'Hundreds'), ('thousands', 'Thousands'), ('millions', 'Millions'))
   POP_COND_CHOICES = (('None', 'None'), ('Dead', 'Dead'), ('Educated', 'Educated'), ('Enslaved', 'Enslaved'), ('Illiterate', 'Illiterate'), ('Impaired', 'Impaired'))
 
-  class Meta:
+  class Meta(BaseDataEntry.Meta):
     verbose_name = "Population Data Entry"
     verbose_name_plural = "Population Data Entries"
     #order_with_respect_to = 'location'
@@ -14,12 +14,13 @@ class MainDataEntry(models.Model):
   # TODO separate tables for sources, tables, pages, etc.
   source_id = models.IntegerField("Source ID", null = True, blank = True)
   combined_id = models.CharField("Combined ID", max_length = 30)
+  page_num = models.IntegerField("Page Number", null = True, default = None)
 
   #TODO date data integrity check
   begin_date = models.DateField("Start Date", null = True, blank = True, help_text = "Examples: If data refers to specific day, enter that day (e.g., April 3, 1900) as the begin and end date. If data encompasses a full calendar year enter January 1, 1900 as Begin date and December 31, 1900, as End date.")
   end_date = models.DateField("End Date", null = True, blank = True, help_text = "Examples: If data refers to specific day, enter that day (e.g., April 3, 1900) as the begin and end date. If data encompasses a full calendar year enter January 1, 1900 as Begin date and December 31, 1900, as End date.")
 
-  location = models.ForeignKey(Location, help_text = "The English name which could be different from the original name in the source")
+  location = models.ForeignKey(Location, related_name = 'population_data_entries', help_text = "The English name which could be different from the original name in the source")
   original_location_name = models.CharField("Original Location Name", max_length = 50, null = True, blank = True, help_text = "Original name used in the source if different from the English name")
   alternate_location_name = models.CharField("Alternate Location Name", max_length = 50, null = True, blank = True)
 
@@ -48,8 +49,8 @@ class MainDataEntry(models.Model):
   polity = models.CharField(max_length = 100, null = True, blank = True)
   iso = models.CharField("ISO", max_length = 100, null = True, blank = True) 
   wb = models.CharField("WB", max_length = 100, null = True, blank = True)
-
+  
   def __unicode__(self) :
-    return "%s (%s - %s)" % (self.location, self.begin_date, self.end_date)
+    return "%s (%s - %s) [%s]" % (self.location, self.begin_date, self.end_date, self.log.status)
 
   
