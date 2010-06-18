@@ -1,5 +1,5 @@
 from django.db import models
-from colonialismdb.common.models import Location, Religion, Race, Ethnicity, EthnicOrigin, BaseDataEntry, LogEntry
+from colonialismdb.common.models import Location, Religion, Race, Ethnicity, EthnicOrigin, BaseDataEntry
 
 class MainDataEntry(BaseDataEntry):
   UNIT_CHOICES = (('hundreds', 'Hundreds'), ('thousands', 'Thousands'), ('millions', 'Millions'))
@@ -14,7 +14,7 @@ class MainDataEntry(BaseDataEntry):
   # TODO separate tables for sources, tables, pages, etc.
   source_id = models.IntegerField("Source ID", null = True, blank = True)
   combined_id = models.CharField("Combined ID", max_length = 30)
-  page_num = models.IntegerField("Page Number", null = True, default = None)
+  page_num = models.IntegerField("Page Number", null = True, blank = True, default = None)
 
   #TODO date data integrity check
   begin_date = models.DateField("Start Date", null = True, blank = True, help_text = "Examples: If data refers to specific day, enter that day (e.g., April 3, 1900) as the begin and end date. If data encompasses a full calendar year enter January 1, 1900 as Begin date and December 31, 1900, as End date.")
@@ -24,14 +24,14 @@ class MainDataEntry(BaseDataEntry):
   original_location_name = models.CharField("Original Location Name", max_length = 50, null = True, blank = True, help_text = "Original name used in the source if different from the English name")
   alternate_location_name = models.CharField("Alternate Location Name", max_length = 50, null = True, blank = True)
 
-  religion = models.ForeignKey(Religion, null = True, default = None)
-  race = models.ForeignKey(Race, null = True, default = None)
-  ethnicity = models.ForeignKey(Ethnicity, null = True, default = None)
-  ethnic_origin = models.ForeignKey(EthnicOrigin, null = True, default = None)
+  religion = models.ForeignKey(Religion, null = True, blank = True, default = None)
+  race = models.ForeignKey(Race, null = True, blank = True, default = None)
+  ethnicity = models.ForeignKey(Ethnicity, null = True, blank = True, default = None)
+  ethnic_origin = models.ForeignKey(EthnicOrigin, null = True, blank = True, default = None)
   
   #TODO age data integrity check
-  age_start = models.IntegerField("Start Age", default = None, null = True, help_text = "Years old at beginning of age grouping")
-  age_end = models.IntegerField("End Age", default = None, null = True, help_text = "Years old at end of age grouping")
+  age_start = models.IntegerField("Start Age", default = None, null = True, blank = True, help_text = "Years old at beginning of age grouping")
+  age_end = models.IntegerField("End Age", default = None, null = True, blank = True, help_text = "Years old at end of age grouping")
 
   remarks = models.TextField(null = True, blank = True)
 
@@ -51,6 +51,6 @@ class MainDataEntry(BaseDataEntry):
   wb = models.CharField("WB", max_length = 100, null = True, blank = True)
   
   def __unicode__(self) :
-    return "%s (%s - %s) [%s]" % (self.location, self.begin_date, self.end_date, self.log.status)
+    return "%s (%s - %s)" % (self.location, self.begin_date, self.end_date)
 
   

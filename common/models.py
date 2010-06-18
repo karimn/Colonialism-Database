@@ -3,6 +3,16 @@ import datetime
 from django.db import models, connection
 from django.contrib.auth.models import User
 
+class Log(models.Model):
+  submitted_by = models.ForeignKey(User, related_name = 'submitted_logs')
+  approved_by = models.ForeignKey(User, related_name = 'approved_logs')
+
+  datetime_submitted = models.DateTimeField('Date/Time Submitted', default = datetime.datetime.now)
+  datetime_approved = models.DateTimeField('Date/Time Approved', null = True)
+
+  remarks = models.TextField(null = True)
+
+  """
 class LogEntry(models.Model):
   STATUS_CHOICES = ((0, 'Inactive'), (1, 'Active'), (2, 'Deleted'))
   CHANGE_CHOICES = ((0, 'Addition'), (1, 'Activation'), (2, 'Deletion'), (3, 'Modification'), (4, 'Migration'))
@@ -23,6 +33,7 @@ class LogEntry(models.Model):
   datetime = models.DateTimeField('Date/Time', default = datetime.datetime.now)
 
   previous = models.ForeignKey('self', null = True, default = None)
+  """
 
 class BaseSubmitModel(models.Model):
   class Meta:
@@ -33,7 +44,17 @@ class BaseSubmitModel(models.Model):
         ('active_new', 'Can accept newly submitted data'),
     )
 
-  log = models.ForeignKey(LogEntry)
+  log = models.ForeignKey(Log)
+  active = models.BooleanField(default = False)
+
+  def submitted_by(self):
+    return self.log.submitted_by
+  submitted_by.short_description = 'Submitted By'
+
+  def approved_by(self):
+    return self.log.approved_by
+  approved_by.short_description = 'Approved By'
+  
 
 class BaseDataEntry(BaseSubmitModel):
   class Meta(BaseSubmitModel.Meta):
