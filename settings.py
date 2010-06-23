@@ -1,5 +1,8 @@
 # Django settings for colonialismdb project.
 
+#import sys
+#sys.path.append('/home/karim/reversion')
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -61,6 +64,8 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.middleware.transaction.TransactionMiddleware',
+    'reversion.middleware.RevisionMiddleware',
 )
 
 ROOT_URLCONF = 'colonialismdb.urls'
@@ -79,6 +84,8 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.databrowse',
+
+    'reversion',
 
     'colonialismdb.population',
     'colonialismdb.common'

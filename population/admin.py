@@ -5,7 +5,7 @@ from django.contrib import admin
 class MainDataEntryAdmin(BaseSubmitAdmin) :
   fieldsets = [
       (None,
-        {'fields' : ['active',]}),
+        {'fields' : ['active', 'submitted_by']}),
 
       ('Location Information', 
         {'fields' : ['location', 'original_location_name', 'alternate_location_name']}),
@@ -26,8 +26,10 @@ class MainDataEntryAdmin(BaseSubmitAdmin) :
         {'fields' : ['remarks', ], 'classes' : ['collapse', ]}),
   ]
 
-  list_display = ('location', 'begin_date', 'end_date', 'active', 'submitted_by', 'approved_by')
-  list_filter = ('active', )
-  search_fields = ['log__submitted_by__username', 'log__approved_by__username']
+  list_display = ('location', 'begin_date', 'end_date', 'active', 'submitted_by')
+  ordering = ['begin_date']
+
+  activate_perm = 'population.activate_main_data_entry'
+
 
 admin.site.register(MainDataEntry, MainDataEntryAdmin)

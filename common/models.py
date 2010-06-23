@@ -3,6 +3,7 @@ import datetime
 from django.db import models, connection
 from django.contrib.auth.models import User
 
+"""
 class Log(models.Model):
   submitted_by = models.ForeignKey(User, related_name = 'submitted_logs')
   approved_by = models.ForeignKey(User, related_name = 'approved_logs')
@@ -12,7 +13,8 @@ class Log(models.Model):
 
   remarks = models.TextField(null = True)
 
-  """
+"""
+"""
 class LogEntry(models.Model):
   STATUS_CHOICES = ((0, 'Inactive'), (1, 'Active'), (2, 'Deleted'))
   CHANGE_CHOICES = ((0, 'Addition'), (1, 'Activation'), (2, 'Deletion'), (3, 'Modification'), (4, 'Migration'))
@@ -33,29 +35,23 @@ class LogEntry(models.Model):
   datetime = models.DateTimeField('Date/Time', default = datetime.datetime.now)
 
   previous = models.ForeignKey('self', null = True, default = None)
-  """
+"""
 
 class BaseSubmitModel(models.Model):
   class Meta:
     abstract = True
 
-    permissions = (
-        ('submit_new', 'Can enter new data to be reviewed'),
-        ('active_new', 'Can accept newly submitted data'),
-    )
+  def activate(self):
+    self.active = True
+    self.save()
 
-  log = models.ForeignKey(Log)
+  def deactivate(self):
+    self.active = False
+    self.save()
+
   active = models.BooleanField(default = False)
-
-  def submitted_by(self):
-    return self.log.submitted_by
-  submitted_by.short_description = 'Submitted By'
-
-  def approved_by(self):
-    return self.log.approved_by
-  approved_by.short_description = 'Approved By'
+  submitted_by = models.ForeignKey(User, related_name = "submitted_%(app_label)s_%(class)s")
   
-
 class BaseDataEntry(BaseSubmitModel):
   class Meta(BaseSubmitModel.Meta):
     abstract = True
@@ -64,11 +60,20 @@ class Location(BaseSubmitModel):
   name = models.CharField("Name", max_length = 50)
   in_location = models.ForeignKey('self', null = True, blank = True, default = None, verbose_name = "In")
 
+  class Meta(BaseSubmitModel.Meta):
+    permissions = ( ('activate_location', 'Can activate submitted location'), )
+
   def __unicode__(self): 
     if self.in_location:
       return self.name + ", " + unicode(self.in_location)
     else:
       return self.name 
+
+  def activate(self):
+    super(Location, self).activate()
+
+    if self.in_location and not self.in_location.active:
+      self.in_location.activate()
 
   def is_root(self):
     return not self.in_location
@@ -117,21 +122,25 @@ class Category(BaseSubmitModel):
     abstract = True
 
   def __unicode__(self):
-    return self.name
+    return unicode(self.name)
   
   name = models.CharField(max_length = 50, unique = True)
 
 class Religion(Category):
-  pass
+  class Meta(Category.Meta):
+    permissions = ( ('activate_religion', 'Can activate submitted religion'), )
 
 class Race(Category):
-  pass
+  class Meta(Category.Meta):
+    permissions = ( ('activate_race', 'Can activate submitted race'), )
 
 class Ethnicity(Category):
   class Meta(Category.Meta):
-    verbose_name_plural = 'Ethnicities'
+    verbose_name_plural = 'ethnicities'
+    permissions = ( ('activate_ethnicity', 'Can activate submitted ethnicity'), )
 
 class EthnicOrigin(Category):
-  pass
+  class Meta(Category.Meta):
+    permissions = ( ('activate_ethnic_origin', 'Can activate submitted ethnic origin'), )
 
 

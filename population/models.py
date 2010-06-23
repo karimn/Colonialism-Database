@@ -6,10 +6,10 @@ class MainDataEntry(BaseDataEntry):
   POP_COND_CHOICES = (('None', 'None'), ('Dead', 'Dead'), ('Educated', 'Educated'), ('Enslaved', 'Enslaved'), ('Illiterate', 'Illiterate'), ('Impaired', 'Impaired'))
 
   class Meta(BaseDataEntry.Meta):
-    verbose_name = "Population Data Entry"
-    verbose_name_plural = "Population Data Entries"
-    #order_with_respect_to = 'location'
-    ordering = ['location', 'begin_date', 'end_date']
+    verbose_name = "population data entry"
+    verbose_name_plural = "population data entries"
+    ordering = ['location', 'begin_date', ]
+    permissions = ( ('activate_main_data_entry', 'Can activate submitted population data entry'), )
   
   # TODO separate tables for sources, tables, pages, etc.
   source_id = models.IntegerField("Source ID", null = True, blank = True)
@@ -17,11 +17,11 @@ class MainDataEntry(BaseDataEntry):
   page_num = models.IntegerField("Page Number", null = True, blank = True, default = None)
 
   #TODO date data integrity check
-  begin_date = models.DateField("Start Date", null = True, blank = True, help_text = "Examples: If data refers to specific day, enter that day (e.g., April 3, 1900) as the begin and end date. If data encompasses a full calendar year enter January 1, 1900 as Begin date and December 31, 1900, as End date.")
-  end_date = models.DateField("End Date", null = True, blank = True, help_text = "Examples: If data refers to specific day, enter that day (e.g., April 3, 1900) as the begin and end date. If data encompasses a full calendar year enter January 1, 1900 as Begin date and December 31, 1900, as End date.")
+  begin_date = models.DateField("Start Date", null = True, blank = True)
+  end_date = models.DateField("End Date", null = True, blank = True)
 
-  location = models.ForeignKey(Location, related_name = 'population_data_entries', help_text = "The English name which could be different from the original name in the source")
-  original_location_name = models.CharField("Original Location Name", max_length = 50, null = True, blank = True, help_text = "Original name used in the source if different from the English name")
+  location = models.ForeignKey(Location, related_name = 'population_data_entries')
+  original_location_name = models.CharField("Original Location Name", max_length = 50, null = True, blank = True)
   alternate_location_name = models.CharField("Alternate Location Name", max_length = 50, null = True, blank = True)
 
   religion = models.ForeignKey(Religion, null = True, blank = True, default = None)
@@ -30,8 +30,8 @@ class MainDataEntry(BaseDataEntry):
   ethnic_origin = models.ForeignKey(EthnicOrigin, null = True, blank = True, default = None)
   
   #TODO age data integrity check
-  age_start = models.IntegerField("Start Age", default = None, null = True, blank = True, help_text = "Years old at beginning of age grouping")
-  age_end = models.IntegerField("End Age", default = None, null = True, blank = True, help_text = "Years old at end of age grouping")
+  age_start = models.IntegerField("Start Age", default = None, null = True, blank = True)
+  age_end = models.IntegerField("End Age", default = None, null = True, blank = True)
 
   remarks = models.TextField(null = True, blank = True)
 
@@ -51,6 +51,27 @@ class MainDataEntry(BaseDataEntry):
   wb = models.CharField("WB", max_length = 100, null = True, blank = True)
   
   def __unicode__(self) :
-    return "%s (%s - %s)" % (self.location, self.begin_date, self.end_date)
+    return "%s (%s - %s)" % (unicode(self.location), self.begin_date, self.end_date)
+
+  def activate(self):
+    super(MainDataEntry, self).activate()
+
+    if not self.location.active:
+      self.location.activate()
+
+    if self.race and not self.race.active:
+      self.race.activate()
+
+    if self.religion and not self.religion.active:
+      self.religion.activate()
+    
+    if self.ethnicity and not self.ethnicity.active:
+      self.ethnicity.activate()
+      
+    if self.ethnic_origin and not self.ethnic_origin.active:
+      self.ethnic_origin.activate()
+
+
+
 
   

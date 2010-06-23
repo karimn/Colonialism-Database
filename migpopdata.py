@@ -1,17 +1,19 @@
+#!/usr/bin/python
+
 import csv
 import datetime
 import sys
 import re
 
 from colonialismdb.population.models import MainDataEntry
-from colonialismdb.common.models import Location, Religion, Ethnicity, EthnicOrigin, Race, Log
+from colonialismdb.common.models import Location, Religion, Ethnicity, EthnicOrigin, Race
 from django.db.utils import DatabaseError
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 
+from reversion import revision
+
 mig_user = User.objects.get(username = 'karim')
-#default_log = LogEntry(status = 1, change = 4, user = mig_user)
-#default_log.save()
 
 class LocationTooComplicated(Exception):
   def __init__(self, problem):
@@ -26,10 +28,9 @@ def get_or_add_religion(religion):
   try:
     return Religion.objects.get(name = religion)
   except Religion.DoesNotExist:
-    log = Log(submitted_by = mig_user, approved_by = mig_user, datetime_approved = datetime.datetime.now())
-    log.save()
-    new_rel = Religion(name = religion, log = log, active = True) #, log = default_log)
-    new_rel.save()
+    with revision:
+      new_rel = Religion(name = religion, active = True, submitted_by = mig_user)
+      new_rel.save()
     return new_rel
 
 def get_or_add_race(race):
@@ -38,10 +39,9 @@ def get_or_add_race(race):
   try:
     return Race.objects.get(name = race)
   except Race.DoesNotExist:
-    log = Log(submitted_by = mig_user, approved_by = mig_user, datetime_approved = datetime.datetime.now())
-    log.save()
-    new_race = Race(name = race, log = log, active = True) #, log = default_log)
-    new_race.save()
+    with revision:
+      new_race = Race(name = race, active = True, submitted_by = mig_user)
+      new_race.save()
     return new_race
 
 def get_or_add_ethnicity(eth):
@@ -50,10 +50,9 @@ def get_or_add_ethnicity(eth):
   try:
     return Ethnicity.objects.get(name = eth)
   except Ethnicity.DoesNotExist:
-    log = Log(submitted_by = mig_user, approved_by = mig_user, datetime_approved = datetime.datetime.now())
-    log.save()
-    new_eth = Ethnicity(name = eth, log = log, active = True) #, log = default_log)
-    new_eth.save()
+    with revision:
+      new_eth = Ethnicity(name = eth, active = True, submitted_by = mig_user) #, log = default_log)
+      new_eth.save()
     return new_eth
 
 def get_or_add_ethnic_origin(eth):
@@ -62,10 +61,9 @@ def get_or_add_ethnic_origin(eth):
   try:
     return EthnicOrigin.objects.get(name = eth)
   except EthnicOrigin.DoesNotExist:
-    log = Log(submitted_by = mig_user, approved_by = mig_user, datetime_approved = datetime.datetime.now())
-    log.save()
-    new_eth = EthnicOrigin(name = eth, log = log, active = True) #, log = default_log)
-    new_eth.save()
+    with revision:
+      new_eth = EthnicOrigin(name = eth, active = True, submitted_by = mig_user) #, log = default_log)
+      new_eth.save()
     return new_eth
 
 def get_or_add_location(place_name, in1 = None, in2 = None, in3 = None):
@@ -92,10 +90,9 @@ def get_or_add_location(place_name, in1 = None, in2 = None, in3 = None):
       if not loc:
         raise LocationTooComplicated('Found multiple matches for parent location %s' % in_loc_name)
     except Location.DoesNotExist:
-      log = Log(submitted_by = mig_user, approved_by = mig_user, datetime_approved = datetime.datetime.now())
-      log.save()
-      loc = Location(name = in_loc_name, in_location = prev_loc, log = log, active = True) #, log = default_log)
-      loc.save()
+      with revision:
+        loc = Location(name = in_loc_name, in_location = prev_loc, active = True, submitted_by = mig_user) #, log = default_log)
+        loc.save()
       location_created = True
     else:
       if location_created and not prev_loc.is_root():
@@ -114,10 +111,9 @@ def get_or_add_location(place_name, in1 = None, in2 = None, in3 = None):
       return places[0]
 
     elif len(places) == 0:
-      log = Log(submitted_by = mig_user, approved_by = mig_user, datetime_approved = datetime.datetime.now())
-      log.save()
-      new_loc = Location(name = place_name, in_location = prev_loc, log = log, active = True) #, log = default_log)
-      new_loc.save()
+      with revision:
+        new_loc = Location(name = place_name, in_location = prev_loc, active = True, submitted_by = mig_user) #, log = default_log)
+        new_loc.save()
 
       return new_loc
 
@@ -134,7 +130,6 @@ def get_or_add_location(place_name, in1 = None, in2 = None, in3 = None):
     
 
 # Script begins ###############################################################################                                                       
-
 
 infile = sys.argv[1]
 reader = csv.reader(open(infile, "r"), delimiter='\t', quotechar = '"')
@@ -232,17 +227,13 @@ for i, row in enumerate(reader):
           del rdict['age_end']
           rdict['age_start'] = over_match.group(1) 
 
-  #rdict['log'] = LogEntry(status = 1, change = 4, user = mig_user, remarks = '|'.join(row).decode(string_encoding))
-  #rdict['log'].save()
-
-  original_row = '|'.join(row).decode(string_encoding)
-  rdict['log'] = Log(submitted_by = mig_user, approved_by = mig_user, datetime_approved = datetime.datetime.now(), remarks = original_row)
-  rdict['log'].save()
   rdict['active'] = True
+  rdict['submitted_by'] = mig_user 
           
   try:
-    entry = MainDataEntry(**rdict)
-    entry.save()
+    with revision:
+      entry = MainDataEntry(**rdict)
+      entry.save()
   except (ValueError, DatabaseError, ValidationError) as e:
     sys.stderr.write('Failed to save data row (%i): %s\n' % (i, e))
     sys.stderr.write('%s\n' % rdict)
