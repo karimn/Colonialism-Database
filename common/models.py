@@ -3,40 +3,6 @@ import datetime
 from django.db import models, connection
 from django.contrib.auth.models import User
 
-"""
-class Log(models.Model):
-  submitted_by = models.ForeignKey(User, related_name = 'submitted_logs')
-  approved_by = models.ForeignKey(User, related_name = 'approved_logs')
-
-  datetime_submitted = models.DateTimeField('Date/Time Submitted', default = datetime.datetime.now)
-  datetime_approved = models.DateTimeField('Date/Time Approved', null = True)
-
-  remarks = models.TextField(null = True)
-
-"""
-"""
-class LogEntry(models.Model):
-  STATUS_CHOICES = ((0, 'Inactive'), (1, 'Active'), (2, 'Deleted'))
-  CHANGE_CHOICES = ((0, 'Addition'), (1, 'Activation'), (2, 'Deletion'), (3, 'Modification'), (4, 'Migration'))
-
-  class Meta:
-    verbose_name_plural = 'LogEntries'
-
-  def __unicode__(self):
-    return 'Status: %s, Change: %s, User: %s' % (self.status, self.change, self.user)
-
-  status = models.IntegerField(choices = STATUS_CHOICES, default = 0)
-  change = models.IntegerField(choices = CHANGE_CHOICES)
-
-  remarks = models.TextField(null = True)
-
-  user = models.ForeignKey(User, related_name = 'logs')
-
-  datetime = models.DateTimeField('Date/Time', default = datetime.datetime.now)
-
-  previous = models.ForeignKey('self', null = True, default = None)
-"""
-
 class BaseSubmitModel(models.Model):
   class Meta:
     abstract = True
@@ -55,6 +21,8 @@ class BaseSubmitModel(models.Model):
 class BaseDataEntry(BaseSubmitModel):
   class Meta(BaseSubmitModel.Meta):
     abstract = True
+
+  UNIT_CHOICES = (('hundreds', 'Hundreds'), ('thousands', 'Thousands'), ('millions', 'Millions'), ('units', 'Units'))
 
 class Location(BaseSubmitModel):
   name = models.CharField("Name", max_length = 50)

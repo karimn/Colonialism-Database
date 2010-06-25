@@ -1,9 +1,12 @@
 from django.db import models
-from colonialismdb.common.models import Location, Religion, Race, Ethnicity, EthnicOrigin, BaseDataEntry
+from colonialismdb.common.models import Location, Religion, Race, Ethnicity, EthnicOrigin, BaseDataEntry, Category
+
+class PopulationCondition(Category):
+  class Meta(Category.Meta):
+    permissions = ( ('activate_population_condition', 'Can activate submitted population condition'), )
 
 class MainDataEntry(BaseDataEntry):
-  UNIT_CHOICES = (('hundreds', 'Hundreds'), ('thousands', 'Thousands'), ('millions', 'Millions'))
-  POP_COND_CHOICES = (('None', 'None'), ('Dead', 'Dead'), ('Educated', 'Educated'), ('Enslaved', 'Enslaved'), ('Illiterate', 'Illiterate'), ('Impaired', 'Impaired'))
+  #POP_COND_CHOICES = (('None', 'None'), ('Dead', 'Dead'), ('Educated', 'Educated'), ('Enslaved', 'Enslaved'), ('Illiterate', 'Illiterate'), ('Impaired', 'Impaired'))
 
   class Meta(BaseDataEntry.Meta):
     verbose_name = "population data entry"
@@ -42,9 +45,9 @@ class MainDataEntry(BaseDataEntry):
   male_population_value = models.DecimalField("Male", max_digits = 10, decimal_places = 2, null = True, blank = True)
   female_population_value = models.DecimalField("Female", max_digits = 10, decimal_places = 2, null = True, blank = True)
   
-  value_unit = models.CharField("Units", max_length = 15, choices = UNIT_CHOICES, null = True, blank = True)
+  value_unit = models.CharField("Units", max_length = 15, choices = BaseDataEntry.UNIT_CHOICES, default = 'units')
   is_total = models.BooleanField("Is Total", default = False)
-  population_condition = models.CharField("Population Condition", max_length = 20, choices = POP_COND_CHOICES, default = 'None') # TODO separate table
+  population_condition = models.ForeignKey(PopulationCondition, null = True, blank = True, default = None)
 
   polity = models.CharField(max_length = 100, null = True, blank = True)
   iso = models.CharField("ISO", max_length = 100, null = True, blank = True) 
@@ -70,6 +73,9 @@ class MainDataEntry(BaseDataEntry):
       
     if self.ethnic_origin and not self.ethnic_origin.active:
       self.ethnic_origin.activate()
+
+    if self.population_condition and not self.population_condition.active:
+      self.population_condition.activate()
 
 
 

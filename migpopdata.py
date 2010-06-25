@@ -5,7 +5,7 @@ import datetime
 import sys
 import re
 
-from colonialismdb.population.models import MainDataEntry
+from colonialismdb.population.models import MainDataEntry, PopulationCondition
 from colonialismdb.common.models import Location, Religion, Ethnicity, EthnicOrigin, Race
 from django.db.utils import DatabaseError
 from django.core.exceptions import ValidationError
@@ -65,6 +65,17 @@ def get_or_add_ethnic_origin(eth):
       new_eth = EthnicOrigin(name = eth, active = True, submitted_by = mig_user) #, log = default_log)
       new_eth.save()
     return new_eth
+  
+def get_or_add_pop_cond(cond):
+  cond = cond.title()
+
+  try:
+    return PopulationCondition.objects.get(name = cond)
+  except PopulationCondition.DoesNotExist:
+    with revision:
+      new_cond = PopulationCondition(name = cond, active = True, submitted_by = mig_user) #, log = default_log)
+      new_cond.save()
+    return new_cond
 
 def get_or_add_location(place_name, in1 = None, in2 = None, in3 = None):
   place_name = place_name.title()
@@ -184,7 +195,7 @@ for i, row in enumerate(reader):
     if not rdict[k]:
       del rdict[k]
 
-  for col_name, add_fun in { 'religion' : get_or_add_religion, 'race' : get_or_add_race, 'ethnicity' : get_or_add_ethnicity, 'ethnic_origin' : get_or_add_ethnic_origin }.iteritems():
+  for col_name, add_fun in { 'religion' : get_or_add_religion, 'race' : get_or_add_race, 'ethnicity' : get_or_add_ethnicity, 'ethnic_origin' : get_or_add_ethnic_origin, 'population_condition' : get_or_add_pop_cond }.iteritems():
     if rdict.has_key(col_name):
       try:
         rdict[col_name] = add_fun(rdict[col_name])
@@ -192,9 +203,6 @@ for i, row in enumerate(reader):
         sys.stderr.write("Error on get_or_add_%s in row (%i): %s\n" % (col_name, i, e))
         sys.stderr.write("%s\n" % rdict)
         num_err_rows += 1
-
-  if rdict.has_key('population_condition') and (rdict['population_condition'] == 'Neither'):
-    del rdict['population_condition']
 
   if rdict.has_key('remarks'):
     rdict['remarks'] = rdict['remarks'].decode(string_encoding)
