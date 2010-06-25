@@ -21,7 +21,7 @@ def query(request):
     form = forms.MainPopulationQueryForm(request.GET)
 
     if form.is_valid():
-      query = models.MainDataEntry.objects.all()
+      query = models.MainDataEntry.objects.filter(active = True)
 
       locations = form.cleaned_data['location']
       
