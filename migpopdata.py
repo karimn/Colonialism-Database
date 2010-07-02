@@ -28,9 +28,8 @@ def get_or_add_religion(religion):
   try:
     return Religion.objects.get(name = religion)
   except Religion.DoesNotExist:
-    with revision:
-      new_rel = Religion(name = religion, active = True, submitted_by = mig_user)
-      new_rel.save()
+    new_rel = Religion(name = religion, active = True, submitted_by = mig_user)
+    new_rel.save()
     return new_rel
 
 def get_or_add_race(race):
@@ -39,9 +38,8 @@ def get_or_add_race(race):
   try:
     return Race.objects.get(name = race)
   except Race.DoesNotExist:
-    with revision:
-      new_race = Race(name = race, active = True, submitted_by = mig_user)
-      new_race.save()
+    new_race = Race(name = race, active = True, submitted_by = mig_user)
+    new_race.save()
     return new_race
 
 def get_or_add_ethnicity(eth):
@@ -50,9 +48,8 @@ def get_or_add_ethnicity(eth):
   try:
     return Ethnicity.objects.get(name = eth)
   except Ethnicity.DoesNotExist:
-    with revision:
-      new_eth = Ethnicity(name = eth, active = True, submitted_by = mig_user) #, log = default_log)
-      new_eth.save()
+    new_eth = Ethnicity(name = eth, active = True, submitted_by = mig_user) #, log = default_log)
+    new_eth.save()
     return new_eth
 
 def get_or_add_ethnic_origin(eth):
@@ -61,9 +58,8 @@ def get_or_add_ethnic_origin(eth):
   try:
     return EthnicOrigin.objects.get(name = eth)
   except EthnicOrigin.DoesNotExist:
-    with revision:
-      new_eth = EthnicOrigin(name = eth, active = True, submitted_by = mig_user) #, log = default_log)
-      new_eth.save()
+    new_eth = EthnicOrigin(name = eth, active = True, submitted_by = mig_user) #, log = default_log)
+    new_eth.save()
     return new_eth
   
 def get_or_add_pop_cond(cond):
@@ -72,9 +68,8 @@ def get_or_add_pop_cond(cond):
   try:
     return PopulationCondition.objects.get(name = cond)
   except PopulationCondition.DoesNotExist:
-    with revision:
-      new_cond = PopulationCondition(name = cond, active = True, submitted_by = mig_user) #, log = default_log)
-      new_cond.save()
+    new_cond = PopulationCondition(name = cond, active = True, submitted_by = mig_user) #, log = default_log)
+    new_cond.save()
     return new_cond
 
 def get_or_add_location(place_name, in1 = None, in2 = None, in3 = None):
@@ -101,9 +96,8 @@ def get_or_add_location(place_name, in1 = None, in2 = None, in3 = None):
       if not loc:
         raise LocationTooComplicated('Found multiple matches for parent location %s' % in_loc_name)
     except Location.DoesNotExist:
-      with revision:
-        loc = Location(name = in_loc_name, in_location = prev_loc, active = True, submitted_by = mig_user) #, log = default_log)
-        loc.save()
+      loc = Location(name = in_loc_name, in_location = prev_loc, active = True, submitted_by = mig_user) #, log = default_log)
+      loc.save()
       location_created = True
     else:
       if location_created and not prev_loc.is_root():
@@ -122,9 +116,8 @@ def get_or_add_location(place_name, in1 = None, in2 = None, in3 = None):
       return places[0]
 
     elif len(places) == 0:
-      with revision:
-        new_loc = Location(name = place_name, in_location = prev_loc, active = True, submitted_by = mig_user) #, log = default_log)
-        new_loc.save()
+      new_loc = Location(name = place_name, in_location = prev_loc, active = True, submitted_by = mig_user) #, log = default_log)
+      new_loc.save()
 
       return new_loc
 
@@ -157,11 +150,58 @@ for i, row in enumerate(reader):
   #continue 
 
   #if i < 57600: continue
-  
-  if (not rdict['individuals_population_value'] or rdict['individuals_population_value'] == 0) and \
-      (not rdict['families_population_value'] or rdict['families_population_value'] == 0) and \
-      (not rdict['male_population_value'] or rdict['male_population_value'] == 0) and \
-      (not rdict['female_population_value'] or rdict['female_population_value'] == 0):
+
+  val_specified = False
+
+  if not rdict['individuals_population_value'] and rdict['individuals_population_value'] != 0:
+    val_specified = True
+    rdict['individ_fam'] = 0
+    rdict['population_value'] = rdict['individuals_population_value']
+
+  del rdict['individuals_population_value']
+
+  if not rdict['families_population_value'] and rdict['families_population_value'] != 0:
+    if val_specified:
+      sys.stderr.write('multiple population values in row (%i)\n' % i)
+      sys.stderr.write('%s\n' % rdict)
+      num_err_rows += 1
+      continue
+
+    val_specified = True
+    rdict['individ_fam'] = 1
+    rdict['population_value'] = rdict['families_population_value']
+
+  del rdict['families_population_value']
+
+  if not rdict['male_population_value'] and rdict['male_population_value'] != 0:
+    if val_specified:
+      sys.stderr.write('multiple population values in row (%i)\n' % i)
+      sys.stderr.write('%s\n' % rdict)
+      num_err_rows += 1
+      continue
+
+    val_specified = True
+    rdict['individ_fam'] = 0
+    rdict['population_value'] = rdict['male_population_value']
+    rdict['population_gender'] = 'm'
+
+  del rdict['male_population_value']
+
+  if not rdict['female_population_value'] and rdict['female_population_value'] != 0:
+    if val_specified:
+      sys.stderr.write('multiple population values in row (%i)\n' % i)
+      sys.stderr.write('%s\n' % rdict)
+      num_err_rows += 1
+      continue
+
+    val_specified = True
+    rdict['individ_fam'] = 0
+    rdict['population_value'] = rdict['female_population_value']
+    rdict['population_gender'] = 'f'
+
+  del rdict['female_population_value']
+
+  if not val_specified:
     sys.stderr.write('Data entry with no data in row (%i)\n' % i)
     sys.stderr.write('%s\n' % rdict)
     num_err_rows += 1
@@ -239,9 +279,8 @@ for i, row in enumerate(reader):
   rdict['submitted_by'] = mig_user 
           
   try:
-    with revision:
-      entry = MainDataEntry(**rdict)
-      entry.save()
+    entry = MainDataEntry(**rdict)
+    entry.save()
   except (ValueError, DatabaseError, ValidationError) as e:
     sys.stderr.write('Failed to save data row (%i): %s\n' % (i, e))
     sys.stderr.write('%s\n' % rdict)

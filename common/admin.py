@@ -54,7 +54,7 @@ class BaseSubmitAdmin(VersionAdmin) :
   list_filter = ('active', 'submitted_by')
 
 class LocationAdmin(BaseSubmitAdmin) :
-  list_display = ('name', 'active', 'submitted_by')
+  list_display = ('__unicode__', 'active', 'submitted_by')
   activate_perm = 'common.activate_location'
   
 class BaseCategoryAdmin(BaseSubmitAdmin):
@@ -69,7 +69,7 @@ class RaceAdmin(BaseCategoryAdmin) :
 class EthnicityAdmin(BaseCategoryAdmin) :
   activate_perm = 'common.activate_ethnicity'
   
-class EthnicOriginAdmin(BaseSubmitAdmin) :
+class EthnicOriginAdmin(BaseCategoryAdmin) :
   activate_perm = 'common.activate_ethnic_origin'
 
 admin.site.register(models.Location, LocationAdmin)

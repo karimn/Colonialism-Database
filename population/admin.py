@@ -1,5 +1,5 @@
-from colonialismdb.population.models import MainDataEntry
-from colonialismdb.common.admin import BaseSubmitAdmin
+from colonialismdb.population.models import MainDataEntry, PopulationCondition, Occupation
+from colonialismdb.common.admin import BaseSubmitAdmin, BaseCategoryAdmin
 from django.contrib import admin
 
 class MainDataEntryAdmin(BaseSubmitAdmin) :
@@ -11,13 +11,13 @@ class MainDataEntryAdmin(BaseSubmitAdmin) :
         {'fields' : ['location', 'original_location_name', 'alternate_location_name']}),
       
       ('Date Range', 
-        {'fields' : ['begin_date', 'end_date']}),
+        {'fields' : ['begin_date', 'end_date', 'circa']}),
 
       ('Population Characteristics', 
         {'fields' : ['religion', 'race', 'ethnicity', 'ethnic_origin', 'age_start', 'age_end', 'population_condition']}),
 
       ('Population Statistics', 
-        {'fields' : ['individuals_population_value', 'families_population_value', 'male_population_value', 'female_population_value', 'value_unit', 'is_total']}),
+        {'fields' : ['individ_fam', 'population_gender', 'population_value', 'value_unit', 'is_total', 'value_precision']}),
 
       ('Source Information', 
         {'fields' : ['source_id', 'combined_id', 'page_num', 'polity', 'iso', 'wb']}),
@@ -31,5 +31,12 @@ class MainDataEntryAdmin(BaseSubmitAdmin) :
 
   activate_perm = 'population.activate_main_data_entry'
 
+class PopulationConditionAdmin(BaseCategoryAdmin) :
+  activate_perm = 'population.activate_population_condition'
+
+class OccupationAdmin(BaseCategoryAdmin):
+  activate_perm = 'population.activate_occupation'
 
 admin.site.register(MainDataEntry, MainDataEntryAdmin)
+admin.site.register(PopulationCondition, PopulationConditionAdmin)
+admin.site.register(Occupation, OccupationAdmin)

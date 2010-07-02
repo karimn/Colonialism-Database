@@ -5,14 +5,20 @@ class PopulationCondition(Category):
   class Meta(Category.Meta):
     permissions = ( ('activate_population_condition', 'Can activate submitted population condition'), )
 
-class MainDataEntry(BaseDataEntry):
-  #POP_COND_CHOICES = (('None', 'None'), ('Dead', 'Dead'), ('Educated', 'Educated'), ('Enslaved', 'Enslaved'), ('Illiterate', 'Illiterate'), ('Impaired', 'Impaired'))
+class Occupation(Category):
+  class Meta(Category.Meta):
+    permissions = ( ('activate_occupation', 'Can activate submitted occupation'), )
 
+class MainDataEntry(BaseDataEntry):
   class Meta(BaseDataEntry.Meta):
-    verbose_name = "population data entry"
-    verbose_name_plural = "population data entries"
+    verbose_name = "data entry"
+    verbose_name_plural = "data entries"
     ordering = ['location', 'begin_date', ]
     permissions = ( ('activate_main_data_entry', 'Can activate submitted population data entry'), )
+
+  GENDER_CHOICES = (('M', 'Male'), ('F', 'Female'))
+  INDIVID_FAM_CHOICES = ((0, 'Individuals'), (1, 'Families'))
+  VAL_PRECISION_CHOICES = ((0, 'Uncertain'), (1, 'Estimate'))
   
   # TODO separate tables for sources, tables, pages, etc.
   source_id = models.IntegerField("Source ID", null = True, blank = True)
@@ -22,6 +28,7 @@ class MainDataEntry(BaseDataEntry):
   #TODO date data integrity check
   begin_date = models.DateField("Start Date", null = True, blank = True)
   end_date = models.DateField("End Date", null = True, blank = True)
+  circa = models.BooleanField(default = False)
 
   location = models.ForeignKey(Location, related_name = 'population_data_entries')
   original_location_name = models.CharField("Original Location Name", max_length = 50, null = True, blank = True)
@@ -39,15 +46,16 @@ class MainDataEntry(BaseDataEntry):
   remarks = models.TextField(null = True, blank = True)
 
   # Link field not used
-  
-  individuals_population_value = models.DecimalField("Individuals", max_digits = 10, decimal_places = 2, null = True, blank = True)
-  families_population_value = models.DecimalField("Families", max_digits = 10, decimal_places = 2, null = True, blank = True)
-  male_population_value = models.DecimalField("Male", max_digits = 10, decimal_places = 2, null = True, blank = True)
-  female_population_value = models.DecimalField("Female", max_digits = 10, decimal_places = 2, null = True, blank = True)
-  
-  value_unit = models.CharField("Units", max_length = 15, choices = BaseDataEntry.UNIT_CHOICES, default = 'units')
+
   is_total = models.BooleanField("Is Total", default = False)
+  value_unit = models.CharField("Units", max_length = 15, choices = BaseDataEntry.UNIT_CHOICES, default = 'units')
+  individ_fam = models.IntegerField("Individuals/Families", choices = INDIVID_FAM_CHOICES)
+  population_gender = models.CharField(max_length = 1, choices = GENDER_CHOICES, default = None, null = True)
+  population_value = models.DecimalField(max_digits = 10, decimal_places = 2, null = True, blank = True)
+  value_precision = models.IntegerField(choices = VAL_PRECISION_CHOICES, default = None, null = True)
+  
   population_condition = models.ForeignKey(PopulationCondition, null = True, blank = True, default = None)
+  occupation = models.ForeignKey(Occupation, null = True, blank = True, default = None)
 
   polity = models.CharField(max_length = 100, null = True, blank = True)
   iso = models.CharField("ISO", max_length = 100, null = True, blank = True) 
