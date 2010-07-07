@@ -82,31 +82,39 @@ def get_or_add_location(place_name, in1 = None, in2 = None, in3 = None):
     if not in_loc_name:
       continue
 
-    try:
-      loc = prev_tree.get(name__exact = in_loc_name)
-    except Location.MultipleObjectsReturned:
+    #try:
+    found_loc = prev_tree.filter(name__exact = in_loc_name)
+    found_loc_count = found_loc.count()
+    #loc = prev_tree.get(name__exact = in_loc_name)
+
+    if found_loc_count > 1:
+  #except Location.MultipleObjectsReturned:
       loc = None
 
       if prev_loc:
-        immediate_subloc_tree = prev_loc.get_sub_locations(include_self = False, max_distance = 1)
+        immediate_subloc_tree = prev_loc.get_geographic_sub_locations(include_self = False, max_distance = 1)
 
-        if immediate_subloc_tree.filter(name__exact = in_loc_name).count() == 1:
-          loc = immediate_subloc_tree.get(name__exact = in_loc_name)
+        immed_found_loc = immediate_subloc_tree.filter(name__exact = in_loc_name)
+        if immed_found_loc.count() > 0: # Just taking the first match no matter what for now
+          loc = immed_found_loc[0] 
 
       if not loc:
-        raise LocationTooComplicated('Found multiple matches for parent location %s' % in_loc_name)
-    except Location.DoesNotExist:
-      loc = Location(name = in_loc_name, in_location = prev_loc, active = True, submitted_by = mig_user) #, log = default_log)
+        #raise LocationTooComplicated('Found multiple matches for parent location %s' % in_loc_name)
+        loc = found_loc[0] # Taking the first match for now
+    elif found_loc_count == 0:
+    #except Location.DoesNotExist:
+      loc = Location(name = in_loc_name, geographically_in = prev_loc, active = True, submitted_by = mig_user) #, log = default_log)
       loc.save()
       location_created = True
     else:
+      loc = found_loc[0]
       if location_created and not prev_loc.is_root():
         raise LocationTooComplicated('Found existing location after having created a non-existent one')
       else:
         loc.in_location = prev_loc
 
     prev_loc = loc
-    prev_tree = prev_loc.get_sub_locations(include_self = False)
+    prev_tree = prev_loc.get_geographic_sub_locations(include_self = False)
 
   retrying = False
   places = prev_tree.filter(name__exact = place_name)
@@ -116,7 +124,7 @@ def get_or_add_location(place_name, in1 = None, in2 = None, in3 = None):
       return places[0]
 
     elif len(places) == 0:
-      new_loc = Location(name = place_name, in_location = prev_loc, active = True, submitted_by = mig_user) #, log = default_log)
+      new_loc = Location(name = place_name, geographically_in = prev_loc, active = True, submitted_by = mig_user) #, log = default_log)
       new_loc.save()
 
       return new_loc
@@ -126,86 +134,62 @@ def get_or_add_location(place_name, in1 = None, in2 = None, in3 = None):
         raise LocationTooComplicated('Found multiple location matches for requested place')
 
       if prev_loc:
-        places = prev_tree.filter(name__exact = place_name, in_location = prev_loc.pk)
+        places = prev_tree.filter(name__exact = place_name, geographically_in = prev_loc.pk)
       else:
         places = []
         
       retrying = True
-    
 
-# Script begins ###############################################################################                                                       
-
-infile = sys.argv[1]
-reader = csv.reader(open(infile, "r"), delimiter='\t', quotechar = '"')
-
-string_encoding = 'ISO-8859-1'
-
-num_err_rows = 0
-
-for i, row in enumerate(reader):
-  rdict = dict(zip(('source_id', 'combined_id', 'begin_date', 'end_date', 'place_origin', 'place_english', 'alternate_location_name', 'large1', 'large2', 'large3', 'religion', 'race', 'ethnicity', 'ethnic_origin', 'age_start', 'age_end', 'remarks', 'link', 'individuals_population_value', 'families_population_value', 'male_population_value', 'female_population_value', 'value_unit', 'is_total', 'population_condition', 'polity', 'iso', 'wb'), row))
-
-  #if rdict['place_english'] or rdict['alternate_location_name'] : 
-  #  print i, rdict['place_origin'], ", ", rdict['alternate_location_name'], ", ", rdict['place_english']
-  #continue 
-
-  #if i < 57600: continue
-
+def add_row(rdict, num_err_rows):
   val_specified = False
 
-  if not rdict['individuals_population_value'] and rdict['individuals_population_value'] != 0:
-    val_specified = True
-    rdict['individ_fam'] = 0
-    rdict['population_value'] = rdict['individuals_population_value']
+  if rdict.has_key('individuals_population_value'): 
+    if len(rdict['individuals_population_value']) > 0 and rdict['individuals_population_value'] != 0:
+      val_specified = True
+      rdict['individ_fam'] = 0
+      rdict['population_value'] = rdict['individuals_population_value']
 
-  del rdict['individuals_population_value']
+    del rdict['individuals_population_value']
 
-  if not rdict['families_population_value'] and rdict['families_population_value'] != 0:
-    if val_specified:
-      sys.stderr.write('multiple population values in row (%i)\n' % i)
-      sys.stderr.write('%s\n' % rdict)
-      num_err_rows += 1
-      continue
+  if rdict.has_key('families_population_value'): 
+    if len(rdict['families_population_value']) > 0 and rdict['families_population_value'] != 0:    
+      if val_specified:
+        num_err_rows = add_row(rdict.copy(), num_err_rows)      
+      else:
+        val_specified = True
+        rdict['individ_fam'] = 1
+        rdict['population_value'] = rdict['families_population_value']
 
-    val_specified = True
-    rdict['individ_fam'] = 1
-    rdict['population_value'] = rdict['families_population_value']
+    del rdict['families_population_value']
 
-  del rdict['families_population_value']
+  if rdict.has_key('male_population_value'): 
+    if len(rdict['male_population_value']) > 0 and rdict['male_population_value'] != 0:
+      if val_specified:
+        num_err_rows = add_row(rdict.copy(), num_err_rows)
+      else:
+        val_specified = True
+        rdict['individ_fam'] = 0
+        rdict['population_value'] = rdict['male_population_value']
+        rdict['population_gender'] = 'm'
 
-  if not rdict['male_population_value'] and rdict['male_population_value'] != 0:
-    if val_specified:
-      sys.stderr.write('multiple population values in row (%i)\n' % i)
-      sys.stderr.write('%s\n' % rdict)
-      num_err_rows += 1
-      continue
+    del rdict['male_population_value']
 
-    val_specified = True
-    rdict['individ_fam'] = 0
-    rdict['population_value'] = rdict['male_population_value']
-    rdict['population_gender'] = 'm'
+  if rdict.has_key('female_population_value'): 
+    if len(rdict['female_population_value']) > 0 and rdict['female_population_value'] != 0:
+      if val_specified:
+       num_err_rows = add_row(rdict.copy(), num_err_rows)
+      else:
+        val_specified = True
+        rdict['individ_fam'] = 0
+        rdict['population_value'] = rdict['female_population_value']
+        rdict['population_gender'] = 'f'
 
-  del rdict['male_population_value']
-
-  if not rdict['female_population_value'] and rdict['female_population_value'] != 0:
-    if val_specified:
-      sys.stderr.write('multiple population values in row (%i)\n' % i)
-      sys.stderr.write('%s\n' % rdict)
-      num_err_rows += 1
-      continue
-
-    val_specified = True
-    rdict['individ_fam'] = 0
-    rdict['population_value'] = rdict['female_population_value']
-    rdict['population_gender'] = 'f'
-
-  del rdict['female_population_value']
+    del rdict['female_population_value']
 
   if not val_specified:
-    sys.stderr.write('Data entry with no data in row (%i)\n' % i)
-    sys.stderr.write('%s\n' % rdict)
-    num_err_rows += 1
-    continue
+    #sys.stderr.write('Data entry with no data in row (%i)\n' % i)
+    #sys.stderr.write('%s\n' % rdict)
+    return num_err_rows + 1
 
   print i, rdict['place_origin'].decode(string_encoding), u", ", rdict['large1'].decode(string_encoding), u", ", rdict['large2'].decode(string_encoding), u", ", rdict['large3'].decode(string_encoding)
 
@@ -214,13 +198,11 @@ for i, row in enumerate(reader):
   except DatabaseError as e:
     sys.stderr.write('Database error on getting or adding location in row (%i): %s\n' % (i, e))
     sys.stderr.write('%s\n' % rdict)
-    num_err_rows += 1
-    continue
+    return num_err_rows + 1
   except LocationTooComplicated as e:
     sys.stderr.write('Location too complicated in row (%i): %s\n' % (i, e))
     sys.stderr.write('%s\n' % rdict)
-    num_err_rows += 1
-    continue
+    return num_err_rows + 1
 
   #import pdb; pdb.set_trace()
 
@@ -232,7 +214,7 @@ for i, row in enumerate(reader):
   del rdict['place_english']
   
   for k in rdict.keys():
-    if not rdict[k]:
+    if isinstance(rdict[k], basestring) and not rdict[k]:
       del rdict[k]
 
   for col_name, add_fun in { 'religion' : get_or_add_religion, 'race' : get_or_add_race, 'ethnicity' : get_or_add_ethnicity, 'ethnic_origin' : get_or_add_ethnic_origin, 'population_condition' : get_or_add_pop_cond }.iteritems():
@@ -242,7 +224,7 @@ for i, row in enumerate(reader):
       except DatabaseError as e:
         sys.stderr.write("Error on get_or_add_%s in row (%i): %s\n" % (col_name, i, e))
         sys.stderr.write("%s\n" % rdict)
-        num_err_rows += 1
+        return num_err_rows + 1
 
   if rdict.has_key('remarks'):
     rdict['remarks'] = rdict['remarks'].decode(string_encoding)
@@ -262,18 +244,30 @@ for i, row in enumerate(reader):
   except ValueError as e:
     sys.stderr.write('Encountered error in date format at row (%i): %s\n' % (i, e))
     sys.stderr.write('%s\n' % rdict)
-    num_err_rows += 1
-    continue
+    return num_err_rows + 1
 
   for age_col in ('age_start', 'age_end'):
     if rdict.has_key(age_col):
       if rdict[age_col] == 'Unknown':
         del rdict[age_col]
+      elif rdict[age_col] in ('Under 1', 'Total', 'Total all ages'):
+        del rdict['age_start']
+        if rdict.has_key('age_end'): del rdict['age_end'] 
+        break
+      elif rdict[age_col] in ('Not specified',):
+        del rdict[age_col]
       else:
         over_match = re.match(r'Over\s(\d+)', rdict[age_col])
         if over_match:
-          del rdict['age_end']
+          if rdict.has_key('age_end'): del rdict['age_end'] 
           rdict['age_start'] = over_match.group(1) 
+          break
+
+        total_range_match = re.match(r'Total,\s(\d+)-(\d+)', rdict[age_col])
+        if total_range_match:
+          rdict['age_start'] = total_range_match.group(1)
+          rdict['age_end'] = total_range_match.group(2)
+          break
 
   rdict['active'] = True
   rdict['submitted_by'] = mig_user 
@@ -285,5 +279,27 @@ for i, row in enumerate(reader):
     sys.stderr.write('Failed to save data row (%i): %s\n' % (i, e))
     sys.stderr.write('%s\n' % rdict)
     num_err_rows += 1
+
+  return num_err_rows
+
+# Script begins ###############################################################################                                                       
+
+infile = sys.argv[1]
+reader = csv.reader(open(infile, "r"), delimiter='\t', quotechar = '"')
+
+string_encoding = 'ISO-8859-1'
+
+num_err_rows = 0
+
+for i, row in enumerate(reader):
+  rdict = dict(zip(('source_id', 'combined_id', 'begin_date', 'end_date', 'place_origin', 'place_english', 'alternate_location_name', 'large1', 'large2', 'large3', 'religion', 'race', 'ethnicity', 'ethnic_origin', 'age_start', 'age_end', 'remarks', 'link', 'individuals_population_value', 'families_population_value', 'male_population_value', 'female_population_value', 'value_unit', 'is_total', 'population_condition', 'polity', 'iso', 'wb'), row))
+
+  #if rdict['place_english'] or rdict['alternate_location_name'] : 
+  #  print i, rdict['place_origin'], ", ", rdict['alternate_location_name'], ", ", rdict['place_english']
+  #continue 
+
+  #if i < 57600: continue
+
+  num_err_rows = add_row(rdict, num_err_rows)
 
 print 'Migration complete. %i row errors encountered and ignored' % num_err_rows

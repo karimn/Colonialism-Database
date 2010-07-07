@@ -95,9 +95,9 @@ class Location(PoliticalUnit):
   def is_terminal(self):
     return Location.objects.filter(in_location = self.pk).count() == 0
 
-  def get_sub_locations(self, include_self = True, max_distance = None):
-    return Location.objects.filter(pk__in = Location.get_location_ids_in((self,), include_self, max_distance))
   """
+  def get_geographic_sub_locations(self, include_self = True, max_distance = None):
+    return Location.objects.filter(pk__in = Location.get_location_ids_geographically_in((self,), include_self, max_distance))
 
   @staticmethod
   def get_location_ids_geographically_in(locations, include_self = True, max_distance = None):
@@ -106,10 +106,10 @@ class Location(PoliticalUnit):
 
     if include_self:
       query = """WITH RECURSIVE in_region(id, distance) AS
-             ((SELECT id, 0 
+             ((SELECT politicalunit_ptr_id, 0 
               FROM common_location
-              WHERE id IN (%s)) UNION
-              (SELECT pl.id, ir.distance + 1
+              WHERE politicalunit_ptr_id IN (%s)) UNION
+              (SELECT pl.politicalunit_ptr_id, ir.distance + 1
               FROM in_region ir, common_location pl
               WHERE pl.geographically_in_id = ir.id %s))
              SELECT id FROM in_region""" % (','.join(ids), (("and ir.distance < %i" % max_distance) if max_distance else ''))
@@ -118,10 +118,10 @@ class Location(PoliticalUnit):
         return []
 
       query = """WITH RECURSIVE in_region(id, distance) AS
-             ((SELECT id, 1 
+             ((SELECT politicalunit_ptr_id, 1 
               FROM common_location
-              WHERE in_location_id IN (%s)) UNION
-              (SELECT pl.id, ir.distance + 1
+              WHERE geographically_in_id IN (%s)) UNION
+              (SELECT pl.politicalunit_ptr_id, ir.distance + 1
               FROM in_region ir, common_location pl
               WHERE pl.geographically_in_id = ir.id %s))
              SELECT id FROM in_region""" % (','.join(ids), (("and ir.distance < %i" % max_distance) if max_distance else ''))
