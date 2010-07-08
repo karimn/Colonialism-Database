@@ -1,0 +1,54 @@
+
+{% block content %}
+    <h2>Data Entries</h2>
+    <table>
+        <thead>
+          <tr>
+            <th>Location</th>
+            <th>Starting Date</th>
+            <th>Ending Date</th>
+            <th>Individual Population Value</th>
+            <th>Families Population Value</th>
+            <th>Male Population Value</th>
+            <th>Female Population Value</th>
+          </tr>
+        </thead>
+        </tbody>
+          {% for data_entry in data_entry_list %}
+          <tr>
+            <td>{{ data_entry.location }}</td> 
+            <td>{{ data_entry.begin_date }}</td>
+            <td>{{ data_entry.end_date }}</td>
+            <td align="center">{{ data_entry.individuals_population_value }}</td>
+            <td align="center">{{ data_entry.families_population_value }}</td>
+            <td align="center">{{ data_entry.male_population_value }}</td>
+            <td align="center">{{data_entry.female_population_value }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+    </table>
+
+    {% if is_paginated %}
+      <div class="pagination">
+        <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+        {% endif %}
+        </span>
+      </div>
+    {% endif %}
+    <div class="download">
+      <a href="download">download data</a>
+    </div>
+    <div class="new_query">
+      <a href="/population">new query</a>
+    </div>
+{% endblock %}
