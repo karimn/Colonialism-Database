@@ -53,6 +53,10 @@ class BaseSubmitAdmin(VersionAdmin) :
   readonly_fields = ('active', 'submitted_by')
   list_filter = ('active', 'submitted_by')
 
+class PoliticalUnitAdmin(BaseSubmitAdmin):
+  list_display = ('__unicode__', 'active', 'submitted_by')
+  activate_perm = 'common.activate_polunit'
+
 class LocationAdmin(BaseSubmitAdmin) :
   list_display = ('__unicode__', 'active', 'submitted_by')
   activate_perm = 'common.activate_location'
@@ -72,8 +76,13 @@ class EthnicityAdmin(BaseCategoryAdmin) :
 class EthnicOriginAdmin(BaseCategoryAdmin) :
   activate_perm = 'common.activate_ethnic_origin'
 
+class PoliticalUnitTypeAdmin(BaseCategoryAdmin):
+  activate_perm = 'common.activate_polunittype'
+
+admin.site.register(models.PoliticalUnit, PoliticalUnitAdmin)
 admin.site.register(models.Location, LocationAdmin)
 admin.site.register(models.Religion, ReligionAdmin)
 admin.site.register(models.Race, RaceAdmin)
 admin.site.register(models.Ethnicity, EthnicityAdmin)
 admin.site.register(models.EthnicOrigin, EthnicOriginAdmin)
+admin.site.regisete(models.PoliticalUnitType, PoliticalUnitTypeAdmin)

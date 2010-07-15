@@ -64,6 +64,9 @@ class PoliticalUnit(BaseSubmitModel):
   def activate(self):
     super(PoliticalUnit, self).activate()
 
+  def __unicode__(self):
+    return self.name
+
 class Location(PoliticalUnit):
   geographically_in = models.ForeignKey('self', null = True, blank = True, default = None, verbose_name = "geographically in", related_name = "geographically contains")
   politcally_in = models.ForeignKey(PoliticalUnit, null = True, blank = True, default = None, verbose_name = "politically in", related_name = "politically contains")
