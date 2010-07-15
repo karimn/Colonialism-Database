@@ -191,7 +191,11 @@ def add_row(rdict, num_err_rows):
     #sys.stderr.write('%s\n' % rdict)
     return num_err_rows + 1
 
-  print i, rdict['place_origin'].decode(string_encoding), u", ", rdict['large1'].decode(string_encoding), u", ", rdict['large2'].decode(string_encoding), u", ", rdict['large3'].decode(string_encoding)
+  try:
+    print i, rdict['place_origin'].decode(string_encoding), u", ", rdict['large1'].decode(string_encoding), u", ", rdict['large2'].decode(string_encoding), u", ", rdict['large3'].decode(string_encoding)
+  except UnicodeEncodeError:
+    # Windows decode error workaround
+    print i, "<UnicodeEncodeError Encountered, ignoring for now>"
 
   try:
     rdict['location'] = get_or_add_location(unicode(rdict['place_origin'], string_encoding), unicode(rdict['large1'], string_encoding), unicode(rdict['large2'], string_encoding), unicode(rdict['large3'], string_encoding))
@@ -298,7 +302,7 @@ for i, row in enumerate(reader):
   #  print i, rdict['place_origin'], ", ", rdict['alternate_location_name'], ", ", rdict['place_english']
   #continue 
 
-  #if i < 57600: continue
+  #if i < 5023: continue
 
   num_err_rows = add_row(rdict, num_err_rows)
 
