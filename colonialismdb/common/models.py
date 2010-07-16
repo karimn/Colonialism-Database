@@ -55,7 +55,7 @@ class PoliticalUnitType(Category):
     permissions = ( ('activate_politicalunittype', 'Can activate submitted political unit type'), )
 
 class PoliticalUnit(BaseSubmitModel):
-  name = models.CharField("Name", max_length = 50)
+  name = models.CharField("name", max_length = 50)
   unit_type = models.ManyToManyField(PoliticalUnitType)
 
   class Meta(BaseSubmitModel.Meta):
@@ -69,7 +69,7 @@ class PoliticalUnit(BaseSubmitModel):
 
 class Location(PoliticalUnit):
   geographically_in = models.ForeignKey('self', null = True, blank = True, default = None, verbose_name = "geographically in", related_name = "geographically contains")
-  politcally_in = models.ForeignKey(PoliticalUnit, null = True, blank = True, default = None, verbose_name = "politically in", related_name = "politically contains")
+  politically_in = models.ForeignKey(PoliticalUnit, null = True, blank = True, default = None, verbose_name = "politically in", related_name = "politically contains")
 
   # TODO Spatial characteristics 
 
@@ -138,6 +138,9 @@ class Location(PoliticalUnit):
   def get_geographically_in(self):
     return self.geographically_in
 
+  def get_politically_in(self):
+    return self.politically_in
+
 class TemporalLocation(Location):
   temporal_is = models.ForeignKey('self', null = False, blank = False, verbose_name = "is")
   begin_date = models.DateField("Start Date", null = True, blank = True)
@@ -151,6 +154,12 @@ class TemporalLocation(Location):
       return self.geographically_in
     else:
       return self.temporal_is.get_geographically_in()
+
+  def get_politically_in(self):
+    if self.politically_in:
+      return self.politically_in
+    else:
+      return self.temporal_is.get_politically_in()
 
   def __unicode__(self): 
     geo = self.get_geographically_in()
