@@ -3,56 +3,64 @@
     "model" : "common.politicalunittype",
     "pk" : 1,
     "fields" : {
-      "name" : "Confederation"
+      "name" : "Confederation",
+      "active" : 1
     }
   },
   {
     "model" : "common.politicalunittype",
     "pk" : 2,
     "fields" : {
-      "name" : "Empire"
+      "name" : "Empire",
+      "active" : 1
     }
   },
   {
     "model" : "common.politicalunittype",
     "pk" : 3,
     "fields" : {
-      "name" : "Nation-state"
+      "name" : "Nation-state",
+      "active" : 1
     }
   },
   {
     "model" : "common.politicalunittype",
     "pk" : 4,
     "fields" : {
-      "name" : "Colony"
+      "name" : "Colony",
+      "active" : 1
     }
   },
   {
     "model" : "common.politicalunittype",
     "pk" : 5,
     "fields" : {
-      "name" : "Region"
+      "name" : "Region",
+      "active" : 1
     }
   },
   {
     "model" : "common.politicalunittype",
     "pk" : 6,
     "fields" : {
-      "name" : "Territory"
+      "name" : "Territory",
+      "active" : 1
     }
   },
   {
     "model" : "common.politicalunittype",
     "pk" : 7,
     "fields" : {
-      "name" : "Municipality"
+      "name" : "Municipality",
+      "active" : 1
     }
   },
   {
     "model" : "common.politicalunittype",
     "pk" : 8,
     "fields" : {
-      "name" : "Land"
+      "name" : "Land",
+      "active" : 1 
     }
   }
 ]
