@@ -60,6 +60,10 @@ class PoliticalUnitAdmin(BaseSubmitAdmin):
 class LocationAdmin(BaseSubmitAdmin) :
   list_display = ('__unicode__', 'active', 'submitted_by')
   activate_perm = 'common.activate_location'
+
+class TemporalLocationAdmin(BaseSubmitAdmin) :
+  list_display = ('__unicode__', 'active', 'submitted_by')
+  activate_perm = 'common.activate_temploc'
   
 class BaseCategoryAdmin(BaseSubmitAdmin):
   list_display = ('name', 'active', 'submitted_by')
@@ -81,6 +85,7 @@ class PoliticalUnitTypeAdmin(BaseCategoryAdmin):
 
 admin.site.register(models.PoliticalUnit, PoliticalUnitAdmin)
 admin.site.register(models.Location, LocationAdmin)
+admin.site.register(models.TemporalLocation, TemporalLocationAdmin)
 admin.site.register(models.Religion, ReligionAdmin)
 admin.site.register(models.Race, RaceAdmin)
 admin.site.register(models.Ethnicity, EthnicityAdmin)
