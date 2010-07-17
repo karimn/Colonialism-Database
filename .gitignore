@@ -2,3 +2,5 @@
 *.swo
 *.pyc
 local_settings.py
+*~
+*.pdf
