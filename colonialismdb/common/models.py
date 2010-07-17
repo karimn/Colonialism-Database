@@ -3,6 +3,14 @@ import datetime
 from django.db import models, connection
 from django.contrib.auth.models import User
 
+class MergeableModel(models.Model):
+  class Meta:
+    abstract = True
+
+  def merge_into(self, other):
+    if not isinstance(other, type(self)):
+      raise TypeError
+
 class BaseSubmitModel(models.Model):
   class Meta:
     abstract = True
@@ -24,12 +32,17 @@ class BaseDataEntry(BaseSubmitModel):
 
   UNIT_CHOICES = (('hundreds', 'Hundreds'), ('thousands', 'Thousands'), ('millions', 'Millions'), ('units', 'Units'))
 
-class Category(BaseSubmitModel):
+class Category(BaseSubmitModel, MergeableModel):
   class Meta(BaseSubmitModel.Meta):
     abstract = True
 
   def __unicode__(self):
     return unicode(self.name)
+
+  def merge_into(self, other):
+    super(Category, self).merge_into(self, other)
+
+
   
   name = models.CharField(max_length = 50, unique = True)
 
