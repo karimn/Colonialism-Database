@@ -10,4 +10,5 @@ For deployment the documentation available on Django's website should be followe
 8. Install "Desktop Experience" feature on Windows 2008 Server
 9. Install git and "pull" source code from http://github.com/karimn/Colonialism-Database
 10. Need to edit Apache's httpd.conf to load django webframe
+11. Configure Windows Firewall to allow httpd.exe to respond to incoming requests
 
