@@ -59,10 +59,10 @@ class PoliticalUnitAdmin(BaseSubmitAdmin):
 
 class LocationAdmin(BaseSubmitAdmin) :
   list_display = ('__unicode__', 'active', 'submitted_by')
+  exclude = ('full_name', )
   activate_perm = 'common.activate_location'
 
-class TemporalLocationAdmin(BaseSubmitAdmin) :
-  list_display = ('__unicode__', 'active', 'submitted_by')
+class TemporalLocationAdmin(LocationAdmin) :
   activate_perm = 'common.activate_temploc'
   
 class BaseCategoryAdmin(BaseSubmitAdmin):
