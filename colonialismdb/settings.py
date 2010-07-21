@@ -60,5 +60,6 @@ INSTALLED_APPS = (
     'reversion',
 
     'colonialismdb.population',
-    'colonialismdb.common'
+    'colonialismdb.sources',
+    'colonialismdb.common',
 )
