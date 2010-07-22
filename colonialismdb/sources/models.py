@@ -15,6 +15,10 @@ class DigitizationPriority(Category):
   class Meta(Category.Meta):
     permissions = ( ('activate_digipriority', 'Can activate digitization priority'), )
 
+class Language(Category):
+  class Meta(Category.Meta):
+    permissions = ( ('activate_language', 'Can activate source language'), )
+
 class Source(BaseSubmitModel):
   class Meta(BaseSubmitModel.Meta):
     permissions = ( ('activate_source', 'Can active source'), )
@@ -35,11 +39,11 @@ class Source(BaseSubmitModel):
   isbn = models.CharField(max_length = 50, blank = True)
 
   total_pages = models.PositiveIntegerField(blank = True)
-  scanned_size = models.PositiveIntegerField(blank = True, help_text = 'Scanned size in MB')
+  scanned_size = models.DecimalField(blank = True, decimal_places = 2, help_text = 'Scanned size in MB')
 
-  written_language1 = models.CharField(max_length = 50, blank = True)
-  written_language2 = models.CharField(max_length = 50, blank = True)
-  
+  written_language1 = models.ForeignKey(Language, blank = True, related_name = 'written_lang1_for_source') 
+  written_language2 = models.ForeignKey(Language, blank = True, related_name = 'written_lang2_for_source')  
+
   source_type = models.ForeignKey(SourceType, blank = True) 
   subject = models.ForeignKey(SourceSubject, blank = True)
   keywords = models.TextField(blank = True)
