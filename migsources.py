@@ -4,184 +4,25 @@ import csv
 import datetime
 import sys
 import re
+import functools
 
-from colonialismdb.common.models import Location, Religion, Ethnicity, EthnicOrigin, Race
+import migtools
+
+from colonialismdb.sources.models import Language, SourceType, SourceSubject, DigitizationPriority, Source
+
 from django.db.utils import DatabaseError
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 
 
-mig_user = User.objects.get(username = 'karim')
+#mig_user = User.objects.get(username = 'karim')
 
-def get_or_add_religion(religion):
-  religion = religion.title()
-
-  try:
-    return Religion.objects.get(name = religion)
-  except Religion.DoesNotExist:
-    new_rel = Religion(name = religion, active = True, submitted_by = mig_user)
-    new_rel.save()
-    return new_rel
-
-def get_or_add_race(race):
-  race = race.title()
-
-  try:
-    return Race.objects.get(name = race)
-  except Race.DoesNotExist:
-    new_race = Race(name = race, active = True, submitted_by = mig_user)
-    new_race.save()
-    return new_race
-
-def get_or_add_ethnicity(eth):
-  eth = eth.title()
-
-  try:
-    return Ethnicity.objects.get(name = eth)
-  except Ethnicity.DoesNotExist:
-    new_eth = Ethnicity(name = eth, active = True, submitted_by = mig_user) #, log = default_log)
-    new_eth.save()
-    return new_eth
-
-def get_or_add_ethnic_origin(eth):
-  eth = eth.title()
-
-  try:
-    return EthnicOrigin.objects.get(name = eth)
-  except EthnicOrigin.DoesNotExist:
-    new_eth = EthnicOrigin(name = eth, active = True, submitted_by = mig_user) #, log = default_log)
-    new_eth.save()
-    return new_eth
-  
-def get_or_add_pop_cond(cond):
-  cond = cond.title()
-
-  try:
-    return PopulationCondition.objects.get(name = cond)
-  except PopulationCondition.DoesNotExist:
-    new_cond = PopulationCondition(name = cond, active = True, submitted_by = mig_user) #, log = default_log)
-    new_cond.save()
-    return new_cond
-
-def get_or_add_location(place_name, in1 = None, in2 = None, in3 = None):
-  place_name = place_name.title()
-  prev_loc = None
-  prev_tree = Location.objects.all()
-  location_created = False
-
-  for in_loc_name in (in3.title(), in2.title(), in1.title()):
-    if not in_loc_name:
-      continue
-
-    #try:
-    found_loc = prev_tree.filter(name__exact = in_loc_name)
-    found_loc_count = found_loc.count()
-    #loc = prev_tree.get(name__exact = in_loc_name)
-
-    if found_loc_count > 1:
-  #except Location.MultipleObjectsReturned:
-      loc = None
-
-      if prev_loc:
-        immediate_subloc_tree = prev_loc.get_geographic_sub_locations(include_self = False, max_distance = 1)
-
-        immed_found_loc = immediate_subloc_tree.filter(name__exact = in_loc_name)
-        if immed_found_loc.count() > 0: # Just taking the first match no matter what for now
-          loc = immed_found_loc[0] 
-
-      if not loc:
-        #raise LocationTooComplicated('Found multiple matches for parent location %s' % in_loc_name)
-        loc = found_loc[0] # Taking the first match for now
-    elif found_loc_count == 0:
-    #except Location.DoesNotExist:
-      loc = Location(name = in_loc_name, geographically_in = prev_loc, active = True, submitted_by = mig_user) #, log = default_log)
-      loc.save()
-      location_created = True
-    else:
-      loc = found_loc[0]
-      if location_created and not prev_loc.is_root():
-        raise LocationTooComplicated('Found existing location after having created a non-existent one')
-      else:
-        loc.in_location = prev_loc
-
-    prev_loc = loc
-    prev_tree = prev_loc.get_geographic_sub_locations(include_self = False)
-
-  retrying = False
-  places = prev_tree.filter(name__exact = place_name)
-
-  while True:
-    if len(places) == 1:
-      return places[0]
-
-    elif len(places) == 0:
-      new_loc = Location(name = place_name, geographically_in = prev_loc, active = True, submitted_by = mig_user) #, log = default_log)
-      new_loc.save()
-
-      return new_loc
-
-    else:
-      if retrying:
-        raise LocationTooComplicated('Found multiple location matches for requested place')
-
-      if prev_loc:
-        places = prev_tree.filter(name__exact = place_name, geographically_in = prev_loc.pk)
-      else:
-        places = []
-        
-      retrying = True
+get_or_add_language = functools.partial(migtools.get_or_add_cat_item, cat = Language)
+get_or_add_sourcetype = functools.partial(migtools.get_or_add_cat_item, cat = SourceType)
+get_or_add_subject = functools.partial(migtools.get_or_add_cat_item, cat = SourceSubject)
+get_or_add_priority = functools.partial(migtools.get_or_add_cat_item, cat = DigitizationPriority)
 
 def add_row(rdict, num_err_rows):
-  val_specified = False
-
-  if rdict.has_key('individuals_population_value'): 
-    if len(rdict['individuals_population_value']) > 0 and rdict['individuals_population_value'] != 0:
-      val_specified = True
-      rdict['individ_fam'] = 0
-      rdict['population_value'] = rdict['individuals_population_value']
-
-    del rdict['individuals_population_value']
-
-  if rdict.has_key('families_population_value'): 
-    if len(rdict['families_population_value']) > 0 and rdict['families_population_value'] != 0:    
-      if val_specified:
-        num_err_rows = add_row(rdict.copy(), num_err_rows)      
-      else:
-        val_specified = True
-        rdict['individ_fam'] = 1
-        rdict['population_value'] = rdict['families_population_value']
-
-    del rdict['families_population_value']
-
-  if rdict.has_key('male_population_value'): 
-    if len(rdict['male_population_value']) > 0 and rdict['male_population_value'] != 0:
-      if val_specified:
-        num_err_rows = add_row(rdict.copy(), num_err_rows)
-      else:
-        val_specified = True
-        rdict['individ_fam'] = 0
-        rdict['population_value'] = rdict['male_population_value']
-        rdict['population_gender'] = 'm'
-
-    del rdict['male_population_value']
-
-  if rdict.has_key('female_population_value'): 
-    if len(rdict['female_population_value']) > 0 and rdict['female_population_value'] != 0:
-      if val_specified:
-       num_err_rows = add_row(rdict.copy(), num_err_rows)
-      else:
-        val_specified = True
-        rdict['individ_fam'] = 0
-        rdict['population_value'] = rdict['female_population_value']
-        rdict['population_gender'] = 'f'
-
-    del rdict['female_population_value']
-
-  if not val_specified:
-    #sys.stderr.write('Data entry with no data in row (%i)\n' % i)
-    #sys.stderr.write('%s\n' % rdict)
-    return num_err_rows + 1
-
   try:
     print i, rdict['place_origin'].decode(string_encoding), u", ", rdict['large1'].decode(string_encoding), u", ", rdict['large2'].decode(string_encoding), u", ", rdict['large3'].decode(string_encoding)
   except UnicodeEncodeError:
@@ -287,14 +128,65 @@ string_encoding = 'ISO-8859-1'
 num_err_rows = 0
 
 for i, row in enumerate(reader):
-  rdict = dict(zip(('old_id', 'author', 'editor', 'title', 'original_title', 'year', 'publisher', 'city', 'series', 'volume', 'edition', 'isbn', 'total_pages', 'scanned_size', ''), row))
+  rdict = dict(zip(('old_id', 'author', 'editor', 'title', 'original_title', 'year', 'publisher', 'city', 'series', 'volume', 'edition', 'isbn', 'total_pages', 'scanned_size', 'written_language1', 'written_language2', 'source_type', 'subjects', 'keywords', 'location', 'url', 'source_file', 'remarks', 'submitted_by', 'transfer', 'digitization_priority_gra', 'digitization_priority_pi', 'record_date'), row))
 
-  #if rdict['place_english'] or rdict['alternate_location_name'] : 
-  #  print i, rdict['place_origin'], ", ", rdict['alternate_location_name'], ", ", rdict['place_english']
-  #continue 
+  if i < 1: continue
 
-  #if i < 5023: continue
+  del rdict['transfer']
 
-  num_err_rows = add_row(rdict, num_err_rows)
+  rdict['active'] = True
+  rdict['submitted_by'] = User.objects.get(first_name = rdict['submitted_by'])
+
+  rdict['written_language1'] = get_or_add_language(rdict['written_language1'], rdict['submitted_by'])
+  rdict['written_language2'] = get_or_add_language(rdict['written_language2'], rdict['submitted_by'])
+
+  rdict['source_type'] = get_or_add_sourcetype(rdict['source_type'], rdict['submitted_by'])
+
+  subjects = None
+
+  if rdict['subjects'] and len(rdict['subjects']) != 0:
+    subjects = [get_or_add_subject(subject, rdict['submitted_by']) for subject in re.split('\s*,\s*', rdict['subjects'])]
+
+  del rdict['subjects']
+
+  rdict['digitization_priority_gra'] = get_or_add_priority(rdict['digitization_priority_gra'], rdict['submitted_by'])
+  rdict['digitization_priority_pi'] = get_or_add_priority(rdict['digitization_priority_pi'], rdict['submitted_by'])
+
+  if not rdict['record_date'] or len(rdict['record_date']) == 0:
+    del rdict['record_date']
+  else:
+    mon, day, year = [int(j) for j in rdict['record_date'].split('/')]
+    rdict['record_date'] = datetime.date(year, mon, day)
+
+  if not rdict['url'] or len(rdict['url']) == 0:
+    del rdict['url']
+  else:
+    url_match = re.match("#([^#]+)#")
+    
+    if url_match:
+      rdict['url'] = url_match.group(1)
+    else:
+      sys.stderr.write('Failed to match url in row (%i): %s\n' % (i,))
+      sys.stderr.write('%s\n' % rdict)
+      num_err_rows += 1
+      continue 
+
+  print '%i, %s, %s, %s' % (i, rdict['author'], rdict['editor'], rdict['title'])
+
+  #TODO Adding files
+  del rdict['source_file']
+
+  for k in rdict.keys():
+    if not rdict[k] or (isinstance(rdict[k], basestring) and len(rdict[k]) == 0):
+      del rdict[k]
+
+  try:
+    source = Source(**rdict)
+    source.save()
+    source.subjects.add(subjects)
+  except (ValueError, DatabaseError, ValidationError) as e:
+    sys.stderr.write('Failed to save source row (%i): %s\n' % (i, e))
+    sys.stderr.write('%s\n' % rdict)
+    num_err_rows += 1
 
 print 'Migration complete. %i row errors encountered and ignored' % num_err_rows

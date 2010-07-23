@@ -25,7 +25,7 @@
     "model" : "auth.user",
     "pk" : null,
     "fields" : {
-      "first_name" : "Abdel Djssai",
+      "first_name" : "Abel",
       "last_name" : "Amado",
       "username" : "aamado",
       "is_staff" : "True",
@@ -69,7 +69,7 @@
     "model" : "auth.user",
     "pk" : null,
     "fields" : {
-      "first_name" : "Joe Scott",
+      "first_name" : "Joe",
       "last_name" : "Robinson",
       "username" : "jrobinson",
       "is_staff" : "True",
@@ -91,7 +91,7 @@
     "model" : "auth.user",
     "pk" : null,
     "fields" : {
-      "first_name" : "Ahmet Selim",
+      "first_name" : "Ahmet",
       "last_name" : "Tekelioglu",
       "username" : "atekelioglu",
       "is_staff" : "True",

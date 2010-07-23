@@ -5,6 +5,8 @@ import datetime
 import sys
 import re
 
+import migtools
+
 from colonialismdb.population.models import MainDataEntry, PopulationCondition
 from colonialismdb.common.models import Location, Religion, Ethnicity, EthnicOrigin, Race
 from django.db.utils import DatabaseError
@@ -21,57 +23,13 @@ class LocationTooComplicated(Exception):
 
   def __str__(self):
     return self.problem
-
-def get_or_add_religion(religion):
-  religion = religion.title()
-
-  try:
-    return Religion.objects.get(name = religion)
-  except Religion.DoesNotExist:
-    new_rel = Religion(name = religion, active = True, submitted_by = mig_user)
-    new_rel.save()
-    return new_rel
-
-def get_or_add_race(race):
-  race = race.title()
-
-  try:
-    return Race.objects.get(name = race)
-  except Race.DoesNotExist:
-    new_race = Race(name = race, active = True, submitted_by = mig_user)
-    new_race.save()
-    return new_race
-
-def get_or_add_ethnicity(eth):
-  eth = eth.title()
-
-  try:
-    return Ethnicity.objects.get(name = eth)
-  except Ethnicity.DoesNotExist:
-    new_eth = Ethnicity(name = eth, active = True, submitted_by = mig_user) #, log = default_log)
-    new_eth.save()
-    return new_eth
-
-def get_or_add_ethnic_origin(eth):
-  eth = eth.title()
-
-  try:
-    return EthnicOrigin.objects.get(name = eth)
-  except EthnicOrigin.DoesNotExist:
-    new_eth = EthnicOrigin(name = eth, active = True, submitted_by = mig_user) #, log = default_log)
-    new_eth.save()
-    return new_eth
   
-def get_or_add_pop_cond(cond):
-  cond = cond.title()
-
-  try:
-    return PopulationCondition.objects.get(name = cond)
-  except PopulationCondition.DoesNotExist:
-    new_cond = PopulationCondition(name = cond, active = True, submitted_by = mig_user) #, log = default_log)
-    new_cond.save()
-    return new_cond
-
+get_or_add_religion = functools.partial(migtools.get_or_add_cat_item, mig_user = mig_user, cat = Religion)
+get_or_add_race = functools.partial(migtools.get_or_add_cat_item, mig_user = mig_user, cat = Race)
+get_or_add_ethnicity = functools.partial(migtools.get_or_add_cat_item, mig_user = mig_user, cat = Ethnicity)
+get_or_add_ethnic_origin = functools.partial(migtools.get_or_add_cat_item, mig_user = mig_user, cat = EthnicOrigin)
+get_or_add_pop_cond = functools.partial(migtools.get_or_add_cat_item, mig_user = mig_user, cat = PopulationCondition)
+  
 def get_or_add_location(place_name, in1 = None, in2 = None, in3 = None):
   place_name = place_name.title()
   prev_loc = None

@@ -39,13 +39,13 @@ class Source(BaseSubmitModel):
   isbn = models.CharField(max_length = 50, blank = True)
 
   total_pages = models.PositiveIntegerField(blank = True)
-  scanned_size = models.DecimalField(blank = True, decimal_places = 2, help_text = 'Scanned size in MB')
+  scanned_size = models.DecimalField(blank = True, decimal_places = 2, max_digits = 5, help_text = 'Scanned size in MB')
 
   written_language1 = models.ForeignKey(Language, blank = True, related_name = 'written_lang1_for_source') 
   written_language2 = models.ForeignKey(Language, blank = True, related_name = 'written_lang2_for_source')  
 
   source_type = models.ForeignKey(SourceType, blank = True) 
-  subject = models.ForeignKey(SourceSubject, blank = True)
+  subjects = models.ManyToManyField(SourceSubject, blank = True)
   keywords = models.TextField(blank = True)
 
   location = models.CharField(max_length = 100, blank = True)
