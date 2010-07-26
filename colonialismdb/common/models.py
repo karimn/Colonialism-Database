@@ -54,6 +54,10 @@ class PoliticalUnitType(Category):
   class Meta(Category.Meta):
     permissions = ( ('activate_politicalunittype', 'Can activate submitted political unit type'), )
 
+class Language(Category):
+  class Meta(Category.Meta):
+    permissions = ( ('activate_language', 'Can activate source language'), )
+
 class PoliticalUnit(BaseSubmitModel):
   name = models.CharField("name", max_length = 50)
   unit_type = models.ManyToManyField(PoliticalUnitType, null = True, blank = True)

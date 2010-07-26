@@ -97,5 +97,26 @@
       "is_staff" : "True",
       "is_active" : "False"
     }
+  },
+  {
+    "model" : "auth.user",
+    "pk" : null,
+    "fields" : {
+      "first_name" : "Natalie",
+      "last_name" : "Lam",
+      "username" : "natalie",
+      "is_staff" : "True",
+      "is_active" : "False"
+    }
+  },
+  {
+    "model" : "auth.user",
+    "pk" : null,
+    "fields" : {
+      "first_name" : "TEST-062409",
+      "username" : "TEST_062409",
+      "is_staff" : "True",
+      "is_active" : "False"
+    }
   }
 ]

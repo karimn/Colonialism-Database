@@ -83,6 +83,9 @@ class EthnicOriginAdmin(BaseCategoryAdmin) :
 class PoliticalUnitTypeAdmin(BaseCategoryAdmin):
   activate_perm = 'common.activate_polunittype'
 
+class LanguageAdmin(BaseCategoryAdmin):
+  activate_perm = 'common.activate_language'
+
 admin.site.register(models.PoliticalUnit, PoliticalUnitAdmin)
 admin.site.register(models.Location, LocationAdmin)
 admin.site.register(models.TemporalLocation, TemporalLocationAdmin)
@@ -91,3 +94,4 @@ admin.site.register(models.Race, RaceAdmin)
 admin.site.register(models.Ethnicity, EthnicityAdmin)
 admin.site.register(models.EthnicOrigin, EthnicOriginAdmin)
 admin.site.register(models.PoliticalUnitType, PoliticalUnitTypeAdmin)
+admin.site.register(models.Language, LanguageAdmin)
