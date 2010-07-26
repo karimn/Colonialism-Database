@@ -5,7 +5,7 @@ from django.contrib import admin
 class SourceAdmin(BaseSubmitAdmin) :
   exclude = ('old_id', )
 
-  list_display = ('author', 'editor', 'title', 'volume', 'edition', 'active', 'submitted_by')
+  list_display = ('author', 'editor', 'title', 'volume', 'year', 'active', 'submitted_by')
   list_display_links = ('author', 'editor', 'title')
   ordering = ['author']
 
