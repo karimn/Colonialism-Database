@@ -16,8 +16,7 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 
 
-#mig_user = User.objects.get(username = 'karim')
-
+#mig_user = User.objects.get(username = 'karim'
 get_or_add_language = functools.partial(migtools.get_or_add_cat_item, cat = Language)
 get_or_add_sourcetype = functools.partial(migtools.get_or_add_cat_item, cat = SourceType)
 get_or_add_subject = functools.partial(migtools.get_or_add_cat_item, cat = SourceSubject)
