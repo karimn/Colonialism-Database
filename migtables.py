@@ -54,7 +54,7 @@ for i, row in enumerate(reader):
   rdict['active'] = True
 
   if not rdict['submitted_by'] or len(rdict['submitted_by']) == 0:
-    del rdict['submitted_by']
+    rdict['submitted_by'] = None
   else:
     try:
       rdict['submitted_by'] = User.objects.get(first_name__iexact = rdict['submitted_by'])
