@@ -53,13 +53,16 @@ for i, row in enumerate(reader):
 
   rdict['active'] = True
 
-  try:
-    rdict['submitted_by'] = User.objects.get(first_name__iexact = rdict['submitted_by'])
-  except User.DoesNotExist as e:
-    sys.stderr.write('Curator %s not found from row (%i)\n' % (rdict['submitted_by'], i))
-    sys.stderr.write('%s\n' % rdict)
-    num_err_rows += 1
-    continue
+  if not rdict['submitted_by'] or len(rdict['submitted_by']) == 0:
+    del rdict['submitted_by']
+  else:
+    try:
+      rdict['submitted_by'] = User.objects.get(first_name__iexact = rdict['submitted_by'])
+    except User.DoesNotExist as e:
+      sys.stderr.write('Curator %s not found from row (%i)\n' % (rdict['submitted_by'], i))
+      sys.stderr.write('%s\n' % rdict)
+      num_err_rows += 1
+      continue
 
   rdict['original_language'] = get_or_add_language(rdict['original_language'], rdict['submitted_by'])
 
