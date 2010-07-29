@@ -94,6 +94,9 @@ class Table(BaseSubmitModel):
   class Meta(BaseSubmitModel.Meta):
     permissions = ( ('activate_table', 'Can activate table'), )
 
+  def __unicode__(self):
+    return self.name
+
   def activate(self):
     super(Table, self).activate()
 

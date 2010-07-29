@@ -24,7 +24,7 @@ for de in MainDataEntry.objects.all():
   table = Table.objects.get(old_id = table_id)
 
   if table.old_source_id != de.source_id:
-    sys.stderr.write('Waring: returned table with source id %i did not match old source id for %i\n' % (table.old_source_id, de.source_id))
+    sys.stderr.write('Warning: returned table with source id %i did not match old source id for %i\n' % (table.old_source_id, de.source_id))
     num_wrn_rows += 1
 
   if table.nr != nr:

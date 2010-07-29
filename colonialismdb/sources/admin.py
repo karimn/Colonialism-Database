@@ -2,12 +2,17 @@ from colonialismdb.sources.models import Source, Table, SourceType, SourceSubjec
 from colonialismdb.common.admin import BaseSubmitAdmin, BaseCategoryAdmin
 from django.contrib import admin
 
+class TableInline(admin.TabularInline):
+  model = Table
+
 class SourceAdmin(BaseSubmitAdmin) :
   exclude = ('old_id', )
 
   list_display = ('author', 'editor', 'title', 'volume', 'year', 'active', 'submitted_by')
   list_display_links = ('author', 'editor', 'title')
   ordering = ['author']
+
+  inlines = [ TableInline, ]
 
   activate_perm = 'sources.activate_source'
 
