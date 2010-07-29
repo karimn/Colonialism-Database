@@ -13,7 +13,7 @@ for de in MainDataEntry.objects.all():
 
   if not cid_matches:
     sys.stderr.write('Failed to match combined id %s in row %s\n' % (de.combined_id, de))
-    num_err_row += 1
+    num_err_rows += 1
     continue
 
   source_id = cid_matches.group(1)
@@ -24,7 +24,7 @@ for de in MainDataEntry.objects.all():
 
   if table.old_source_id != int(source_id):
     sys.stderr.write('Returned table %s did not match old source id for %s\n' % (table, de))
-    num_err_row += 1
+    num_err_rows += 1
     continue
 
   de.source_table = table
