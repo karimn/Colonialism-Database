@@ -22,7 +22,7 @@ for de in MainDataEntry.objects.all():
 
   table = Table.objects.get(old_id = table_id)
 
-  if table.old_source_id != int(source_id):
+  if table.old_source_id != de.source_id:
     sys.stderr.write('Returned table %s did not match old source id for %s\n' % (table, de))
     num_err_rows += 1
     continue
