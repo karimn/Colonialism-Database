@@ -1,5 +1,7 @@
 from django.db import models
+
 from colonialismdb.common.models import Location, Religion, Race, Ethnicity, EthnicOrigin, BaseDataEntry, Category
+from colonialismdb.sources.models import Table
 
 class PopulationCondition(Category):
   class Meta(Category.Meta):
@@ -24,6 +26,8 @@ class MainDataEntry(BaseDataEntry):
   source_id = models.IntegerField("Source ID", null = True, blank = True)
   combined_id = models.CharField("Combined ID", max_length = 30)
   page_num = models.IntegerField("Page Number", null = True, blank = True, default = None)
+
+  source_table = models.ForeignKey(Table, blank = True, null = True)
 
   #TODO date data integrity check
   begin_date = models.DateField("Start Date", null = True, blank = True)

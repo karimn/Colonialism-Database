@@ -4,6 +4,7 @@ import csv
 import datetime
 import sys
 import re
+import functools
 
 import migtools
 
@@ -23,7 +24,7 @@ get_or_add_ethnicity = functools.partial(migtools.get_or_add_cat_item, mig_user 
 get_or_add_ethnic_origin = functools.partial(migtools.get_or_add_cat_item, mig_user = mig_user, cat = EthnicOrigin)
 get_or_add_pop_cond = functools.partial(migtools.get_or_add_cat_item, mig_user = mig_user, cat = PopulationCondition)
 
-get_or_add_location = functools.partial(migtools.get_or_add_location, mig_user = mig_user)
+#get_or_add_location = functools.partial(migtools.get_or_add_location, mig_user = mig_user)
 
 def add_row(rdict, num_err_rows):
   val_specified = False
@@ -83,12 +84,12 @@ def add_row(rdict, num_err_rows):
     print i, "<UnicodeEncodeError Encountered, ignoring for now>"
 
   try:
-    rdict['location'] = get_or_add_location(unicode(rdict['place_origin'], string_encoding), unicode(rdict['large1'], string_encoding), unicode(rdict['large2'], string_encoding), unicode(rdict['large3'], string_encoding))
+    rdict['location'] = migtools.get_or_add_location(unicode(rdict['place_origin'], string_encoding), mig_user, unicode(rdict['large1'], string_encoding), unicode(rdict['large2'], string_encoding), unicode(rdict['large3'], string_encoding))
   except DatabaseError as e:
     sys.stderr.write('Database error on getting or adding location in row (%i): %s\n' % (i, e))
     sys.stderr.write('%s\n' % rdict)
     return num_err_rows + 1
-  except LocationTooComplicated as e:
+  except migtools.LocationTooComplicated as e:
     sys.stderr.write('Location too complicated in row (%i): %s\n' % (i, e))
     sys.stderr.write('%s\n' % rdict)
     return num_err_rows + 1
