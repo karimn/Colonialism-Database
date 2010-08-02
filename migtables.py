@@ -124,6 +124,8 @@ for i, row in enumerate(reader):
     if not rdict[k] or (isinstance(rdict[k], basestring) and len(rdict[k]) == 0):
       del rdict[k]
 
+  print "%i, %s" % (i, rdict['name'])
+
   try:
     table = Table(**rdict)
     table.save()

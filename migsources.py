@@ -30,7 +30,7 @@ string_encoding = 'ISO-8859-1'
 num_err_rows = 0
 
 for i, row in enumerate(reader):
-  rdict = dict(zip(('old_id', 'author', 'editor', 'title', 'original_title', 'year', 'publisher', 'city', 'series', 'volume', 'edition', 'isbn', 'total_pages', 'scanned_size', 'written_language1', 'written_language2', 'source_type', 'subjects', 'keywords', 'location', 'url', 'source_file', 'remarks', 'submitted_by', 'transfer', 'digitization_priority_gra', 'digitization_priority_pi', 'record_date'), row))
+  rdict = dict(zip(('old_id', 'author', 'editor', 'original_title', 'title', 'year', 'publisher', 'city', 'series', 'volume', 'edition', 'isbn', 'total_pages', 'scanned_size', 'written_language1', 'written_language2', 'source_type', 'subjects', 'keywords', 'location', 'url', 'source_file', 'remarks', 'submitted_by', 'transfer', 'digitization_priority_gra', 'digitization_priority_pi', 'record_date'), row))
 
   if i < 1: continue
 
