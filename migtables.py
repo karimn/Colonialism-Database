@@ -64,7 +64,10 @@ for i, row in enumerate(reader):
       num_err_rows += 1
       continue
 
-  rdict['original_language'] = get_or_add_language(rdict['original_language'], rdict['submitted_by'])
+  if rdict['original_language'] and len(rdict['original_language']) != 0:
+    languages = [get_or_add_language(lang, rdict['submitted_by']) for lang in re.split(r'\s*,\s*', rdict['original_language'])]
+
+  del rdict['original_language']
 
   subjects = None
 
@@ -132,6 +135,10 @@ for i, row in enumerate(reader):
     if subjects:
       for subj in subjects:
         table.subjects.add(subj)
+
+    if languages:
+      for lang in languages:
+        table.languages.add(lang)
 
   except (ValueError, DatabaseError, ValidationError) as e:
     sys.stderr.write('Failed to save table row (%i): %s\n' % (i, e))

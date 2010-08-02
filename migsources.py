@@ -15,8 +15,6 @@ from django.db.utils import DatabaseError
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 
-
-#mig_user = User.objects.get(username = 'karim'
 get_or_add_language = functools.partial(migtools.get_or_add_cat_item, cat = Language)
 get_or_add_sourcetype = functools.partial(migtools.get_or_add_cat_item, cat = SourceType)
 get_or_add_subject = functools.partial(migtools.get_or_add_cat_item, cat = SourceSubject)
@@ -48,8 +46,11 @@ for i, row in enumerate(reader):
     num_err_rows += 1
     continue 
 
-  rdict['written_language1'] = get_or_add_language(rdict['written_language1'], rdict['submitted_by'])
-  rdict['written_language2'] = get_or_add_language(rdict['written_language2'], rdict['submitted_by'])
+  written_language1 = get_or_add_language(rdict['written_language1'], rdict['submitted_by'])
+  written_language2 = get_or_add_language(rdict['written_language2'], rdict['submitted_by'])
+
+  del rdict['written_language1']
+  del rdict['written_language2']
 
   rdict['source_type'] = get_or_add_sourcetype(rdict['source_type'], rdict['submitted_by'])
 
@@ -98,6 +99,12 @@ for i, row in enumerate(reader):
     if subjects:
       for subj in subjects:
         source.subjects.add(subj)
+
+    if written_language1:
+      source.languages.add(written_language1)
+
+    if written_language2:
+      source.languages.add(written_language2)
 
   except (ValueError, DatabaseError, ValidationError) as e:
     sys.stderr.write('Failed to save source row (%i): %s\n' % (i, e))

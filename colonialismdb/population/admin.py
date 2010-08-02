@@ -21,7 +21,7 @@ class MainDataEntryAdmin(BaseSubmitAdmin) :
         {'fields' : ['individ_fam', 'population_gender', 'population_value', 'value_unit', 'is_total', 'value_precision']}),
 
       ('Source Information', 
-        {'fields' : ['source_table', 'page_num', 'polity', 'iso', 'wb']}),
+        {'fields' : ['page_num', 'polity', 'iso', 'wb']}),
 
       ('Other Information', 
         {'fields' : ['remarks', ], 'classes' : ['collapse', ]}),

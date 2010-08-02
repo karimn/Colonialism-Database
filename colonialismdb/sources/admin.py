@@ -4,6 +4,7 @@ from django.contrib import admin
 
 class TableInline(admin.TabularInline):
   model = Table
+  fk_name = 'source'
 
 class SourceAdmin(BaseSubmitAdmin) :
   exclude = ('old_id', )
