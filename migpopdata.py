@@ -5,6 +5,8 @@ import datetime
 import sys
 import re
 
+import migtools
+
 from colonialismdb.population.models import MainDataEntry, PopulationCondition
 from colonialismdb.common.models import Location, Religion, Ethnicity, EthnicOrigin, Race
 from django.db.utils import DatabaseError
@@ -14,131 +16,14 @@ from django.contrib.auth.models import User
 from reversion import revision
 
 mig_user = User.objects.get(username = 'karim')
+ 
+get_or_add_religion = functools.partial(migtools.get_or_add_cat_item, mig_user = mig_user, cat = Religion)
+get_or_add_race = functools.partial(migtools.get_or_add_cat_item, mig_user = mig_user, cat = Race)
+get_or_add_ethnicity = functools.partial(migtools.get_or_add_cat_item, mig_user = mig_user, cat = Ethnicity)
+get_or_add_ethnic_origin = functools.partial(migtools.get_or_add_cat_item, mig_user = mig_user, cat = EthnicOrigin)
+get_or_add_pop_cond = functools.partial(migtools.get_or_add_cat_item, mig_user = mig_user, cat = PopulationCondition)
 
-class LocationTooComplicated(Exception):
-  def __init__(self, problem):
-    self.problem = problem
-
-  def __str__(self):
-    return self.problem
-
-def get_or_add_religion(religion):
-  religion = religion.title()
-
-  try:
-    return Religion.objects.get(name = religion)
-  except Religion.DoesNotExist:
-    new_rel = Religion(name = religion, active = True, submitted_by = mig_user)
-    new_rel.save()
-    return new_rel
-
-def get_or_add_race(race):
-  race = race.title()
-
-  try:
-    return Race.objects.get(name = race)
-  except Race.DoesNotExist:
-    new_race = Race(name = race, active = True, submitted_by = mig_user)
-    new_race.save()
-    return new_race
-
-def get_or_add_ethnicity(eth):
-  eth = eth.title()
-
-  try:
-    return Ethnicity.objects.get(name = eth)
-  except Ethnicity.DoesNotExist:
-    new_eth = Ethnicity(name = eth, active = True, submitted_by = mig_user) #, log = default_log)
-    new_eth.save()
-    return new_eth
-
-def get_or_add_ethnic_origin(eth):
-  eth = eth.title()
-
-  try:
-    return EthnicOrigin.objects.get(name = eth)
-  except EthnicOrigin.DoesNotExist:
-    new_eth = EthnicOrigin(name = eth, active = True, submitted_by = mig_user) #, log = default_log)
-    new_eth.save()
-    return new_eth
-  
-def get_or_add_pop_cond(cond):
-  cond = cond.title()
-
-  try:
-    return PopulationCondition.objects.get(name = cond)
-  except PopulationCondition.DoesNotExist:
-    new_cond = PopulationCondition(name = cond, active = True, submitted_by = mig_user) #, log = default_log)
-    new_cond.save()
-    return new_cond
-
-def get_or_add_location(place_name, in1 = None, in2 = None, in3 = None):
-  place_name = place_name.title()
-  prev_loc = None
-  prev_tree = Location.objects.all()
-  location_created = False
-
-  for in_loc_name in (in3.title(), in2.title(), in1.title()):
-    if not in_loc_name:
-      continue
-
-    #try:
-    found_loc = prev_tree.filter(name__exact = in_loc_name)
-    found_loc_count = found_loc.count()
-    #loc = prev_tree.get(name__exact = in_loc_name)
-
-    if found_loc_count > 1:
-  #except Location.MultipleObjectsReturned:
-      loc = None
-
-      if prev_loc:
-        immediate_subloc_tree = prev_loc.get_geographic_sub_locations(include_self = False, max_distance = 1)
-
-        immed_found_loc = immediate_subloc_tree.filter(name__exact = in_loc_name)
-        if immed_found_loc.count() > 0: # Just taking the first match no matter what for now
-          loc = immed_found_loc[0] 
-
-      if not loc:
-        #raise LocationTooComplicated('Found multiple matches for parent location %s' % in_loc_name)
-        loc = found_loc[0] # Taking the first match for now
-    elif found_loc_count == 0:
-    #except Location.DoesNotExist:
-      loc = Location(name = in_loc_name, geographically_in = prev_loc, active = True, submitted_by = mig_user) #, log = default_log)
-      loc.save()
-      location_created = True
-    else:
-      loc = found_loc[0]
-      if location_created and not prev_loc.is_root():
-        raise LocationTooComplicated('Found existing location after having created a non-existent one')
-      else:
-        loc.in_location = prev_loc
-
-    prev_loc = loc
-    prev_tree = prev_loc.get_geographic_sub_locations(include_self = False)
-
-  retrying = False
-  places = prev_tree.filter(name__exact = place_name)
-
-  while True:
-    if len(places) == 1:
-      return places[0]
-
-    elif len(places) == 0:
-      new_loc = Location(name = place_name, geographically_in = prev_loc, active = True, submitted_by = mig_user) #, log = default_log)
-      new_loc.save()
-
-      return new_loc
-
-    else:
-      if retrying:
-        raise LocationTooComplicated('Found multiple location matches for requested place')
-
-      if prev_loc:
-        places = prev_tree.filter(name__exact = place_name, geographically_in = prev_loc.pk)
-      else:
-        places = []
-        
-      retrying = True
+get_or_add_location = functools.partial(migtools.get_or_add_location, mig_user = mig_user)
 
 def add_row(rdict, num_err_rows):
   val_specified = False

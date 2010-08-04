@@ -65,9 +65,13 @@ class PoliticalUnitType(Category):
   class Meta(Category.Meta):
     permissions = ( ('activate_politicalunittype', 'Can activate submitted political unit type'), )
 
+class Language(Category):
+  class Meta(Category.Meta):
+    permissions = ( ('activate_language', 'Can activate source language'), )
+
 class PoliticalUnit(BaseSubmitModel):
   name = models.CharField("name", max_length = 50)
-  unit_type = models.ManyToManyField(PoliticalUnitType)
+  unit_type = models.ManyToManyField(PoliticalUnitType, null = True, blank = True)
 
   class Meta(BaseSubmitModel.Meta):
     permissions = ( ('activate_politicalunit', 'Can activate submitted political unit'), )
@@ -81,17 +85,23 @@ class PoliticalUnit(BaseSubmitModel):
 class Location(PoliticalUnit):
   geographically_in = models.ForeignKey('self', null = True, blank = True, default = None, verbose_name = "geographically in", related_name = "geographically contains")
   politically_in = models.ForeignKey(PoliticalUnit, null = True, blank = True, default = None, verbose_name = "politically in", related_name = "politically contains")
+  full_name = models.CharField(max_length = 200, blank = True)
 
   # TODO Spatial characteristics 
 
   class Meta(BaseSubmitModel.Meta):
     permissions = ( ('activate_location', 'Can activate submitted location'), )
 
-  def __unicode__(self): 
+  def save(self, *args, **kwargs):
     if self.geographically_in:
-      return self.name + ", " + unicode(self.geographically_in)
+      self.full_name = self.name + ", " + unicode(self.geographically_in)
     else:
-      return self.name 
+      self.full_name = self.name 
+
+    super(Location, self).save(*args, **kwargs)
+
+  def __unicode__(self): 
+    return self.full_name
 
   def activate(self):
     super(Location, self).activate()
@@ -172,6 +182,7 @@ class TemporalLocation(Location):
     else:
       return self.temporal_is.get_politically_in()
 
+  """ 
   def __unicode__(self): 
     geo = self.get_geographically_in()
 
@@ -179,6 +190,7 @@ class TemporalLocation(Location):
       return self.name + " (%s - %s)" % (self.begin_date, self.end_date) + ", " + unicode(self.geo)
     else:
       return self.name + " (%s - %s)" % (self.begin_date, self.end_date)
+  """
 
   def activate(self):
     super(TemporalLocation, self).activate()

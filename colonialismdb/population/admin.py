@@ -14,7 +14,7 @@ class MainDataEntryAdmin(BaseSubmitAdmin) :
         {'fields' : ['begin_date', 'end_date', 'circa']}),
 
       ('Population Characteristics', 
-        {'fields' : ['religion', 'race', 'ethnicity', 'ethnic_origin', 'age_start', 'age_end', 'population_condition']}),
+        {'fields' : ['religion', 'race', 'ethnicity', 'ethnic_origin', 'age_start', 'age_end', 'population_condition', 'occupation']}),
 
       ('Population Statistics', 
         {'fields' : ['individ_fam', 'population_gender', 'population_value', 'value_unit', 'is_total', 'value_precision']}),

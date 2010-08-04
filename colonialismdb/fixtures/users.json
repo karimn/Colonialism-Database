@@ -1,0 +1,122 @@
+[
+  {
+    "model" : "auth.user",
+    "pk" : null,
+    "fields" : {
+      "first_name" : "Erzen",
+      "last_name" : "Oncel",
+      "username" : "eoncel",
+      "is_staff" : "True",
+      "is_active" : "False"
+    }
+  },
+  {
+    "model" : "auth.user",
+    "pk" : null,
+    "fields" : {
+      "first_name" : "Johan",
+      "last_name" : "Van Gorp",
+      "username" : "jvangorp",
+      "is_staff" : "True",
+      "is_active" : "False"
+    }
+  },
+  {
+    "model" : "auth.user",
+    "pk" : null,
+    "fields" : {
+      "first_name" : "Abel",
+      "last_name" : "Amado",
+      "username" : "aamado",
+      "is_staff" : "True",
+      "is_active" : "False"
+    }
+  },
+  {
+    "model" : "auth.user",
+    "pk" : null,
+    "fields" : {
+      "first_name" : "Andreea",
+      "last_name" : "Maierean",
+      "username" : "amaierean",
+      "is_staff" : "True",
+      "is_active" : "False"
+    }
+  },
+  {
+    "model" : "auth.user",
+    "pk" : null,
+    "fields" : {
+      "first_name" : "John",
+      "last_name" : "Gerring",
+      "username" : "jgerring",
+      "is_staff" : "True",
+      "is_active" : "False"
+    }
+  },
+  {
+    "model" : "auth.user",
+    "pk" : null,
+    "fields" : {
+      "first_name" : "Oya",
+      "last_name" : "Yegen",
+      "username" : "oyegen",
+      "is_staff" : "True",
+      "is_active" : "False"
+    }
+  },
+  {
+    "model" : "auth.user",
+    "pk" : null,
+    "fields" : {
+      "first_name" : "Joe",
+      "last_name" : "Robinson",
+      "username" : "jrobinson",
+      "is_staff" : "True",
+      "is_active" : "False"
+    }
+  },
+  {
+    "model" : "auth.user",
+    "pk" : null,
+    "fields" : {
+      "first_name" : "Jennifer",
+      "last_name" : "Rosen",
+      "username" : "jrosen",
+      "is_staff" : "True",
+      "is_active" : "False"
+    }
+  },
+  {
+    "model" : "auth.user",
+    "pk" : null,
+    "fields" : {
+      "first_name" : "Ahmet",
+      "last_name" : "Tekelioglu",
+      "username" : "atekelioglu",
+      "is_staff" : "True",
+      "is_active" : "False"
+    }
+  },
+  {
+    "model" : "auth.user",
+    "pk" : null,
+    "fields" : {
+      "first_name" : "Natalie",
+      "last_name" : "Lam",
+      "username" : "natalie",
+      "is_staff" : "True",
+      "is_active" : "False"
+    }
+  },
+  {
+    "model" : "auth.user",
+    "pk" : null,
+    "fields" : {
+      "first_name" : "TEST-062409",
+      "username" : "TEST_062409",
+      "is_staff" : "True",
+      "is_active" : "False"
+    }
+  }
+]
