@@ -18,7 +18,7 @@ class MainDataEntry(BaseDataEntry):
 
   GENDER_CHOICES = (('M', 'Male'), ('F', 'Female'))
   INDIVID_FAM_CHOICES = ((0, 'Individuals'), (1, 'Families'))
-  VAL_PRECISION_CHOICES = ((0, 'Exact'), (1, 'Uncertain'), (2, 'Estimate'))
+  VAL_PRECISION_CHOICES = ((0, 'Unspecified'), (1, 'Uncertain'), (2, 'Estimate'))
   
   # TODO separate tables for sources, tables, pages, etc.
   source_id = models.IntegerField("Source ID", null = True, blank = True)
@@ -36,7 +36,7 @@ class MainDataEntry(BaseDataEntry):
 
   religion = models.ForeignKey(Religion, null = True, blank = True, default = None)
   race = models.ForeignKey(Race, null = True, blank = True, default = None)
-  ethnicity = models.ForeignKey(Ethnicity, null = True, blank = True, default = None)
+  
   ethnic_origin = models.ForeignKey(EthnicOrigin, null = True, blank = True, default = None)
   
   #TODO age data integrity check
@@ -50,11 +50,11 @@ class MainDataEntry(BaseDataEntry):
   is_total = models.BooleanField("Is Total", default = False)
   value_unit = models.CharField("Units", max_length = 15, choices = BaseDataEntry.UNIT_CHOICES, default = 'units')
   individ_fam = models.IntegerField("Individuals/Families", choices = INDIVID_FAM_CHOICES)
-  population_gender = models.CharField(max_length = 1, choices = GENDER_CHOICES, default = None, null = True)
-  population_value = models.DecimalField(max_digits = 10, decimal_places = 2, null = True, blank = True)
-  value_precision = models.IntegerField(choices = VAL_PRECISION_CHOICES, default = 0, null = True)
+  population_gender = models.CharField("gender", max_length = 1, choices = GENDER_CHOICES, default = None, null = True)
+  population_value = models.DecimalField("value", max_digits = 10, decimal_places = 2, null = True, blank = True)
+  value_precision = models.IntegerField("level of precision", choices = VAL_PRECISION_CHOICES, default = 0, null = True)
   
-  population_condition = models.ForeignKey(PopulationCondition, null = True, blank = True, default = None)
+  population_condition = models.ForeignKey("condition", PopulationCondition, null = True, blank = True, default = None)
   occupation = models.ForeignKey(Occupation, null = True, blank = True, default = None)
 
   polity = models.CharField(max_length = 100, null = True, blank = True)
