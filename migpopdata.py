@@ -10,6 +10,7 @@ import migtools
 
 from colonialismdb.population.models import MainDataEntry, PopulationCondition
 from colonialismdb.common.models import Location, Religion, Ethnicity, EthnicOrigin, Race
+from colonialismdb.sources.models import Source, Table
 from django.db.utils import DatabaseError
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
@@ -27,6 +28,51 @@ get_or_add_pop_cond = functools.partial(migtools.get_or_add_cat_item, mig_user =
 #get_or_add_location = functools.partial(migtools.get_or_add_location, mig_user = mig_user)
 
 def add_row(rdict, num_err_rows):
+  if rdict['old_combined_id']:
+    cid_matches = re.match(r'([^-]+)-([^\.]+)(?:\.(.+))', rdict['old_combined_id'])
+
+    if not cid_matches:
+      sys.stderr.write('Failed to match combined id %s in row (%i)\n' % (rdict['old_combined_id'], i))
+      sys.stderr.write('%s\n' % rdict)
+      return num_err_rows + 1
+
+    source_id = cid_matches.group(1)
+    table_id = cid_matches.group(2)
+
+    if source_id != rdict['old_source_id']:
+      sys.stderr.write('Mismatch of old source ID in row (%i)' % i)
+      sys.stderr.write('%s\n' % rdict)
+      return num_err_rows + 1
+
+    table = None
+
+    try:
+      table = Table.objects.get(old_id = table_id)
+    except Table.DoesNotExist as e:
+      sys.stderr.write('Source table does not exist in row (%i)' % i)
+      sys.stderr.write('%s\n' % rdict)
+      return num_err_rows + 1
+
+    nr = cid_matches.group(3)
+
+    if not nr and table.nr != nr:
+      sys.stderr.write('Table NR mismatch in row (%i)' % i)
+      sys.stderr.write('%s\n' % rdict)
+      return num_err_rows + 1
+
+    rdict['source'] = table
+  else:
+    source = None
+
+    try:
+      Source.objects.get(old_id = rdict['old_source_id'])
+    except Source.DoesNotExist as e:
+      sys.stderr.write('Source does not exist in row (%i)' % i)
+      sys.stderr.write('%s\n' % rdict)
+      return num_err_rows + 1
+
+    rdict['source'] = source
+ 
   val_specified = False
 
   if rdict.has_key('individuals_population_value'): 
@@ -182,7 +228,9 @@ string_encoding = 'ISO-8859-1'
 num_err_rows = 0
 
 for i, row in enumerate(reader):
-  rdict = dict(zip(('source_id', 'combined_id', 'begin_date', 'end_date', 'place_origin', 'place_english', 'alternate_location_name', 'large1', 'large2', 'large3', 'religion', 'race', 'ethnicity', 'ethnic_origin', 'age_start', 'age_end', 'remarks', 'link', 'individuals_population_value', 'families_population_value', 'male_population_value', 'female_population_value', 'value_unit', 'is_total', 'population_condition', 'polity', 'iso', 'wb'), row))
+  rdict = dict(zip(('old_source_id', 'old_combined_id', 'ignore', 'begin_date', 'end_date', 'place_origin', 'place_english', 'alternate_location_name', 'large1', 'large2', 'large3', 'religion', 'race', 'ethnicity', 'ethnic_origin', 'age_start', 'age_end', 'remarks', 'link', 'individuals_population_value', 'families_population_value', 'male_population_value', 'female_population_value', 'value_unit', 'is_total', 'population_condition', 'polity', 'iso', 'wb'), row))
+
+  del rdict['ignore']
 
   #if rdict['place_english'] or rdict['alternate_location_name'] : 
   #  print i, rdict['place_origin'], ", ", rdict['alternate_location_name'], ", ", rdict['place_english']
