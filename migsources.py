@@ -100,12 +100,12 @@ for i, row in enumerate(reader):
       relative_path_match = re.match(r'(?:\.\.\\){1,2}subproject_([^\\]+)\\([^#]+)', rdict['source_file'], flags = re.IGNORECASE)
 
       if relative_path_match:
-        subproj_dir = relative_path_match.group(1).lowercase()
+        subproj_dir = relative_path_match.group(1).lower()
 
         if subproj_dir == 'colonialism':
-          source_file_path = 'e:\\colonialism\\project_thebase\\subproject_colonialism\\%s' % relative_path_match.group(1).lowercase()
+          source_file_path = 'e:\\colonialism\\project_thebase\\subproject_colonialism\\%s' % relative_path_match.group(1).lower()
         #elif subproj_dir == 'datalabel':
-        #  source_file_path = 'e:\\colonialism\\project_thebase\\subproject_colonialism\\%s' % relative_path_match.group(1).lowercase()
+        #  source_file_path = 'e:\\colonialism\\project_thebase\\subproject_colonialism\\%s' % relative_path_match.group(1).lower()
         else:
           sys.stderr.write('Failed to match relative source file path in row (%i)\n' % (i,))
           sys.stderr.write('%s\n' % rdict)
