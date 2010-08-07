@@ -39,7 +39,6 @@ class BaseSourceObject(BaseSubmitModel):
     if self.digitization_priority_pi and not self.digitization_priority_pi.active:
       self.digitization_priority_pi.activate()
 
-  old_id = models.IntegerField(null = True, blank = True) # column to hold old source id from original Access db
   subjects = models.ManyToManyField(SourceSubject, blank = True)
 
   source_file = models.FileField(upload_to = 'sources/%Y/%m/%d', blank = True)
@@ -47,7 +46,7 @@ class BaseSourceObject(BaseSubmitModel):
   digitization_priority_gra = models.ForeignKey(DigitizationPriority, null = True, blank = True, related_name = 'prority_gra_for_%(class)s')
   digitization_priority_pi = models.ForeignKey(DigitizationPriority, null = True, blank = True, related_name = 'priority_pi_for_%(class)s')
   
-  record_date = models.DateField(blank = True, null = True)
+  record_date = models.DateField(blank = True, null = True) # auto_now_add = True
 
   remarks = models.TextField(blank = True)
 
@@ -72,6 +71,8 @@ class Source(BaseSourceObject):
 
     if self.source_type and not self.source_type.active:
       self.source_type.activate()
+
+  old_id = models.IntegerField(null = True, blank = True, unique = True) # column to hold old source id from original Access db
   
   author = models.CharField(max_length = 100, blank = True)
   editor = models.CharField(max_length = 100, blank = True)
@@ -85,7 +86,7 @@ class Source(BaseSourceObject):
   edition = models.CharField(max_length = 20, blank = True)
   isbn = models.CharField(max_length = 50, blank = True)
 
-  total_pages = models.PositiveIntegerField(blank = True)
+  total_pages = models.PositiveIntegerField(blank = True, null = True)
   scanned_size = models.DecimalField(blank = True, null = True, decimal_places = 2, max_digits = 8, help_text = 'Scanned size in MB')
 
   source_type = models.ForeignKey(SourceType, blank = True, null = True) 
@@ -110,6 +111,8 @@ class Table(BaseSourceObject):
       for country in self.included_countries.all():
         if not country.active:
           country.activate()
+
+  old_id = models.IntegerField(null = True, blank = True, unique = True) # column to hold old source id from original Access db
 
   old_source_id = models.IntegerField(null = True, blank = True) # column to hold old source id from original Access db
 

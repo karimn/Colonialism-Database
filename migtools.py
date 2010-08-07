@@ -1,5 +1,7 @@
 from colonialismdb.common.models import Location
 
+STRING_ENCODING = 'ISO-8859-1'
+
 def get_or_add_cat_item(item, mig_user, cat):
   if not item or len(item) == 0:
     return None

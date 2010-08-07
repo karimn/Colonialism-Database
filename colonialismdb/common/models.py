@@ -31,7 +31,7 @@ class Category(BaseSubmitModel):
   def __unicode__(self):
     return unicode(self.name)
 
-  name = models.CharField(max_length = 50, unique = True)
+  name = models.CharField(max_length = 100, unique = True)
 
 class Religion(Category):
   class Meta(Category.Meta):
@@ -59,7 +59,7 @@ class Language(Category):
     permissions = ( ('activate_language', 'Can activate source language'), )
 
 class PoliticalUnit(BaseSubmitModel):
-  name = models.CharField("name", max_length = 50)
+  name = models.CharField("name", max_length = 150)
   unit_type = models.ManyToManyField(PoliticalUnitType, null = True, blank = True)
 
   class Meta(BaseSubmitModel.Meta):

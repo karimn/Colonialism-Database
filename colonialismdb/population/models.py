@@ -55,7 +55,7 @@ class MainDataEntry(BaseDataEntry):
   value_unit = models.CharField("Units", max_length = 15, choices = BaseDataEntry.UNIT_CHOICES, default = 'units')
   individ_fam = models.IntegerField("Individuals/Families", choices = INDIVID_FAM_CHOICES)
   population_gender = models.CharField(max_length = 1, choices = GENDER_CHOICES, default = None, null = True)
-  population_value = models.DecimalField(max_digits = 10, decimal_places = 2, null = True, blank = True)
+  population_value = models.DecimalField(max_digits = 20, decimal_places = 2, null = True, blank = True)
   value_precision = models.IntegerField(choices = VAL_PRECISION_CHOICES, default = 0, null = True)
   
   population_condition = models.ForeignKey(PopulationCondition, null = True, blank = True, default = None)
