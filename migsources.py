@@ -92,7 +92,7 @@ for i, row in enumerate(reader):
 
   if os.environ.has_key('COLONIALISM_SERVER') and rdict['source_file']: # and colonialism.settings.MEDIA_ROOT:
     source_file_path = None
-    peanut_match = re.match(r'\\\\peanut\.bu\.edu\\e\\(.+)', rdict['source_file'], flags = re.IGNORECASE)
+    peanut_match = re.match(r'\\\\peanut\.bu\.edu\\e\\([^#]+)', rdict['source_file'], flags = re.IGNORECASE)
 
     if peanut_match:
       source_file_path = "e:\\%s" % peanut_match.group(1)
