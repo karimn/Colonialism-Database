@@ -117,7 +117,13 @@ for i, row in enumerate(reader):
         num_err_rows += 1
         continue 
       
-    rdict['source_file'] = File(open(source_file_path, 'r'))
+    try:
+      rdict['source_file'] = File(open(source_file_path, 'r'))
+    except IOError as e:
+      sys.stderr.write('IO error on opening source file in row (%i)\n' % (i,))
+      sys.stderr.write('%s\n' % rdict)
+      num_err_rows += 1
+      continue 
   else:
     del rdict['source_file']
 
