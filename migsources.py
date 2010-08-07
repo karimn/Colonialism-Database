@@ -103,7 +103,7 @@ for i, row in enumerate(reader):
         subproj_dir = relative_path_match.group(1).lower()
 
         if subproj_dir == 'colonialism':
-          source_file_path = 'e:\\colonialism\\project_thebase\\subproject_colonialism\\%s' % relative_path_match.group(1).lower()
+          source_file_path = 'e:\\colonialism\\project_thebase\\subproject_colonialism\\%s' % relative_path_match.group(2).lower()
         #elif subproj_dir == 'datalabel':
         #  source_file_path = 'e:\\colonialism\\project_thebase\\subproject_colonialism\\%s' % relative_path_match.group(1).lower()
         else:
