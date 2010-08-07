@@ -90,7 +90,7 @@ for i, row in enumerate(reader):
 
   print '%i, %s, %s, %s' % (i, rdict['author'], rdict['editor'], rdict['title'])
 
-  if os.environ.has_key('COLONIALISM_SERVER'): # and colonialism.settings.MEDIA_ROOT:
+  if os.environ.has_key('COLONIALISM_SERVER') and rdict['source_file']: # and colonialism.settings.MEDIA_ROOT:
     source_file_path = None
     peanut_match = re.match(r'\\\\peanut\.bu\.edu\\e\\(.+)', rdict['source_file'], flags = re.IGNORECASE)
 
@@ -117,7 +117,7 @@ for i, row in enumerate(reader):
         num_err_rows += 1
         continue 
       
-      rdict['source_file'] = File(open(source_file_path, 'r'))
+    rdict['source_file'] = File(open(source_file_path, 'r'))
   else:
     del rdict['source_file']
 
