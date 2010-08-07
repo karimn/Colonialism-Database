@@ -92,12 +92,12 @@ for i, row in enumerate(reader):
 
   if os.environ.has_key('COLONIALISM_SERVER') and rdict['source_file']: # and colonialism.settings.MEDIA_ROOT:
     source_file_path = None
-    peanut_match = re.match(r'\\\\peanut\.bu\.edu\\e\\([^#]+)', rdict['source_file'], flags = re.IGNORECASE)
+    peanut_match = re.match(r'#?\\\\peanut\.bu\.edu\\e\\([^#]+)', rdict['source_file'], flags = re.IGNORECASE)
 
     if peanut_match:
       source_file_path = "e:\\%s" % peanut_match.group(1)
     else:
-      relative_path_match = re.match(r'(?:\.\.\\){1,2}subproject_([^\\]+)\\([^#]+)', rdict['source_file'], flags = re.IGNORECASE)
+      relative_path_match = re.match(r'#?(?:\.\.\\){1,2}subproject_([^\\]+)\\([^#]+)', rdict['source_file'], flags = re.IGNORECASE)
 
       if relative_path_match:
         subproj_dir = relative_path_match.group(1).lower()
@@ -120,7 +120,7 @@ for i, row in enumerate(reader):
     try:
       rdict['source_file'] = File(open(source_file_path, 'r'))
     except IOError as e:
-      sys.stderr.write('IO error on opening source file in row (%i)\n' % (i,))
+      sys.stderr.write('IO error on opening source file %s in row (%i)\n' % (source_file_path, i))
       sys.stderr.write('%s\n' % rdict)
       num_err_rows += 1
       continue 
