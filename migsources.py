@@ -97,7 +97,7 @@ for i, row in enumerate(reader):
     if peanut_match:
       source_file_path = "e:\\%s" % peanut_match.group(1)
     else:
-      relative_path_match = re.match(r'(?:\.\.\\){1,2}subproject_(^[\\]+)\\(.+)', rdict['source_file'], flags = re.IGNORECASE)
+      relative_path_match = re.match(r'(?:\.\.\\){1,2}subproject_([^\\]+)\\([^#]+)', rdict['source_file'], flags = re.IGNORECASE)
 
       if relative_path_match:
         subproj_dir = relative_path_match.group(1).lowercase()
