@@ -39,10 +39,14 @@ class Category(BaseSubmitModel, MergeableModel):
   def __unicode__(self):
     return unicode(self.name)
 
+<<<<<<< HEAD
   def merge_into(self, other):
     super(Category, self).merge_into(self, other)
 
   name = models.CharField(max_length = 50, unique = True)
+=======
+  name = models.CharField(max_length = 100, unique = True)
+>>>>>>> sources
 
 class Religion(Category):
   class Meta(Category.Meta):
@@ -70,7 +74,7 @@ class Language(Category):
     permissions = ( ('activate_language', 'Can activate source language'), )
 
 class PoliticalUnit(BaseSubmitModel):
-  name = models.CharField("name", max_length = 50)
+  name = models.CharField("name", max_length = 150)
   unit_type = models.ManyToManyField(PoliticalUnitType, null = True, blank = True)
 
   class Meta(BaseSubmitModel.Meta):

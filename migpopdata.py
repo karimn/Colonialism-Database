@@ -4,11 +4,13 @@ import csv
 import datetime
 import sys
 import re
+import functools
 
 import migtools
 
 from colonialismdb.population.models import MainDataEntry, PopulationCondition
 from colonialismdb.common.models import Location, Religion, Ethnicity, EthnicOrigin, Race
+from colonialismdb.sources.models import Source, Table
 from django.db.utils import DatabaseError
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
@@ -23,9 +25,54 @@ get_or_add_ethnicity = functools.partial(migtools.get_or_add_cat_item, mig_user 
 get_or_add_ethnic_origin = functools.partial(migtools.get_or_add_cat_item, mig_user = mig_user, cat = EthnicOrigin)
 get_or_add_pop_cond = functools.partial(migtools.get_or_add_cat_item, mig_user = mig_user, cat = PopulationCondition)
 
-get_or_add_location = functools.partial(migtools.get_or_add_location, mig_user = mig_user)
+#get_or_add_location = functools.partial(migtools.get_or_add_location, mig_user = mig_user)
 
 def add_row(rdict, num_err_rows):
+  if rdict['old_combined_id']:
+    cid_matches = re.match(r'([^-]+)-([^\.]+)(?:\.(.+))', rdict['old_combined_id'])
+
+    if not cid_matches:
+      sys.stderr.write('Failed to match combined id %s in row (%i)\n' % (rdict['old_combined_id'], i))
+      sys.stderr.write('%s\n' % rdict)
+      return num_err_rows + 1
+
+    source_id = cid_matches.group(1)
+    table_id = cid_matches.group(2)
+
+    if source_id != rdict['old_source_id']:
+      sys.stderr.write('Mismatch of old source ID in row (%i)\n' % i)
+      sys.stderr.write('%s\n' % rdict)
+      return num_err_rows + 1
+
+    table = None
+
+    try:
+      table = Table.objects.get(old_id = table_id)
+    except Table.DoesNotExist as e:
+      sys.stderr.write('Source table does not exist in row (%i)\n' % i)
+      sys.stderr.write('%s\n' % rdict)
+      return num_err_rows + 1
+
+    nr = cid_matches.group(3)
+
+    if not nr and table.nr != nr:
+      sys.stderr.write('Table NR mismatch in row (%i)\n' % i)
+      sys.stderr.write('%s\n' % rdict)
+      return num_err_rows + 1
+
+    rdict['source'] = table
+  else:
+    source = None
+
+    try:
+      Source.objects.get(old_id = rdict['old_source_id'])
+    except Source.DoesNotExist as e:
+      sys.stderr.write('Source does not exist in row (%i)\n' % i)
+      sys.stderr.write('%s\n' % rdict)
+      return num_err_rows + 1
+
+    rdict['source'] = source
+ 
   val_specified = False
 
   if rdict.has_key('individuals_population_value'): 
@@ -77,18 +124,18 @@ def add_row(rdict, num_err_rows):
     return num_err_rows + 1
 
   try:
-    print i, rdict['place_origin'].decode(string_encoding), u", ", rdict['large1'].decode(string_encoding), u", ", rdict['large2'].decode(string_encoding), u", ", rdict['large3'].decode(string_encoding)
+    print i, rdict['place_origin'].decode(migtools.STRING_ENCODING), u", ", rdict['large1'].decode(migtools.STRING_ENCODING), u", ", rdict['large2'].decode(migtools.STRING_ENCODING), u", ", rdict['large3'].decode(migtools.STRING_ENCODING)
   except UnicodeEncodeError:
     # Windows decode error workaround
     print i, "<UnicodeEncodeError Encountered, ignoring for now>"
 
   try:
-    rdict['location'] = get_or_add_location(unicode(rdict['place_origin'], string_encoding), unicode(rdict['large1'], string_encoding), unicode(rdict['large2'], string_encoding), unicode(rdict['large3'], string_encoding))
-  except DatabaseError as e:
+    rdict['location'] = migtools.get_or_add_location(unicode(rdict['place_origin'], migtools.STRING_ENCODING), mig_user, unicode(rdict['large1'], migtools.STRING_ENCODING), unicode(rdict['large2'], migtools.STRING_ENCODING), unicode(rdict['large3'], migtools.STRING_ENCODING))
+  except Location.DatabaseError as e:
     sys.stderr.write('Database error on getting or adding location in row (%i): %s\n' % (i, e))
     sys.stderr.write('%s\n' % rdict)
     return num_err_rows + 1
-  except LocationTooComplicated as e:
+  except migtools.LocationTooComplicated as e:
     sys.stderr.write('Location too complicated in row (%i): %s\n' % (i, e))
     sys.stderr.write('%s\n' % rdict)
     return num_err_rows + 1
@@ -109,17 +156,17 @@ def add_row(rdict, num_err_rows):
   for col_name, add_fun in { 'religion' : get_or_add_religion, 'race' : get_or_add_race, 'ethnicity' : get_or_add_ethnicity, 'ethnic_origin' : get_or_add_ethnic_origin, 'population_condition' : get_or_add_pop_cond }.iteritems():
     if rdict.has_key(col_name):
       try:
-        rdict[col_name] = add_fun(rdict[col_name])
+        rdict[col_name] = add_fun(unicode(rdict[col_name], migtools.STRING_ENCODING))
       except DatabaseError as e:
         sys.stderr.write("Error on get_or_add_%s in row (%i): %s\n" % (col_name, i, e))
         sys.stderr.write("%s\n" % rdict)
         return num_err_rows + 1
 
   if rdict.has_key('remarks'):
-    rdict['remarks'] = rdict['remarks'].decode(string_encoding)
+    rdict['remarks'] = rdict['remarks'].decode(migtools.STRING_ENCODING)
 
   if rdict.has_key('alternate_location_name'):
-    rdict['alternate_location_name'] = rdict['alternate_location_name'].decode(string_encoding)
+    rdict['alternate_location_name'] = rdict['alternate_location_name'].decode(migtools.STRING_ENCODING)
 
   try:
     if rdict.has_key('begin_date'):
@@ -139,11 +186,11 @@ def add_row(rdict, num_err_rows):
     if rdict.has_key(age_col):
       if rdict[age_col] == 'Unknown':
         del rdict[age_col]
-      elif rdict[age_col] in ('Under 1', 'Total', 'Total all ages'):
+      elif rdict[age_col] in ('Under 1', 'Total', 'Total all ages', 'All ages'):
         del rdict['age_start']
         if rdict.has_key('age_end'): del rdict['age_end'] 
         break
-      elif rdict[age_col] in ('Not specified',):
+      elif rdict[age_col] in ('Not specified','Unspecified', 'Period not indicated'):
         del rdict[age_col]
       else:
         over_match = re.match(r'Over\s(\d+)', rdict[age_col])
@@ -176,18 +223,16 @@ def add_row(rdict, num_err_rows):
 infile = sys.argv[1]
 reader = csv.reader(open(infile, "r"), delimiter='\t', quotechar = '"')
 
-string_encoding = 'ISO-8859-1'
-
 num_err_rows = 0
 
 for i, row in enumerate(reader):
-  rdict = dict(zip(('source_id', 'combined_id', 'begin_date', 'end_date', 'place_origin', 'place_english', 'alternate_location_name', 'large1', 'large2', 'large3', 'religion', 'race', 'ethnicity', 'ethnic_origin', 'age_start', 'age_end', 'remarks', 'link', 'individuals_population_value', 'families_population_value', 'male_population_value', 'female_population_value', 'value_unit', 'is_total', 'population_condition', 'polity', 'iso', 'wb'), row))
+  rdict = dict(zip(('old_source_id', 'old_combined_id', 'page_num', 'begin_date', 'end_date', 'place_origin', 'place_english', 'alternate_location_name', 'large1', 'large2', 'large3', 'religion', 'race', 'ethnicity', 'ethnic_origin', 'age_start', 'age_end', 'remarks', 'link', 'individuals_population_value', 'families_population_value', 'male_population_value', 'female_population_value', 'value_unit', 'is_total', 'population_condition', 'polity', 'iso', 'wb'), row))
 
   #if rdict['place_english'] or rdict['alternate_location_name'] : 
   #  print i, rdict['place_origin'], ", ", rdict['alternate_location_name'], ", ", rdict['place_english']
   #continue 
 
-  #if i < 5023: continue
+  #if i < 91580: continue
 
   num_err_rows = add_row(rdict, num_err_rows)
 

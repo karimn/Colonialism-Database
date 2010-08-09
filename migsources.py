@@ -3,6 +3,7 @@
 import csv
 import datetime
 import sys
+import os
 import re
 import functools
 
@@ -13,10 +14,9 @@ from colonialismdb.common.models import Language
 
 from django.db.utils import DatabaseError
 from django.core.exceptions import ValidationError
+from django.core.files import File
 from django.contrib.auth.models import User
 
-
-#mig_user = User.objects.get(username = 'karim'
 get_or_add_language = functools.partial(migtools.get_or_add_cat_item, cat = Language)
 get_or_add_sourcetype = functools.partial(migtools.get_or_add_cat_item, cat = SourceType)
 get_or_add_subject = functools.partial(migtools.get_or_add_cat_item, cat = SourceSubject)
@@ -32,13 +32,16 @@ string_encoding = 'ISO-8859-1'
 num_err_rows = 0
 
 for i, row in enumerate(reader):
-  rdict = dict(zip(('old_id', 'author', 'editor', 'title', 'original_title', 'year', 'publisher', 'city', 'series', 'volume', 'edition', 'isbn', 'total_pages', 'scanned_size', 'written_language1', 'written_language2', 'source_type', 'subjects', 'keywords', 'location', 'url', 'source_file', 'remarks', 'submitted_by', 'transfer', 'digitization_priority_gra', 'digitization_priority_pi', 'record_date'), row))
+  rdict = dict(zip(('old_id', 'author', 'editor', 'original_title', 'title', 'year', 'publisher', 'city', 'series', 'volume', 'edition', 'isbn', 'total_pages', 'scanned_size', 'written_language1', 'written_language2', 'source_type', 'subjects', 'keywords', 'location', 'url', 'source_file', 'remarks', 'submitted_by', 'transfer', 'digitization_priority_gra', 'digitization_priority_pi', 'record_date'), row))
 
-  if i < 1: continue
+  #if i < 1: continue
 
   del rdict['transfer']
 
   rdict['active'] = True
+
+  if rdict['year']:
+    rdict['year'] = rdict['year'].split(' ')[0].split('/')[2]
 
   try:
     rdict['submitted_by'] = User.objects.get(first_name = rdict['submitted_by'])
@@ -48,8 +51,11 @@ for i, row in enumerate(reader):
     num_err_rows += 1
     continue 
 
-  rdict['written_language1'] = get_or_add_language(rdict['written_language1'], rdict['submitted_by'])
-  rdict['written_language2'] = get_or_add_language(rdict['written_language2'], rdict['submitted_by'])
+  written_language1 = get_or_add_language(rdict['written_language1'], rdict['submitted_by'])
+  written_language2 = get_or_add_language(rdict['written_language2'], rdict['submitted_by'])
+
+  del rdict['written_language1']
+  del rdict['written_language2']
 
   rdict['source_type'] = get_or_add_sourcetype(rdict['source_type'], rdict['submitted_by'])
 
@@ -66,7 +72,7 @@ for i, row in enumerate(reader):
   if not rdict['record_date'] or len(rdict['record_date']) == 0:
     del rdict['record_date']
   else:
-    mon, day, year = [int(j) for j in rdict['record_date'].split('/')]
+    mon, day, year = [int(j) for j in rdict['record_date'].split(' ')[0].split('/')]
     rdict['record_date'] = datetime.date(year, mon, day)
 
   if not rdict['url'] or len(rdict['url']) == 0:
@@ -84,12 +90,51 @@ for i, row in enumerate(reader):
 
   print '%i, %s, %s, %s' % (i, rdict['author'], rdict['editor'], rdict['title'])
 
-  #TODO Adding files
-  del rdict['source_file']
+  if os.environ.has_key('COLONIALISM_SERVER') and rdict['source_file']: # and colonialism.settings.MEDIA_ROOT:
+    source_file_path = None
+    peanut_match = re.match(r'#?\\\\peanut\.bu\.edu\\e\\([^#]+)', rdict['source_file'], flags = re.IGNORECASE)
+
+    if peanut_match:
+      source_file_path = "e:\\%s" % peanut_match.group(1)
+    else:
+      relative_path_match = re.match(r'#?(?:\.\.\\){1,2}subproject_([^\\]+)\\([^#]+)', rdict['source_file'], flags = re.IGNORECASE)
+
+      if relative_path_match:
+        subproj_dir = relative_path_match.group(1).lower()
+
+        if subproj_dir == 'colonialism':
+          source_file_path = 'e:\\colonialism\\project_thebase\\subproject_colonialism\\%s' % relative_path_match.group(2).lower()
+        #elif subproj_dir == 'datalabel':
+        #  source_file_path = 'e:\\colonialism\\project_thebase\\subproject_colonialism\\%s' % relative_path_match.group(1).lower()
+        else:
+          sys.stderr.write('Failed to match relative source file path in row (%i)\n' % (i,))
+          sys.stderr.write('%s\n' % rdict)
+          num_err_rows += 1
+          continue 
+      else:
+        sys.stderr.write('Failed to match source file path in row (%i)\n' % (i,))
+        sys.stderr.write('%s\n' % rdict)
+        num_err_rows += 1
+        continue 
+      
+    try:
+      rdict['source_file'] = File(open(source_file_path, 'r'))
+    except IOError as e:
+      sys.stderr.write('IO error on opening source file %s in row (%i)\n' % (source_file_path, i))
+      sys.stderr.write('%s\n' % rdict)
+      num_err_rows += 1
+      continue 
+  else:
+    del rdict['source_file']
 
   for k in rdict.keys():
     if not rdict[k] or (isinstance(rdict[k], basestring) and len(rdict[k]) == 0):
       del rdict[k]
+
+
+  for key in ('original_title', 'title', 'publisher', 'remarks'):
+    if rdict.has_key(key):
+      rdict[key] = unicode(rdict[key], string_encoding)
 
   try:
     source = Source(**rdict)
@@ -98,6 +143,12 @@ for i, row in enumerate(reader):
     if subjects:
       for subj in subjects:
         source.subjects.add(subj)
+
+    if written_language1:
+      source.languages.add(written_language1)
+
+    if written_language2:
+      source.languages.add(written_language2)
 
   except (ValueError, DatabaseError, ValidationError) as e:
     sys.stderr.write('Failed to save source row (%i): %s\n' % (i, e))

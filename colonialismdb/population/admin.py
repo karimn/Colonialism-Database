@@ -1,4 +1,5 @@
 from colonialismdb.population.models import MainDataEntry, PopulationCondition, Occupation
+from colonialismdb.sources.models import Table
 from colonialismdb.common.admin import BaseSubmitAdmin, BaseCategoryAdmin
 from django.contrib import admin
 
@@ -20,7 +21,7 @@ class MainDataEntryAdmin(BaseSubmitAdmin) :
         {'fields' : ['individ_fam', 'population_gender', 'population_value', 'value_unit', 'is_total', 'value_precision']}),
 
       ('Source Information', 
-        {'fields' : ['source_id', 'combined_id', 'page_num', 'polity', 'iso', 'wb']}),
+        {'fields' : ['page_num', 'polity', 'iso', 'wb']}),
 
       ('Other Information', 
         {'fields' : ['remarks', ], 'classes' : ['collapse', ]}),

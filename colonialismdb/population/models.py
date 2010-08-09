@@ -1,5 +1,7 @@
 from django.db import models
+
 from colonialismdb.common.models import Location, Religion, Race, Ethnicity, EthnicOrigin, BaseDataEntry, Category
+from colonialismdb.sources.models import BaseSourceObject 
 
 class PopulationCondition(Category):
   class Meta(Category.Meta):
@@ -21,9 +23,11 @@ class MainDataEntry(BaseDataEntry):
   VAL_PRECISION_CHOICES = ((0, 'Unspecified'), (1, 'Uncertain'), (2, 'Estimate'))
   
   # TODO separate tables for sources, tables, pages, etc.
-  source_id = models.IntegerField("Source ID", null = True, blank = True)
-  combined_id = models.CharField("Combined ID", max_length = 30)
+  old_source_id = models.IntegerField("Source ID", null = True, blank = True)
+  old_combined_id = models.CharField("Combined ID", max_length = 30)
   page_num = models.IntegerField("Page Number", null = True, blank = True, default = None)
+
+  source = models.ForeignKey(BaseSourceObject, blank = True, null = True)
 
   #TODO date data integrity check
   begin_date = models.DateField("Start Date", null = True, blank = True)
@@ -36,7 +40,7 @@ class MainDataEntry(BaseDataEntry):
 
   religion = models.ForeignKey(Religion, null = True, blank = True, default = None)
   race = models.ForeignKey(Race, null = True, blank = True, default = None)
-  
+  ethnicity = models.ForeignKey(Ethnicity, null = True, blank = True, default = None)
   ethnic_origin = models.ForeignKey(EthnicOrigin, null = True, blank = True, default = None)
   
   #TODO age data integrity check

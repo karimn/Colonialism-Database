@@ -1,5 +1,7 @@
 from colonialismdb.common.models import Location
 
+STRING_ENCODING = 'ISO-8859-1'
+
 def get_or_add_cat_item(item, mig_user, cat):
   if not item or len(item) == 0:
     return None
@@ -30,7 +32,7 @@ def get_or_add_location(place_name, mig_user, in1 = None, in2 = None, in3 = None
     if not in_loc_name:
       continue
 
-    loc_name = loc_name.title()
+    in_loc_name = in_loc_name.title()
 
     found_loc = prev_tree.filter(name__exact = in_loc_name)
     found_loc_count = found_loc.count()
