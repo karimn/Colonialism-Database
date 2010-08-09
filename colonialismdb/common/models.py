@@ -39,41 +39,67 @@ class Category(BaseSubmitModel, MergeableModel):
   def __unicode__(self):
     return unicode(self.name)
 
-<<<<<<< HEAD
   def merge_into(self, other):
-    super(Category, self).merge_into(self, other)
+    super(Category, self).merge_into(other)
 
-  name = models.CharField(max_length = 50, unique = True)
-=======
   name = models.CharField(max_length = 100, unique = True)
->>>>>>> sources
 
 class Religion(Category):
   class Meta(Category.Meta):
     permissions = ( ('activate_religion', 'Can activate submitted religion'), )
 
+  def merge_into(self, other):
+    super(Religion, self).merge_into(other)
+
+    self.maindataentry_set.all().update(religion = other)
+
 class Race(Category):
   class Meta(Category.Meta):
     permissions = ( ('activate_race', 'Can activate submitted race'), )
+
+  def merge_into(self, other):
+    super(Race, self).merge_into(other)
+
+    self.maindataentry_set.all().update(religion = other)
 
 class Ethnicity(Category):
   class Meta(Category.Meta):
     verbose_name_plural = 'ethnicities'
     permissions = ( ('activate_ethnicity', 'Can activate submitted ethnicity'), )
 
+  def merge_into(self, other):
+    super(Ethnicity, self).merge_into(other)
+
+    self.maindataentry_set.all().update(religion = other)
+    
 class EthnicOrigin(Category):
   class Meta(Category.Meta):
     permissions = ( ('activate_ethnic_origin', 'Can activate submitted ethnic origin'), )
+
+  def merge_into(self, other):
+    super(EthnicOrigin, self).merge_into(other)
+
+    self.maindataentry_set.all().update(religion = other)
 
 class PoliticalUnitType(Category):
   class Meta(Category.Meta):
     permissions = ( ('activate_politicalunittype', 'Can activate submitted political unit type'), )
 
+  def merge_into(self, other):
+    super(PoliticalUnitType, self).merge_into(other)
+
+    self.politicalunit_set.all().update(unit_type = other)
+
 class Language(Category):
   class Meta(Category.Meta):
     permissions = ( ('activate_language', 'Can activate source language'), )
+    
+  def merge_into(self, other):
+    super(Language, self).merge_into(other)
 
-class PoliticalUnit(BaseSubmitModel):
+    self.basesourceobject_set.all().update(unit_type = other)
+
+class PoliticalUnit(BaseSubmitModel,MergeableModel):
   name = models.CharField("name", max_length = 150)
   unit_type = models.ManyToManyField(PoliticalUnitType, null = True, blank = True)
 
@@ -86,9 +112,14 @@ class PoliticalUnit(BaseSubmitModel):
   def __unicode__(self):
     return self.name
 
+  def merge_into(self, other):
+    super(PoliticalUnit, self).merge_into(other)
+
+    self.politically_contains.all().update(politically_in = other)
+
 class Location(PoliticalUnit):
-  geographically_in = models.ForeignKey('self', null = True, blank = True, default = None, verbose_name = "geographically in", related_name = "geographically contains")
-  politically_in = models.ForeignKey(PoliticalUnit, null = True, blank = True, default = None, verbose_name = "politically in", related_name = "politically contains")
+  geographically_in = models.ForeignKey('self', null = True, blank = True, default = None, verbose_name = "geographically in", related_name = "geographically_contains")
+  politically_in = models.ForeignKey(PoliticalUnit, null = True, blank = True, default = None, verbose_name = "politically in", related_name = "politically_contains")
   full_name = models.CharField(max_length = 200, blank = True)
 
   # TODO Spatial characteristics 
@@ -166,8 +197,13 @@ class Location(PoliticalUnit):
   def get_politically_in(self):
     return self.politically_in
 
+  def merge_into(self, other):
+    super(Location, self).merge_into(other)
+
+    self.geographically_contains.all().update(geographically_in = other)
+
 class TemporalLocation(Location):
-  temporal_is = models.ForeignKey('self', null = False, blank = False, verbose_name = "is")
+  temporal_is = models.ForeignKey(Location, null = False, blank = False, verbose_name = "is", related_name = "temp_locations")
   begin_date = models.DateField("Start Date", null = True, blank = True)
   end_date = models.DateField("End Date", null = True, blank = True)
 
@@ -202,4 +238,8 @@ class TemporalLocation(Location):
     if not self.temporal_is.active:
       self.temporal_is.activate()
 
+  def merge_into(self, other):
+    super(TemporalLocation, self).merge_into(other)
+
+    self.temp_locations.all().update(temporal_is = other)
 

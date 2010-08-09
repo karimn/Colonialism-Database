@@ -58,7 +58,7 @@ class MainDataEntry(BaseDataEntry):
   population_value = models.DecimalField("value", max_digits = 10, decimal_places = 2, null = True, blank = True)
   value_precision = models.IntegerField("level of precision", choices = VAL_PRECISION_CHOICES, default = 0, null = True)
   
-  population_condition = models.ForeignKey("condition", PopulationCondition, null = True, blank = True, default = None)
+  population_condition = models.ForeignKey(PopulationCondition, null = True, blank = True, default = None, verbose_name = 'condition')
   occupation = models.ForeignKey(Occupation, null = True, blank = True, default = None)
 
   polity = models.CharField(max_length = 100, null = True, blank = True)
