@@ -5,16 +5,42 @@ from colonialismdb.common.models import BaseSubmitModel, Category, Language, Loc
 
 class SourceType(Category):
   class Meta(Category.Meta):
-    permissions = ( ('activate_sourcetype', 'Can activate source type'), )
+    permissions = ( ('activate_sourcetype', 'Can activate source type'),
+                    ('merge_sourcetype', 'Can merge source type entries') )
+
+  def merge_into(self, other):
+    super(SourceType, self).merge_into(other)
+
+    self.basesourceobject_set.all().update(source_type = other)
+
   
 class SourceSubject(Category):
   class Meta(Category.Meta):
-    permissions = ( ('active_sourcesubject', 'Can activate source subject'), )
+    permissions = ( ('active_sourcesubject', 'Can activate source subject'),
+                    ('merge_sourcesubject', 'Can merge source subject entries') )
+
+  def merge_into(self, other):
+    super(SourceSubject, self).merge_into(other)
+
+    for bso in self.basesourceobject_set.all():
+      bso.subjects.remove(self)
+      bso.subjects.add(other)
 
 class DigitizationPriority(Category):
   class Meta(Category.Meta):
-    permissions = ( ('activate_digipriority', 'Can activate digitization priority'), )
+    permissions = ( ('activate_digipriority', 'Can activate digitization priority'),
+                    ('merge_digipriority', 'Can merge digitization priority entries') )
+
     verbose_name_plural = 'digitization priorities'
+
+  def merge_into(self, other):
+    super(DigitizationPriority, self).merge_into(other)
+
+    self.priority_gra_for_source.all().update(digitization_priority_gra = other)
+    self.priority_pi_for_source.all().update(digitization_priority_pi = other)
+
+    self.priority_gra_for_table.all().update(digitization_priority_gra = other)
+    self.priority_pi_for_table.all().update(digitization_priority_pi = other)
 
 class BaseSourceObject(BaseSubmitModel):
   class Meta(BaseSubmitModel.Meta):

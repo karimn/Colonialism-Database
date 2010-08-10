@@ -3,6 +3,8 @@ from django.contrib import admin
 from reversion.admin import VersionAdmin
 from reversion import revision
 
+import reversion
+
 class BaseSubmitAdmin(VersionAdmin) :
   @revision.create_on_success
   def activate(self, request, query_set):
@@ -53,38 +55,115 @@ class BaseSubmitAdmin(VersionAdmin) :
   readonly_fields = ('active', 'submitted_by')
   list_filter = ('active', 'submitted_by')
 
-class PoliticalUnitAdmin(BaseSubmitAdmin):
+class BaseMergeableAdmin(VersionAdmin):
+  #@revision.create_on_success
+  def merge(self, request, query_set):
+    """ 
+    We should have a concurrency problem here if more than one person are trying to activate entries at the same time.  
+    We could use "SELECT FOR UPDATE ..." or the django-locking module, but I would rather wait for 
+    http://code.djangoproject.com/ticket/2705 to be integrated into Django.
+    """
+    rows_merged = 0
+
+    if query_set.count < 2:
+      # TODO Add error message
+      return
+
+    merge_into = query_set[0]
+
+    for merge in query_set[1:]:
+      with reversion.revision:
+        merge.merge_into(merge_into)
+        revision.user = request.user
+        revision.comment = "Merged into %s" % merge_into
+      rows_merged += 1
+
+    for merge in query_set[1:]:
+      with reversion.revision:
+        merge.delete()
+        revision.user = request.user
+        revision.comment = "Deleted after merging"
+
+    with reversion.revision:
+      merge_into.save()
+      revision.user = request.user
+      revision.comment = "%i entries merged into this entry" % rows_merged
+
+    if rows_merged > 0:
+      self.message_user(request, '%i entries merged' % (rows_merged + 1))
+
+  merge.short_description = 'Merge entries'
+
+  def get_actions(self, request):
+    actions = super(VersionAdmin, self).get_actions(request)
+
+    if not request.user.has_perm(self.__class__.merge_perm):
+      del actions['merge']
+
+    return actions
+
+  actions = ('merge', )
+
+class PoliticalUnitAdmin(BaseSubmitAdmin, BaseMergeableAdmin):
   list_display = ('__unicode__', 'active', 'submitted_by')
   activate_perm = 'common.activate_polunit'
+  merge_perm = 'common.merge_polunit'
 
-class LocationAdmin(BaseSubmitAdmin) :
-  list_display = ('__unicode__', 'active', 'submitted_by')
+  actions = BaseSubmitAdmin.actions + BaseMergeableAdmin.actions
+
+  def get_actions(self, request):
+    actions1 = BaseSubmitAdmin.get_actions(self, request)
+    actions2 = BaseMergeableAdmin.get_actions(self, request)
+
+    actions1.update(actions2)
+    return actions1
+
+class LocationAdmin(PoliticalUnitAdmin) :
+  #list_display = ('__unicode__', 'active', 'submitted_by')
   exclude = ('full_name', )
   activate_perm = 'common.activate_location'
+  merge_perm = 'common.merge_location'
 
-class TemporalLocationAdmin(LocationAdmin) :
+class TemporalLocationAdmin(LocationAdmin):
   activate_perm = 'common.activate_temploc'
+  merge_perm = 'common.merge_temploc'
   
-class BaseCategoryAdmin(BaseSubmitAdmin):
+class BaseCategoryAdmin(BaseSubmitAdmin, BaseMergeableAdmin):
   list_display = ('name', 'active', 'submitted_by')
 
-class ReligionAdmin(BaseCategoryAdmin) :
+class BaseMergeableCategoryAdmin(BaseCategoryAdmin, BaseMergeableAdmin):
+  actions = BaseCategoryAdmin.actions + BaseMergeableAdmin.actions 
+
+  def get_actions(self, request):
+    actions1 = BaseCategoryAdmin.get_actions(self, request)
+    actions2 = BaseMergeableAdmin.get_actions(self, request)
+
+    actions1.update(actions2)
+    return actions1
+
+class ReligionAdmin(BaseMergeableCategoryAdmin):
   activate_perm = 'common.activate_religion'
+  merge_perm = 'common.merge_religion'
 
-class RaceAdmin(BaseCategoryAdmin) :
+class RaceAdmin(BaseMergeableCategoryAdmin):
   activate_perm = 'common.activate_race'
+  merge_perm = 'common.merge_race'
 
-class EthnicityAdmin(BaseCategoryAdmin) :
+class EthnicityAdmin(BaseMergeableCategoryAdmin):
   activate_perm = 'common.activate_ethnicity'
+  merge_perm = 'common.merge_ethnicity'
   
-class EthnicOriginAdmin(BaseCategoryAdmin) :
+class EthnicOriginAdmin(BaseMergeableCategoryAdmin):
   activate_perm = 'common.activate_ethnic_origin'
+  merge_perm = 'common.merge_ethnic_origin'
 
-class PoliticalUnitTypeAdmin(BaseCategoryAdmin):
+class PoliticalUnitTypeAdmin(BaseMergeableCategoryAdmin):
   activate_perm = 'common.activate_polunittype'
+  merge_perm = 'common.merge_polunittype'
 
-class LanguageAdmin(BaseCategoryAdmin):
+class LanguageAdmin(BaseMergeableCategoryAdmin):
   activate_perm = 'common.activate_language'
+  merge_perm = 'common.merge_language'
 
 admin.site.register(models.PoliticalUnit, PoliticalUnitAdmin)
 admin.site.register(models.Location, LocationAdmin)

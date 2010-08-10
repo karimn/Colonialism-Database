@@ -46,7 +46,8 @@ class Category(BaseSubmitModel, MergeableModel):
 
 class Religion(Category):
   class Meta(Category.Meta):
-    permissions = ( ('activate_religion', 'Can activate submitted religion'), )
+    permissions = ( ('activate_religion', 'Can activate submitted religion'),
+                    ('merge_religion', 'Can merge religion entries') )
 
   def merge_into(self, other):
     super(Religion, self).merge_into(other)
@@ -55,7 +56,8 @@ class Religion(Category):
 
 class Race(Category):
   class Meta(Category.Meta):
-    permissions = ( ('activate_race', 'Can activate submitted race'), )
+    permissions = ( ('activate_race', 'Can activate submitted race'), 
+                    ('merge_race', 'Can merge race entries') )
 
   def merge_into(self, other):
     super(Race, self).merge_into(other)
@@ -65,7 +67,8 @@ class Race(Category):
 class Ethnicity(Category):
   class Meta(Category.Meta):
     verbose_name_plural = 'ethnicities'
-    permissions = ( ('activate_ethnicity', 'Can activate submitted ethnicity'), )
+    permissions = ( ('activate_ethnicity', 'Can activate submitted ethnicity'),
+                    ('merge_ethnicity', 'Can merge ethnicity entries') )
 
   def merge_into(self, other):
     super(Ethnicity, self).merge_into(other)
@@ -74,7 +77,8 @@ class Ethnicity(Category):
     
 class EthnicOrigin(Category):
   class Meta(Category.Meta):
-    permissions = ( ('activate_ethnic_origin', 'Can activate submitted ethnic origin'), )
+    permissions = ( ('activate_ethnic_origin', 'Can activate submitted ethnic origin'), 
+                    ('merge_ethnic_origin', 'Can merge ethnic origin entries') )
 
   def merge_into(self, other):
     super(EthnicOrigin, self).merge_into(other)
@@ -83,28 +87,35 @@ class EthnicOrigin(Category):
 
 class PoliticalUnitType(Category):
   class Meta(Category.Meta):
-    permissions = ( ('activate_politicalunittype', 'Can activate submitted political unit type'), )
+    permissions = ( ('activate_polunittype', 'Can activate submitted political unit type'),
+                    ('merge_polunittype', 'Can merge pol unit type entries') )
 
   def merge_into(self, other):
     super(PoliticalUnitType, self).merge_into(other)
 
-    self.politicalunit_set.all().update(unit_type = other)
+    for pu in self.politicalunit_set.all():
+      pu.remove(self)
+      pu.add(other)
 
 class Language(Category):
   class Meta(Category.Meta):
-    permissions = ( ('activate_language', 'Can activate source language'), )
+    permissions = ( ('activate_language', 'Can activate source language'), 
+                    ('merge_language', 'Can merge language entries') )
     
   def merge_into(self, other):
     super(Language, self).merge_into(other)
 
-    self.basesourceobject_set.all().update(unit_type = other)
+    for bo in self.basesourceobject_set.all():
+      bo.remove(self)
+      bo.add(other)
 
 class PoliticalUnit(BaseSubmitModel,MergeableModel):
   name = models.CharField("name", max_length = 150)
   unit_type = models.ManyToManyField(PoliticalUnitType, null = True, blank = True)
 
   class Meta(BaseSubmitModel.Meta):
-    permissions = ( ('activate_politicalunit', 'Can activate submitted political unit'), )
+    permissions = ( ('activate_politicalunit', 'Can activate submitted political unit'),
+                    ('merge_politicalunit', 'Can merge political unit entries') )
 
   def activate(self):
     super(PoliticalUnit, self).activate()
@@ -125,7 +136,8 @@ class Location(PoliticalUnit):
   # TODO Spatial characteristics 
 
   class Meta(BaseSubmitModel.Meta):
-    permissions = ( ('activate_location', 'Can activate submitted location'), )
+    permissions = ( ('activate_location', 'Can activate submitted location'),
+                    ('merge_location', 'Can activate location entries') )
 
   def save(self, *args, **kwargs):
     if self.geographically_in:
@@ -202,13 +214,20 @@ class Location(PoliticalUnit):
 
     self.geographically_contains.all().update(geographically_in = other)
 
+    self.population_data_entries.all().update(location = other)
+
+    for tbl in self.table_set.all():
+      tbl.included_countries.remove(self)
+      tbl.included_countries.add(other)
+
 class TemporalLocation(Location):
   temporal_is = models.ForeignKey(Location, null = False, blank = False, verbose_name = "is", related_name = "temp_locations")
   begin_date = models.DateField("Start Date", null = True, blank = True)
   end_date = models.DateField("End Date", null = True, blank = True)
 
   class Meta(BaseSubmitModel.Meta):
-    permissions = ( ('activate_temporallocation', 'Can activate submitted temporal location'), )
+    permissions = ( ('activate_temploc', 'Can activate submitted temporal location'),
+                    ('merge_temploc', 'Can merge temporal location entries') )
 
   def get_geographically_in(self):
     if self.geographically_in:

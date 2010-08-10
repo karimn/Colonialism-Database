@@ -1,5 +1,5 @@
 from colonialismdb.sources.models import Source, Table, SourceType, SourceSubject, DigitizationPriority
-from colonialismdb.common.admin import BaseSubmitAdmin, BaseCategoryAdmin
+from colonialismdb.common.admin import BaseSubmitAdmin, BaseMergeableCategoryAdmin
 from colonialismdb import population
 from django.contrib import admin
 
@@ -39,14 +39,17 @@ class TableAdmin(BaseSubmitAdmin):
 
   activate_perm = 'sources.activate_table'
 
-class SourceTypeAdmin(BaseCategoryAdmin) :
+class SourceTypeAdmin(BaseMergeableCategoryAdmin) :
   activate_perm = 'sources.activate_sourcetype'
+  merge_perm = 'sources.merge_sourcetype'
 
-class SourceSubjectAdmin(BaseCategoryAdmin):
+class SourceSubjectAdmin(BaseMergeableCategoryAdmin):
   activate_perm = 'sources.activate_sourcesubject'
+  merge_perm = 'suorces.merge_sourcesubject'
 
-class DigitizationPriorityAdmin(BaseCategoryAdmin):
+class DigitizationPriorityAdmin(BaseMergeableCategoryAdmin):
   activate_perm = 'sources.activate_digipriority'
+  merge_perm = 'sources.merge_digipriority'
 
 admin.site.register(Source, SourceAdmin)
 admin.site.register(Table, TableAdmin)

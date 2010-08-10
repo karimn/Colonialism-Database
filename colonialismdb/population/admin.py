@@ -1,6 +1,6 @@
 from colonialismdb.population.models import MainDataEntry, PopulationCondition, Occupation
 from colonialismdb.sources.models import Table
-from colonialismdb.common.admin import BaseSubmitAdmin, BaseCategoryAdmin
+from colonialismdb.common.admin import BaseSubmitAdmin, BaseMergeableCategoryAdmin
 from django.contrib import admin
 
 class MainDataEntryAdmin(BaseSubmitAdmin) :
@@ -32,11 +32,13 @@ class MainDataEntryAdmin(BaseSubmitAdmin) :
 
   activate_perm = 'population.activate_main_data_entry'
 
-class PopulationConditionAdmin(BaseCategoryAdmin) :
+class PopulationConditionAdmin(BaseMergeableCategoryAdmin) :
   activate_perm = 'population.activate_population_condition'
+  merge_perm = 'population.merge_population_condition'
 
-class OccupationAdmin(BaseCategoryAdmin):
+class OccupationAdmin(BaseMergeableCategoryAdmin):
   activate_perm = 'population.activate_occupation'
+  merge_perm = 'population.merge_occupation'
 
 admin.site.register(MainDataEntry, MainDataEntryAdmin)
 admin.site.register(PopulationCondition, PopulationConditionAdmin)

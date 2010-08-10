@@ -5,11 +5,13 @@ from colonialismdb.sources.models import BaseSourceObject
 
 class PopulationCondition(Category):
   class Meta(Category.Meta):
-    permissions = ( ('activate_population_condition', 'Can activate submitted population condition'), )
+    permissions = ( ('activate_population_condition', 'Can activate submitted population condition'), 
+                    ('merge_population_condition', 'Can merge population condition entries') )
 
 class Occupation(Category):
   class Meta(Category.Meta):
-    permissions = ( ('activate_occupation', 'Can activate submitted occupation'), )
+    permissions = ( ('activate_occupation', 'Can activate submitted occupation'), 
+                    ('merge_occupation', 'Can merge occupation entries') )
 
 class MainDataEntry(BaseDataEntry):
   class Meta(BaseDataEntry.Meta):
