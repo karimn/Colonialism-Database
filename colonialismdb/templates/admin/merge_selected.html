@@ -1,0 +1,11 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+
+{% block content %}
+  <p>{% blocktrans %}Please select into which object you want to merge selected objects:{% endblocktrans %}</p>
+  <form action="/admin/merge_selected/" method="post">{% csrf_token %}
+    {{ form.as_p}}
+    <input type="submit" value="Submit"/>
+  </form>
+{% endblock %}

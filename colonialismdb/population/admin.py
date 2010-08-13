@@ -27,6 +27,8 @@ class MainDataEntryAdmin(BaseSubmitAdmin) :
         {'fields' : ['remarks', ], 'classes' : ['collapse', ]}),
   ]
 
+  radio_fields = { 'value_precision' : admin.HORIZONTAL, 'individ_fam' : admin.HORIZONTAL, 'population_gender' : admin.HORIZONTAL, 'value_unit' : admin.HORIZONTAL, }
+
   list_display = ('location', 'begin_date', 'end_date', 'active', 'submitted_by')
   ordering = ['begin_date']
 

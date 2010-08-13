@@ -25,6 +25,8 @@ urlpatterns = patterns('',
 
     (r'^population/', include('colonialismdb.population.urls')),
 
+    (r'^admin/merge_selected/', 'colonialismdb.common.admin.merge_selected'),
+
     (r'^admin/', include(admin.site.urls)),
     (r'^accounts/login/$', 'django.contrib.auth.views.login'),
     (r'^databrowse/(.*)', login_required(databrowse.site.root)),

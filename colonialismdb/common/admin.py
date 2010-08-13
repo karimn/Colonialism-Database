@@ -2,6 +2,11 @@ from colonialismdb.common import models
 from django.contrib import admin
 from reversion.admin import VersionAdmin
 from reversion import revision
+from django import forms
+from django.shortcuts import render_to_response
+from django.template import RequestContext
+from django.contrib.contenttypes.models import ContentType
+from django.http import HttpResponseRedirect
 
 import reversion
 
@@ -55,42 +60,73 @@ class BaseSubmitAdmin(VersionAdmin) :
   readonly_fields = ('active', 'submitted_by')
   list_filter = ('active', 'submitted_by')
 
-class BaseMergeableAdmin(VersionAdmin):
-  #@revision.create_on_success
-  def merge(self, request, query_set):
+class MergeSelectedForm(forms.Form):
+  merge_into = forms.ModelChoiceField(queryset = models.Location.objects.all(), empty_label = None)
+  ct = forms.IntegerField(widget = forms.HiddenInput)
+  ids = forms.CharField(widget = forms.HiddenInput)
+
+def merge_selected(request):
+  if request.method == "POST":
     """ 
     We should have a concurrency problem here if more than one person are trying to activate entries at the same time.  
     We could use "SELECT FOR UPDATE ..." or the django-locking module, but I would rather wait for 
     http://code.djangoproject.com/ticket/2705 to be integrated into Django.
     """
-    rows_merged = 0
+    form = MergeSelectedForm(request.POST)
 
+    if True: #form.is_valid(): # Not relying on this because the form will not be valid for any models other than Location because it is the one
+                               # used in the queryset argument of the ModelChoiceField.  I will rely instead on the POST values
+      rows_merged = 0
+
+      ct = ContentType.objects.get(pk = int(request.POST['ct']))
+      ids = [int(objid) for objid in request.POST['ids'].split(',')]
+      merge_into_pk = int(request.POST['merge_into'])
+
+      #merge_into = form.cleaned_data['merge_into']
+      merge_into = ct.model_class().objects.get(id = merge_into_pk)
+
+      to_merge = ct.model_class().objects.filter(id__in = ids).exclude(id = merge_into.pk)
+
+      for merge in to_merge:
+        with reversion.revision:
+          merge.merge_into(merge_into)
+          revision.user = request.user
+          revision.comment = "Merged into %s" % merge_into
+        rows_merged += 1
+
+      for merge in to_merge:
+        with reversion.revision:
+          merge.delete()
+          revision.user = request.user
+          revision.comment = "Deleted after merging"
+
+      with reversion.revision:
+        merge_into.save()
+        revision.user = request.user
+        revision.comment = "%i entries merged into this entry" % rows_merged
+
+      # TODO Print message to confirm merge
+
+    return HttpResponseRedirect('/admin/%s/%s' % (ct.app_label, ct.model))
+  else:
+    ct = ContentType.objects.get(pk = int(request.GET['ct']))
+    ids = [int(objid) for objid in request.GET['ids'].split(',')]
+    form = MergeSelectedForm(initial = { 'ct' : request.GET['ct'], 'ids' : request.GET['ids'] })
+    form.fields['merge_into'].queryset = ct.model_class().objects.filter(id__in = ids)
+
+    return render_to_response('admin/merge_selected.html', 
+                              { 'form' : form, 'app_label' : ct.app_label, 'model' : ct.model, }, 
+                              context_instance = RequestContext(request))
+
+class BaseMergeableAdmin(VersionAdmin):
+  def merge(self, request, query_set):
     if query_set.count < 2:
       # TODO Add error message
       return
 
-    merge_into = query_set[0]
-
-    for merge in query_set[1:]:
-      with reversion.revision:
-        merge.merge_into(merge_into)
-        revision.user = request.user
-        revision.comment = "Merged into %s" % merge_into
-      rows_merged += 1
-
-    for merge in query_set[1:]:
-      with reversion.revision:
-        merge.delete()
-        revision.user = request.user
-        revision.comment = "Deleted after merging"
-
-    with reversion.revision:
-      merge_into.save()
-      revision.user = request.user
-      revision.comment = "%i entries merged into this entry" % rows_merged
-
-    if rows_merged > 0:
-      self.message_user(request, '%i entries merged' % (rows_merged + 1))
+    selected = request.POST.getlist(admin.ACTION_CHECKBOX_NAME)
+    ct = ContentType.objects.get_for_model(query_set.model)
+    return HttpResponseRedirect("/admin/merge_selected/?ct=%s&ids=%s" % (ct.pk, ",".join(selected)))
 
   merge.short_description = 'Merge entries'
 
@@ -108,6 +144,8 @@ class PoliticalUnitAdmin(BaseSubmitAdmin, BaseMergeableAdmin):
   list_display = ('__unicode__', 'active', 'submitted_by')
   activate_perm = 'common.activate_polunit'
   merge_perm = 'common.merge_polunit'
+
+  search_fields = ('name', )
 
   actions = BaseSubmitAdmin.actions + BaseMergeableAdmin.actions
 

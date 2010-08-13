@@ -140,12 +140,26 @@ class Location(PoliticalUnit):
                     ('merge_location', 'Can activate location entries') )
 
   def save(self, *args, **kwargs):
+    self.clean()
+    super(Location, self).save(*args, **kwargs)
+
+    for loc in self.geographically_contains.all():
+      loc.clean()
+
+  def delete(self, *args, **kwargs):
+    geo_contains = self.geographically_contains.all()
+
+    super(Location, self).delete(*args, **kwargs)
+
+    for loc in geo_contains:
+      loc.geographically_in = None
+      loc.save()
+
+  def clean(self):
     if self.geographically_in:
       self.full_name = self.name + ", " + unicode(self.geographically_in)
     else:
       self.full_name = self.name 
-
-    super(Location, self).save(*args, **kwargs)
 
   def __unicode__(self): 
     return self.full_name
