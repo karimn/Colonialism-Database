@@ -94,8 +94,8 @@ class PoliticalUnitType(Category):
     super(PoliticalUnitType, self).merge_into(other)
 
     for pu in self.politicalunit_set.all():
-      pu.remove(self)
-      pu.add(other)
+      pu.unit_type.remove(self)
+      pu.unit_type.add(other)
 
 class Language(Category):
   class Meta(Category.Meta):
@@ -106,8 +106,8 @@ class Language(Category):
     super(Language, self).merge_into(other)
 
     for bo in self.basesourceobject_set.all():
-      bo.remove(self)
-      bo.add(other)
+      bo.languages.remove(self)
+      bo.languages.add(other)
 
 class PoliticalUnit(BaseSubmitModel,MergeableModel):
   name = models.CharField("name", max_length = 150)
