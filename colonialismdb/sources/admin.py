@@ -1,19 +1,27 @@
 from colonialismdb.sources.models import Source, Table, SourceType, SourceSubject, DigitizationPriority
-from colonialismdb.common.admin import BaseSubmitAdmin, BaseMergeableCategoryAdmin
+from colonialismdb.common.admin import BaseSubmitStackedInline, BaseSubmitTabularInline, BaseSubmitAdmin, BaseMergeableCategoryAdmin
 from colonialismdb import population
 from django.contrib import admin
 
-class TableInline(admin.TabularInline):
+class TableInline(BaseSubmitTabularInline):
   model = Table
   fields = ('name', 'original_name', 'nr', 'begin_page', 'end_page')
   fk_name = 'source'
   extra = 0
 
-class PopulationDataInline(admin.TabularInline):
+  activate_perm = 'sources.activate_table'
+
+class PopulationDataInline(BaseSubmitTabularInline):
   model = population.models.MainDataEntry
-  exclude = ('old_source_id', 'old_combined_id')
+  fields = ('location', 'begin_date', 'end_date', )
+  #exclude = ('old_source_id', 'old_combined_id')
+  readonly_fields = ('active', 'submitted_by')
+  list_display_links = ('location', )
+
   fk_name = 'source'
   extra = 0
+
+  activate_perm = 'population.activate_main_data_entry'
 
 class SourceAdmin(BaseSubmitAdmin) :
   exclude = ('old_id', )

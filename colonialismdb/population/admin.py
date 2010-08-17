@@ -4,6 +4,24 @@ from colonialismdb.common.admin import BaseSubmitAdmin, BaseMergeableCategoryAdm
 from django.contrib import admin
 
 class MainDataEntryAdmin(BaseSubmitAdmin) :
+  def change_view(self, request, object_id, extra_context=None):
+    result = super(MainDataEntryAdmin, self).change_view(request, object_id, extra_context)
+
+    if request.POST.has_key('_addanother'):
+      request.session['reuse_values'] = { 'source' : request.POST['source'], 'location' : request.POST['location'], }
+
+    return result
+
+  def add_view(self, request, form_url = '', extra_context=None):
+    if request.session.has_key('reuse_values'):
+      request.GET = request.GET.copy()
+      request.GET.update(request.session['reuse_values'])
+      del request.session['reuse_values']
+
+    result = super(MainDataEntryAdmin, self).add_view(request, form_url, extra_context)
+
+    return result
+  
   fieldsets = [
       (None,
         {'fields' : ['active', 'submitted_by']}),
@@ -21,7 +39,7 @@ class MainDataEntryAdmin(BaseSubmitAdmin) :
         {'fields' : ['individ_fam', 'population_gender', 'population_value', 'value_unit', 'is_total', 'value_precision']}),
 
       ('Source Information', 
-        {'fields' : ['page_num', 'polity', 'iso', 'wb']}),
+        {'fields' : ['source', 'page_num', 'polity', 'iso', 'wb']}),
 
       ('Other Information', 
         {'fields' : ['remarks', ], 'classes' : ['collapse', ]}),

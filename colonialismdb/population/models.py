@@ -15,8 +15,8 @@ class Occupation(Category):
 
 class MainDataEntry(BaseDataEntry):
   class Meta(BaseDataEntry.Meta):
-    verbose_name = "data entry"
-    verbose_name_plural = "data entries"
+    verbose_name = "population data entry"
+    verbose_name_plural = "population data entries"
     ordering = ['location', 'begin_date', ]
     permissions = ( ('activate_main_data_entry', 'Can activate submitted population data entry'), )
 
@@ -55,9 +55,9 @@ class MainDataEntry(BaseDataEntry):
 
   is_total = models.BooleanField("Is Total", default = False)
   value_unit = models.CharField("Units", max_length = 15, choices = BaseDataEntry.UNIT_CHOICES, default = 'units')
-  individ_fam = models.IntegerField("Individuals/Families", choices = INDIVID_FAM_CHOICES)
+  individ_fam = models.IntegerField("Individuals / Families", choices = INDIVID_FAM_CHOICES, default = 0)
   population_gender = models.CharField("gender", max_length = 1, choices = GENDER_CHOICES, default = None, null = True)
-  population_value = models.DecimalField("value", max_digits = 10, decimal_places = 2, null = True, blank = True)
+  population_value = models.DecimalField("value", max_digits = 10, decimal_places = 2) #, null = True, blank = True)
   value_precision = models.IntegerField("level of precision", choices = VAL_PRECISION_CHOICES, default = 0, null = True)
   
   population_condition = models.ForeignKey(PopulationCondition, null = True, blank = True, default = None, verbose_name = 'condition')

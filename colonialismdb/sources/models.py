@@ -46,6 +46,13 @@ class BaseSourceObject(BaseSubmitModel):
   class Meta(BaseSubmitModel.Meta):
     pass
 
+  def __unicode__(self):
+    """ This is ugly because subclass __unicode__ are not automatically called """
+    try:
+      return unicode(self.source)
+    except Source.DoesNotExist:
+      return unicode(self.table)
+
   def activate(self):
     super(Source, self).activate()
 

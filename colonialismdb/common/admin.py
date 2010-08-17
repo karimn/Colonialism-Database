@@ -10,7 +10,67 @@ from django.http import HttpResponseRedirect
 
 import reversion
 
-class BaseSubmitAdmin(VersionAdmin) :
+class BaseSubmit:
+  readonly_fields = ('active', 'submitted_by')
+
+class BaseSubmitInline(BaseSubmit):
+  max_num = 0 # This is to prevent additions
+
+"""
+  def save_formset(self, request, form, formset, change):
+    import pdb; pdb.set_trace()
+    if change:
+      formset.save()
+    else:
+      instances = formset.save(commit = False)
+
+      for inst in instances:
+        with reversion.revision:
+          inst.submitted_by = request.user
+          inst.save()
+          revision.user = request.user
+          revision.comment = 'Submitted new data'
+
+      formset.save_m2m()
+"""
+
+class BaseSubmitStackedInline(BaseSubmitInline, admin.StackedInline):
+  def queryset(self, request):
+    qs = super(BaseSubmitStackedInline, self).queryset(request)
+
+    if not request.user.has_perm(self.__class__.activate_perm):
+      qs = qs.filter(submitted_by = request.user)
+
+    return qs
+
+class BaseSubmitTabularInline(BaseSubmitInline, admin.TabularInline):
+  def queryset(self, request):
+    qs = super(BaseSubmitTabularInline, self).queryset(request)
+
+    if not request.user.has_perm(self.__class__.activate_perm):
+      qs = qs.filter(submitted_by = request.user)
+
+    return qs
+
+class BaseSubmitAdmin(BaseSubmit, VersionAdmin) :
+  @revision.create_on_success
+  def save_model(self, request, obj, form, change):
+    if not change and obj.active == False:
+      obj.submitted_by = request.user
+      obj.save()
+      revision.user = request.user
+      revision.comment = "Submitted new data"
+    else:
+      obj.save()
+
+  def queryset(self, request):
+    qs = super(BaseSubmitAdmin, self).queryset(request)
+
+    if not request.user.has_perm(self.__class__.activate_perm):
+      qs = qs.filter(submitted_by = request.user)
+
+    return qs
+
   @revision.create_on_success
   def activate(self, request, query_set):
     """ 
@@ -30,16 +90,6 @@ class BaseSubmitAdmin(VersionAdmin) :
 
   activate.short_description = 'Activate'
 
-  @revision.create_on_success
-  def save_model(self, request, obj, form, change):
-    if not change and obj.active == False:
-      obj.submitted_by = request.user
-      obj.save()
-      revision.user = request.user
-      revision.comment = "Submitted new data"
-    else:
-      obj.save()
-
   def get_actions(self, request):
     actions = super(BaseSubmitAdmin, self).get_actions(request)
     
@@ -48,16 +98,7 @@ class BaseSubmitAdmin(VersionAdmin) :
 
     return actions
 
-  def queryset(self, request):
-    qs = super(BaseSubmitAdmin, self).queryset(request)
-
-    if not request.user.has_perm(self.__class__.activate_perm):
-      qs = qs.filter(submitted_by = request.user)
-
-    return qs
-
   actions = ('activate', )
-  readonly_fields = ('active', 'submitted_by')
   list_filter = ('active', 'submitted_by')
 
 class MergeSelectedForm(forms.Form):
