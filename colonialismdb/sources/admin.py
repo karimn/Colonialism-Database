@@ -53,7 +53,7 @@ class SourceTypeAdmin(BaseMergeableCategoryAdmin) :
 
 class SourceSubjectAdmin(BaseMergeableCategoryAdmin):
   activate_perm = 'sources.activate_sourcesubject'
-  merge_perm = 'suorces.merge_sourcesubject'
+  merge_perm = 'sources.merge_sourcesubject'
 
 class DigitizationPriorityAdmin(BaseMergeableCategoryAdmin):
   activate_perm = 'sources.activate_digipriority'
