@@ -16,7 +16,7 @@ class SourceType(Category):
   
 class SourceSubject(Category):
   class Meta(Category.Meta):
-    permissions = ( ('active_sourcesubject', 'Can activate source subject'),
+    permissions = ( ('activate_sourcesubject', 'Can activate source subject'),
                     ('merge_sourcesubject', 'Can merge source subject entries') )
 
   def merge_into(self, other):
