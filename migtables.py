@@ -146,7 +146,11 @@ if __name__ == "__main__":
       if not rdict[k] or (isinstance(rdict[k], basestring) and len(rdict[k]) == 0):
         del rdict[k]
 
-    print "%i, %s" % (i, rdict['name'])
+    try:
+      print "%i, %s" % (i, rdict['name'])
+    except UnicodeEncodeError:
+      # Windows decode error workaround
+      print i, ", <UnicodeEncodeError Encountered, ignoring for now>"
 
     try:
       table = Table(**rdict)
