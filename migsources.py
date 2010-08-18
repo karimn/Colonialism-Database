@@ -27,8 +27,6 @@ get_or_add_priority = functools.partial(migtools.get_or_add_cat_item, cat = Digi
 infile = sys.argv[1]
 reader = csv.reader(open(infile, "r"), delimiter='\t', quotechar = '"')
 
-string_encoding = 'ISO-8859-1'
-
 num_err_rows = 0
 
 for i, row in enumerate(reader):
@@ -134,7 +132,7 @@ for i, row in enumerate(reader):
 
   for key in ('original_title', 'title', 'publisher', 'remarks'):
     if rdict.has_key(key):
-      rdict[key] = unicode(rdict[key], string_encoding)
+      rdict[key] = unicode(rdict[key], migtools.STRING_ENCODING)
 
   try:
     source = Source(**rdict)

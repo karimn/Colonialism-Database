@@ -1,4 +1,4 @@
-from colonialismdb.sources.models import Source, Table, SourceType, SourceSubject, DigitizationPriority
+from colonialismdb.sources.models import Source, Table, SourceType, SourceSubject, DigitizationPriority, SourceFile
 from colonialismdb.common.admin import BaseSubmitStackedInline, BaseSubmitTabularInline, BaseSubmitAdmin, BaseMergeableCategoryAdmin
 from colonialismdb import population
 from django.contrib import admin
@@ -23,6 +23,13 @@ class PopulationDataInline(BaseSubmitTabularInline):
 
   activate_perm = 'population.activate_main_data_entry'
 
+class SourceFileInline(BaseSubmitTabularInline):
+  model = SourceFile
+  max_num = None
+  extra = 0
+
+  activate_perm = 'sources.activate_sourcefile'
+
 class SourceAdmin(BaseSubmitAdmin) :
   exclude = ('old_id', )
 
@@ -31,7 +38,7 @@ class SourceAdmin(BaseSubmitAdmin) :
   search_fields = ('title', 'original_title')
   ordering = ['author']
 
-  inlines = [ TableInline, PopulationDataInline ]
+  inlines = [ SourceFileInline, TableInline, PopulationDataInline ]
 
   activate_perm = 'sources.activate_source'
 
@@ -43,7 +50,7 @@ class TableAdmin(BaseSubmitAdmin):
   search_fields = ('name', 'original_name')
   ordering = ['source']
 
-  inlines = [ PopulationDataInline, ]
+  inlines = [ SourceFileInline, PopulationDataInline, ]
 
   activate_perm = 'sources.activate_table'
 

@@ -10,9 +10,7 @@ class SourceType(Category):
 
   def merge_into(self, other):
     super(SourceType, self).merge_into(other)
-
     self.basesourceobject_set.all().update(source_type = other)
-
   
 class SourceSubject(Category):
   class Meta(Category.Meta):
@@ -42,6 +40,7 @@ class DigitizationPriority(Category):
     self.priority_gra_for_table.all().update(digitization_priority_gra = other)
     self.priority_pi_for_table.all().update(digitization_priority_pi = other)
 
+
 class BaseSourceObject(BaseSubmitModel):
   class Meta(BaseSubmitModel.Meta):
     pass
@@ -66,6 +65,10 @@ class BaseSourceObject(BaseSubmitModel):
         if not lang.active:
           lang.activate()
 
+    for f in self.sourcefile_set:
+      if not f.active:
+        f.activate()
+
     if self.digitization_priority_gra and not self.digitization_priority_gra.active:
       self.digitization_priority_gra.activate()
 
@@ -73,8 +76,6 @@ class BaseSourceObject(BaseSubmitModel):
       self.digitization_priority_pi.activate()
 
   subjects = models.ManyToManyField(SourceSubject, blank = True)
-
-  source_file = models.FileField(upload_to = 'sources/%Y/%m/%d', blank = True)
 
   digitization_priority_gra = models.ForeignKey(DigitizationPriority, null = True, blank = True, related_name = 'prority_gra_for_%(class)s')
   digitization_priority_pi = models.ForeignKey(DigitizationPriority, null = True, blank = True, related_name = 'priority_pi_for_%(class)s')
@@ -87,15 +88,24 @@ class BaseSourceObject(BaseSubmitModel):
 
   languages = models.ManyToManyField(Language)
 
+class SourceFile(BaseSubmitModel):
+  class Meta(BaseSubmitModel.Meta):
+    permissions = ( ('activate_sourcefile', 'Can activate source file'), )
+
+  source_file = models.FileField(upload_to = 'sources/%Y/%m/%d')
+  for_source = models.ForeignKey(BaseSourceObject)
+
 class Source(BaseSourceObject):
   class Meta(BaseSourceObject.Meta):
-    permissions = ( ('activate_source', 'Can active source'), )
+    permissions = ( ('activate_source', 'Can activate source'), )
 
   def __unicode__(self):
     if self.volume and len(unicode(self.volume)) > 0:
-      return "%s, %s" % (self.title, self.volume)
+      return "%s (Volume: %s)" % (self.title, self.volume)
+    elif self.year and len(unicode(self.year)) > 0:
+      return "%s (Year: %i)" % (self.title, self.year)
     elif self.edition and len(unicode(self.edition)) > 0:
-      return "%s, %s" % (self.title, self.edition)
+      return "%s (Edition: %s)" % (self.title, self.edition)
 
     return self.title
 

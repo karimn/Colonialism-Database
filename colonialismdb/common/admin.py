@@ -16,23 +16,6 @@ class BaseSubmit:
 class BaseSubmitInline(BaseSubmit):
   max_num = 0 # This is to prevent additions
 
-"""
-  def save_formset(self, request, form, formset, change):
-    import pdb; pdb.set_trace()
-    if change:
-      formset.save()
-    else:
-      instances = formset.save(commit = False)
-
-      for inst in instances:
-        with reversion.revision:
-          inst.submitted_by = request.user
-          inst.save()
-          revision.user = request.user
-          revision.comment = 'Submitted new data'
-
-      formset.save_m2m()
-"""
 
 class BaseSubmitStackedInline(BaseSubmitInline, admin.StackedInline):
   def queryset(self, request):
@@ -98,9 +81,26 @@ class BaseSubmitAdmin(BaseSubmit, VersionAdmin) :
 
     return actions
 
+  def save_formset(self, request, form, formset, change):
+    if issubclass(formset.model, models.BaseSubmitModel):
+        instances = formset.save(commit = False)
+
+        for inst in instances:
+          with reversion.revision:
+            if not inst.submitted_by:
+              inst.submitted_by = request.user
+              
+            inst.save()
+            revision.user = request.user
+            revision.comment = 'Submitted new data'
+
+        formset.save_m2m()
+    else:
+      formset.save()
+
   actions = ('activate', )
   list_filter = ('active', 'submitted_by')
-
+  
 class MergeSelectedForm(forms.Form):
   merge_into = forms.ModelChoiceField(queryset = models.Location.objects.all(), empty_label = None)
   ct = forms.IntegerField(widget = forms.HiddenInput)
