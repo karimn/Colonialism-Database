@@ -1,4 +1,7 @@
+import os
+
 from colonialismdb.common.models import Location
+import colonialismdb
 
 STRING_ENCODING = 'ISO-8859-1'
 
@@ -113,3 +116,18 @@ def get_source_file_path(rdict, i, num_err_rows):
       return None, num_err_rows + 1
 
   return source_file_path, num_err_rows
+
+def add_source_files(source_file_path, src_obj):
+  if os.path.isfile(source_file_path):
+    source_file = File(open(source_file_path, 'r'))
+    src_file = sources.models.SourceFile(source_file = source_file, for_source = src_obj)
+    src_file.save()
+  elif os.path.isdir(source_file_path):
+    for f in os.listdir(source_file_path):
+      sub_source_file = "%s/%s" % (source_file_path, f)
+      if os.path.isfile(sub_source_file):
+        add_source_files(sub_source_file, src_obj)
+  else:
+    return False
+  
+  return True

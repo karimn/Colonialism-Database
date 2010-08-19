@@ -88,19 +88,13 @@ for i, row in enumerate(reader):
 
   print '%i, %s, %s, %s' % (i, rdict['author'], rdict['editor'], rdict['title'])
 
+  source_file_path = None
+
   if os.environ.has_key('COLONIALISM_SERVER') and rdict['source_file']: # and colonialism.settings.MEDIA_ROOT:
     source_file_path, num_err_rows = migtools.get_source_file_path(rdict, i, num_err_rows) 
 
     if not source_file_path:
       continue
-      
-    try:
-      source_file = File(open(source_file_path, 'r'))
-    except IOError as e:
-      sys.stderr.write('IO error on opening source file %s in row (%i)\n' % (source_file_path, i))
-      sys.stderr.write('%s\n' % rdict)
-      num_err_rows += 1
-      continue 
     
   del rdict['source_file']
 
@@ -126,6 +120,14 @@ for i, row in enumerate(reader):
 
     if written_language2:
       source.languages.add(written_language2)
+
+    if source_file_path:
+      if not add_source_files(source_file_path, source):
+        sys.stderr.write('IO error on opening source file %s in row (%i)\n' % (source_file_path, i))
+        sys.stderr.write('%s\n' % rdict)
+        num_err_rows += 1
+        source.delete()
+        continue 
 
   except (ValueError, DatabaseError, ValidationError) as e:
     sys.stderr.write('Failed to save source row (%i): %s\n' % (i, e))

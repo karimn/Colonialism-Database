@@ -55,19 +55,13 @@ if __name__ == "__main__":
 
     del rdict['transfer']
 
+    source_file_path = None
+
     if os.environ.has_key('COLONIALISM_SERVER') and rdict['source_file']: # and colonialism.settings.MEDIA_ROOT:
       source_file_path, num_err_rows = migtools.get_source_file_path(rdict, i, num_err_rows) 
 
       if not source_file_path:
         continue
-      
-      try:
-        source_file = File(open(source_file_path, 'r'))
-      except IOError as e:
-        sys.stderr.write('IO error on opening source file %s in row (%i)\n' % (source_file_path, i))
-        sys.stderr.write('%s\n' % rdict)
-        num_err_rows += 1
-        continue 
 
     del rdict['source_file']
 
@@ -181,6 +175,13 @@ if __name__ == "__main__":
         for lang in languages:
           table.languages.add(lang)
 
+      if source_file_path:
+        if not add_source_files(source_file_path, source):
+          sys.stderr.write('IO error on opening source file %s in row (%i)\n' % (source_file_path, i))
+          sys.stderr.write('%s\n' % rdict)
+          num_err_rows += 1
+          source.delete()
+          continue 
     except (ValueError, DatabaseError, ValidationError) as e:
       sys.stderr.write('Failed to save table row (%i): %s\n' % (i, e))
       sys.stderr.write('%s\n' % rdict)
