@@ -55,8 +55,21 @@ if __name__ == "__main__":
 
     del rdict['transfer']
 
-    #TODO Adding files
-    del rdict['source_file']
+    if os.environ.has_key('COLONIALISM_SERVER') and rdict['source_file']: # and colonialism.settings.MEDIA_ROOT:
+      source_file_path, num_err_rows = migtools.get_source_file_path(rdict, i, num_err_rows) 
+
+      if not source_file_path:
+        continue
+      
+      try:
+        rdict['source_file'] = File(open(source_file_path, 'r'))
+      except IOError as e:
+        sys.stderr.write('IO error on opening source file %s in row (%i)\n' % (source_file_path, i))
+        sys.stderr.write('%s\n' % rdict)
+        num_err_rows += 1
+        continue 
+    else:
+      del rdict['source_file']
 
     try:
       rdict['source'] = Source.objects.get(old_id = rdict['old_source_id'])

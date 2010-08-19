@@ -89,31 +89,10 @@ for i, row in enumerate(reader):
   print '%i, %s, %s, %s' % (i, rdict['author'], rdict['editor'], rdict['title'])
 
   if os.environ.has_key('COLONIALISM_SERVER') and rdict['source_file']: # and colonialism.settings.MEDIA_ROOT:
-    source_file_path = None
-    peanut_match = re.match(r'#?\\\\peanut\.bu\.edu\\e\\([^#]+)', rdict['source_file'], flags = re.IGNORECASE)
+    source_file_path, num_err_rows = migtools.get_source_file_path(rdict, i, num_err_rows) 
 
-    if peanut_match:
-      source_file_path = "e:\\%s" % peanut_match.group(1)
-    else:
-      relative_path_match = re.match(r'#?(?:\.\.\\){1,2}subproject_([^\\]+)\\([^#]+)', rdict['source_file'], flags = re.IGNORECASE)
-
-      if relative_path_match:
-        subproj_dir = relative_path_match.group(1).lower()
-
-        if subproj_dir == 'colonialism':
-          source_file_path = 'e:\\colonialism\\project_thebase\\subproject_colonialism\\%s' % relative_path_match.group(2).lower()
-        #elif subproj_dir == 'datalabel':
-        #  source_file_path = 'e:\\colonialism\\project_thebase\\subproject_colonialism\\%s' % relative_path_match.group(1).lower()
-        else:
-          sys.stderr.write('Failed to match relative source file path in row (%i)\n' % (i,))
-          sys.stderr.write('%s\n' % rdict)
-          num_err_rows += 1
-          continue 
-      else:
-        sys.stderr.write('Failed to match source file path in row (%i)\n' % (i,))
-        sys.stderr.write('%s\n' % rdict)
-        num_err_rows += 1
-        continue 
+    if not source_file_path:
+      continue
       
     try:
       rdict['source_file'] = File(open(source_file_path, 'r'))
