@@ -95,14 +95,14 @@ for i, row in enumerate(reader):
       continue
       
     try:
-      rdict['source_file'] = File(open(source_file_path, 'r'))
+      source_file = File(open(source_file_path, 'r'))
     except IOError as e:
       sys.stderr.write('IO error on opening source file %s in row (%i)\n' % (source_file_path, i))
       sys.stderr.write('%s\n' % rdict)
       num_err_rows += 1
       continue 
-  else:
-    del rdict['source_file']
+    
+  del rdict['source_file']
 
   for k in rdict.keys():
     if not rdict[k] or (isinstance(rdict[k], basestring) and len(rdict[k]) == 0):
