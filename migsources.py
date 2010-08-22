@@ -100,7 +100,7 @@ for i, row in enumerate(reader):
 
   source_file_path = None
 
-  if os.environ.has_key('COLONIALISM_SERVER') and rdict['source_file']: # and colonialism.settings.MEDIA_ROOT:
+  if os.environ.has_key('COLONIALISM_SERVER') and rdict.has_key('source_file') and rdict['source_file']: # and colonialism.settings.MEDIA_ROOT:
     source_file_path, num_err_rows = migtools.get_source_file_path(rdict, i, num_err_rows) 
 
     if not source_file_path:
