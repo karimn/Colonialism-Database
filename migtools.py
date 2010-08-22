@@ -2,6 +2,7 @@ import re
 import os
 
 from colonialismdb.common.models import Location
+from django.core.files import File
 import colonialismdb
 
 STRING_ENCODING = 'ISO-8859-1'

@@ -14,7 +14,6 @@ from colonialismdb.common.models import Language
 
 from django.db.utils import DatabaseError
 from django.core.exceptions import ValidationError
-from django.core.files import File
 from django.contrib.auth.models import User
 
 get_or_add_language = functools.partial(migtools.get_or_add_cat_item, cat = Language)
