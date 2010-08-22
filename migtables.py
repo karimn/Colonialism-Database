@@ -193,7 +193,7 @@ if __name__ == "__main__":
           sys.stderr.write('Error on adding source file(s) (from) %s in row (%i)\n' % (source_file_path, i))
           sys.stderr.write('%s\n' % rdict)
           num_err_rows += 1
-          source.delete()
+          table.delete()
           continue 
     except (ValueError, DatabaseError, ValidationError) as e:
       sys.stderr.write('Failed to save table row (%i): %s\n' % (i, e))
