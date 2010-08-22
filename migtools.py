@@ -94,29 +94,31 @@ def get_or_add_location(place_name, mig_user, in1 = None, in2 = None, in3 = None
       retrying = True
 
 def get_source_file_path(rdict, i, num_err_rows):
-  source_file_path = None
-  peanut_match = re.match(r'#?\\\\peanut\.bu\.edu\\e\\([^#]+)', rdict['source_file'], flags = re.IGNORECASE)
+  source_file_path = rdict['source_file'] 
 
-  if peanut_match:
-    source_file_path = "e:\\%s" % peanut_match.group(1)
-  else:
-    relative_path_match = re.match(r'#?(?:\.\.\\){1,2}subproject_([^\\]+)\\([^#]+)', rdict['source_file'], flags = re.IGNORECASE)
+  if not re.match(r'^e:\\', source_file_path, flags = re.IGNORECASE):
+    peanut_match = re.match(r'#?\\\\peanut\.bu\.edu\\e\\([^#]+)', rdict['source_file'], flags = re.IGNORECASE)
 
-    if relative_path_match:
-      subproj_dir = relative_path_match.group(1).lower()
+    if peanut_match:
+      source_file_path = "e:\\%s" % peanut_match.group(1)
+    else:
+      relative_path_match = re.match(r'#?(?:\.\.\\){1,2}subproject_([^\\]+)\\([^#]+)', rdict['source_file'], flags = re.IGNORECASE)
 
-      if subproj_dir == 'colonialism':
-        source_file_path = 'e:\\colonialism\\project_thebase\\subproject_colonialism\\%s' % relative_path_match.group(2).lower()
-      #elif subproj_dir == 'datalabel':
-      #  source_file_path = 'e:\\colonialism\\project_thebase\\subproject_colonialism\\%s' % relative_path_match.group(1).lower()
+      if relative_path_match:
+        subproj_dir = relative_path_match.group(1).lower()
+
+        if subproj_dir == 'colonialism':
+          source_file_path = 'e:\\colonialism\\project_thebase\\subproject_colonialism\\%s' % relative_path_match.group(2).lower()
+        #elif subproj_dir == 'datalabel':
+        #  source_file_path = 'e:\\colonialism\\project_thebase\\subproject_colonialism\\%s' % relative_path_match.group(1).lower()
+        else:
+          sys.stderr.write('Failed to match relative source file path in row (%i)\n' % (i,))
+          sys.stderr.write('%s\n' % rdict)
+          return None, num_err_rows + 1
       else:
-        sys.stderr.write('Failed to match relative source file path in row (%i)\n' % (i,))
+        sys.stderr.write('Failed to match source file path in row (%i)\n' % (i,))
         sys.stderr.write('%s\n' % rdict)
         return None, num_err_rows + 1
-    else:
-      sys.stderr.write('Failed to match source file path in row (%i)\n' % (i,))
-      sys.stderr.write('%s\n' % rdict)
-      return None, num_err_rows + 1
 
   return source_file_path, num_err_rows
 

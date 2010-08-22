@@ -87,6 +87,17 @@ for i, row in enumerate(reader):
 
   print '%i, %s, %s, %s' % (i, rdict['author'], rdict['editor'], rdict['title'])
 
+  if re.match(r'^http:', rdict['source_file']):
+    if not rdict.has_key('url'):
+      rdict['url'] = rdict['source_file']
+    else:
+      sys.stderr.write('URL already specified in row (%i)\n', % i)
+      sys.stderr.write('%s\n' % rdict)
+      num_err_rows += 1
+      continue 
+
+    del rdict['source_file']
+
   source_file_path = None
 
   if os.environ.has_key('COLONIALISM_SERVER') and rdict['source_file']: # and colonialism.settings.MEDIA_ROOT:
