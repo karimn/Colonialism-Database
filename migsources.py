@@ -87,7 +87,7 @@ for i, row in enumerate(reader):
 
   print '%i, %s, %s, %s' % (i, rdict['author'], rdict['editor'], rdict['title'])
 
-  if re.match(r'^http:', rdict['source_file']):
+  if re.match(r'^#?http:', rdict['source_file']):
     if not rdict.has_key('url'):
       rdict['url'] = rdict['source_file']
     else:

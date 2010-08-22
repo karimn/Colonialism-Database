@@ -94,9 +94,13 @@ def get_or_add_location(place_name, mig_user, in1 = None, in2 = None, in3 = None
       retrying = True
 
 def get_source_file_path(rdict, i, num_err_rows):
-  source_file_path = rdict['source_file'] 
+  source_file_path = None 
+  
+  local_path_match = re.match(r'^#?(e:\\[^#]+)', rdict['source_file'], flags = re.IGNORECASE)
 
-  if not re.match(r'^e:\\', source_file_path, flags = re.IGNORECASE):
+  if local_path_match:     
+    source_file_path = local_path_match.group(1)
+  else:
     peanut_match = re.match(r'#?\\\\peanut\.bu\.edu\\e\\([^#]+)', rdict['source_file'], flags = re.IGNORECASE)
 
     if peanut_match:
