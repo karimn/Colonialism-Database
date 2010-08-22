@@ -133,7 +133,7 @@ for i, row in enumerate(reader):
       source.languages.add(written_language2)
 
     if source_file_path:
-      if not migtools.add_source_files(unicode(source_file_path, migtools.STRING_ENCODING), source):
+      if not migtools.add_source_files(unicode(source_file_path, migtools.STRING_ENCODING), source, rdict['submitted_by']):
         sys.stderr.write('Error on adding source file(s) (from) %s in row (%i)\n' % (source_file_path, i))
         sys.stderr.write('%s\n' % rdict)
         num_err_rows += 1

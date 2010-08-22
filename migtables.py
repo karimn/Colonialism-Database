@@ -55,15 +55,27 @@ if __name__ == "__main__":
 
     del rdict['transfer']
 
+    if re.match(r'^#?http:', rdict['source_file']):
+      if not rdict.has_key('url'):
+        rdict['url'] = rdict['source_file']
+      else:
+        sys.stderr.write('URL already specified in row (%i)\n' % i)
+        sys.stderr.write('%s\n' % rdict)
+        num_err_rows += 1
+        continue 
+
+      del rdict['source_file']
+
     source_file_path = None
 
-    if os.environ.has_key('COLONIALISM_SERVER') and rdict['source_file']: # and colonialism.settings.MEDIA_ROOT:
+    if os.environ.has_key('COLONIALISM_SERVER') and rdict.has_key('source_file') and rdict['source_file']: # and colonialism.settings.MEDIA_ROOT:
       source_file_path, num_err_rows = migtools.get_source_file_path(rdict, i, num_err_rows) 
 
       if not source_file_path:
         continue
-
-    del rdict['source_file']
+      
+    if rdict.has_key('source_file'):
+      del rdict['source_file']
 
     try:
       rdict['source'] = Source.objects.get(old_id = rdict['old_source_id'])
@@ -176,8 +188,8 @@ if __name__ == "__main__":
           table.languages.add(lang)
 
       if source_file_path:
-        if not add_source_files(source_file_path, source):
-          sys.stderr.write('IO error on opening source file %s in row (%i)\n' % (source_file_path, i))
+        if not add_source_files(source_file_path, source, rdict['submitted_by']):
+          sys.stderr.write('Error on adding source file(s) (from) %s in row (%i)\n' % (source_file_path, i))
           sys.stderr.write('%s\n' % rdict)
           num_err_rows += 1
           source.delete()
