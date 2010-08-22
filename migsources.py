@@ -106,7 +106,8 @@ for i, row in enumerate(reader):
     if not source_file_path:
       continue
     
-  del rdict['source_file']
+  if rdict.has_key('source_file'):
+    del rdict['source_file']
 
   for k in rdict.keys():
     if not rdict[k] or (isinstance(rdict[k], basestring) and len(rdict[k]) == 0):
