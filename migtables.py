@@ -192,7 +192,7 @@ if __name__ == "__main__":
           table.languages.add(lang)
 
       if source_file_path:
-        if not migtools.add_source_files(source_file_path, table, rdict['submitted_by']):
+        if not migtools.add_source_files(unicode(source_file_path, migtools.STRING_ENCODING), table, rdict['submitted_by']):
           sys.stderr.write('Error on adding source file(s) (from) %s in row (%i)\n' % (source_file_path, i))
           sys.stderr.write('%s\n' % rdict)
           num_err_rows += 1
