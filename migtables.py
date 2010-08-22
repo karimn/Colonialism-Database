@@ -4,6 +4,7 @@ import csv
 import datetime
 import sys
 import re
+import os
 import functools
 
 import migtools
