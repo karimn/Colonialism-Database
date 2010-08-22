@@ -91,7 +91,7 @@ for i, row in enumerate(reader):
     if not rdict.has_key('url'):
       rdict['url'] = rdict['source_file']
     else:
-      sys.stderr.write('URL already specified in row (%i)\n', % i)
+      sys.stderr.write('URL already specified in row (%i)\n' % i)
       sys.stderr.write('%s\n' % rdict)
       num_err_rows += 1
       continue 
