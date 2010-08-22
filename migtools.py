@@ -135,7 +135,7 @@ def add_source_files(source_file_path, src_obj, submitted_by):
     for f in os.listdir(source_file_path):
       sub_source_file = "%s/%s" % (source_file_path, f)
       if os.path.isfile(sub_source_file):
-        add_source_files(sub_source_file, src_obj)
+        add_source_files(sub_source_file, src_obj, submitted_by)
   else:
     return False
   
