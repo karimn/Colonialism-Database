@@ -96,7 +96,10 @@ if __name__ == "__main__":
     rdict['active'] = True
 
     if not rdict['submitted_by'] or len(rdict['submitted_by']) == 0:
-      rdict['submitted_by'] = None
+      sys.stderr.write('Curator not specified in row (%i)\n' % i)
+      sys.stderr.write('%s\n' % rdict)
+      num_err_rows += 1
+      continue
     else:
       try:
         rdict['submitted_by'] = User.objects.get(first_name__iexact = rdict['submitted_by'])
