@@ -1,5 +1,6 @@
 import re
 import os
+import sys
 
 from colonialismdb.common.models import Location
 from django.core.files import File
