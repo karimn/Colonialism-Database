@@ -123,7 +123,7 @@ for i, row in enumerate(reader):
 
     if source_file_path:
       if not add_source_files(source_file_path, source):
-        sys.stderr.write('IO error on opening source file %s in row (%i)\n' % (source_file_path, i))
+        sys.stderr.write('Error on adding source file(s) (from) %s in row (%i)\n' % (source_file_path, i))
         sys.stderr.write('%s\n' % rdict)
         num_err_rows += 1
         source.delete()
