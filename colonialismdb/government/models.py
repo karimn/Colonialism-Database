@@ -57,7 +57,7 @@ class MainDataEntry(BaseDataEntry):
   expenditure = models.IntegerField(null = True, blank = True)
   expenditure_type = models.ForeignKey(ExpenditureType, null = True, blank = True)
 
-  public_debt = models.CharField(max_length = 255, null = True, blank = True) # Not sure what this is
+  public_debt = models.IntegerField(null = True, blank = True) 
 
   money_supply = models.IntegerField(null = True, blank = True)
   money_supply_type = models.ForeignKey(MoneySupplyType, null = True, blank = True)
