@@ -249,7 +249,7 @@ class TemporalLocation(Location):
     else:
       return self.temporal_is.get_politically_in()
 
-  """ 
+  """
   def __unicode__(self): 
     geo = self.get_geographically_in()
 
@@ -283,7 +283,7 @@ class BaseDataEntry(BaseSubmitModel):
   old_source_id = models.IntegerField("Source ID", null = True, blank = True)
   old_combined_id = models.CharField("Combined ID", max_length = 30)
 
-  source = models.ForeignKey('sources.BaseSourceObject', blank = True, null = True)
+  source = models.ForeignKey('sources.BaseSourceObject', blank = True, null = True, related_name = "%(app)s_%(class)s_related")
   page_num = models.IntegerField("Page Number", null = True, blank = True, default = None)
 
   # Date info
