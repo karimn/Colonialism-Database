@@ -22,24 +22,12 @@ get_or_add_language = functools.partial(migtools.get_or_add_cat_item, cat = Lang
 get_or_add_subject = functools.partial(migtools.get_or_add_cat_item, cat = SourceSubject)
 get_or_add_priority = functools.partial(migtools.get_or_add_cat_item, cat = DigitizationPriority)
 
-class UTF8Recoder:
-  """
-  Iterator that reads an encoded stream and reencodes the input to UTF-8
-  """
-  def __init__(self, f, encoding):
-    self.reader = codecs.getreader(encoding)(f)
-
-  def __iter__(self):
-    return self
-
-  def next(self):
-    return self.reader.next().encode("utf-8")
 
 # Script begins ###############################################################################                                                       
 
 if __name__ == "__main__":
   infile = sys.argv[1]
-  f = UTF8Recoder(open(infile, "r"), "utf-8")
+  f = migtools.UTF8Recoder(open(infile, "r"), "utf-8")
   reader = csv.reader(f, delimiter='\t', quotechar = '"')
   #reader = csv.reader(codecs.open(infile, "r", encoding = 'utf-8'), delimiter='\t', quotechar = '"')
 
