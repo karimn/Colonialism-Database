@@ -4,11 +4,8 @@ import csv
 import datetime
 import sys
 import re
-<<<<<<< HEAD
 import os
-=======
 import codecs
->>>>>>> govt
 import functools
 import cStringIO
 
