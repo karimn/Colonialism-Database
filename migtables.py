@@ -5,9 +5,7 @@ import datetime
 import sys
 import re
 import os
-import codecs
 import functools
-import cStringIO
 
 import migtools
 

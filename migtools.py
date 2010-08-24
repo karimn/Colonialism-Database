@@ -1,6 +1,8 @@
 import re
 import os
 import sys
+import codecs
+import cStringIO
 
 from colonialismdb.common.models import Location
 from django.core.files import File
