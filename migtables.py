@@ -20,7 +20,6 @@ get_or_add_language = functools.partial(migtools.get_or_add_cat_item, cat = Lang
 get_or_add_subject = functools.partial(migtools.get_or_add_cat_item, cat = SourceSubject)
 get_or_add_priority = functools.partial(migtools.get_or_add_cat_item, cat = DigitizationPriority)
 
-
 # Script begins ###############################################################################                                                       
 
 if __name__ == "__main__":
@@ -101,10 +100,7 @@ if __name__ == "__main__":
     rdict['active'] = True
 
     if not rdict['submitted_by'] or len(rdict['submitted_by']) == 0:
-      sys.stderr.write('Curator not specified in row (%i)\n' % i)
-      sys.stderr.write('%s\n' % rdict)
-      num_err_rows += 1
-      continue
+      rdict['submitted_by'] = rdict['source'].submitted_by
     else:
       try:
         rdict['submitted_by'] = User.objects.get(first_name__iexact = rdict['submitted_by'])
