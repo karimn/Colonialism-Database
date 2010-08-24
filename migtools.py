@@ -6,7 +6,8 @@ from colonialismdb.common.models import Location
 from django.core.files import File
 import colonialismdb
 
-STRING_ENCODING = 'ISO-8859-1'
+#STRING_ENCODING = 'ISO-8859-1'
+STRING_ENCODING = 'utf-8'
 
 def get_or_add_cat_item(item, mig_user, cat):
   if not item or len(item) == 0:

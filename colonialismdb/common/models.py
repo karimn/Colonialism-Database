@@ -25,12 +25,6 @@ class BaseSubmitModel(models.Model):
 
   active = models.BooleanField(default = False)
   submitted_by = models.ForeignKey(User, null = True, related_name = "submitted_%(app_label)s_%(class)s")
-  
-class BaseDataEntry(BaseSubmitModel):
-  class Meta(BaseSubmitModel.Meta):
-    abstract = True
-
-  UNIT_CHOICES = (('hundreds', 'Hundreds'), ('thousands', 'Thousands'), ('millions', 'Millions'), ('units', 'Units'))
 
 class Category(BaseSubmitModel, MergeableModel):
   class Meta(BaseSubmitModel.Meta):
@@ -255,7 +249,7 @@ class TemporalLocation(Location):
     else:
       return self.temporal_is.get_politically_in()
 
-  """ 
+  """
   def __unicode__(self): 
     geo = self.get_geographically_in()
 
@@ -276,3 +270,46 @@ class TemporalLocation(Location):
 
     self.temp_locations.all().update(temporal_is = other)
 
+class BaseDataEntry(BaseSubmitModel):
+  class Meta(BaseSubmitModel.Meta):
+    ordering = ['location', 'begin_date', ]
+    abstract = True
+
+  GENDER_CHOICES = (('M', 'Male'), ('F', 'Female'))
+  UNIT_CHOICES = (('hundreds', 'Hundreds'), ('thousands', 'Thousands'), ('millions', 'Millions'), ('units', 'Units'))
+  VAL_PRECISION_CHOICES = ((0, 'Unspecified'), (1, 'Uncertain'), (2, 'Estimate'))
+
+  # Source info
+  old_source_id = models.IntegerField("Source ID", null = True, blank = True)
+  old_combined_id = models.CharField("Combined ID", max_length = 30)
+
+  source = models.ForeignKey('sources.BaseSourceObject', blank = True, null = True, related_name = "%(app)s_%(class)s_related")
+  # TODO Add primary source
+  page_num = models.IntegerField("Page Number", null = True, blank = True, default = None)
+
+  # Date info
+  begin_date = models.DateField("Start Date", null = True, blank = True)
+  end_date = models.DateField("End Date", null = True, blank = True)
+  circa = models.BooleanField(default = False)
+  
+  # Location info
+  location = models.ForeignKey(Location, related_name = 'population_data_entries')
+  original_location_name = models.CharField("Original Location Name", max_length = 50, null = True, blank = True)
+  alternate_location_name = models.CharField("Alternate Location Name", max_length = 50, null = True, blank = True)
+
+  is_total = models.BooleanField("Is Total", default = False)
+
+  polity = models.CharField(max_length = 100, null = True, blank = True)
+  iso = models.CharField("ISO", max_length = 100, null = True, blank = True) 
+  wb = models.CharField("WB", max_length = 100, null = True, blank = True)
+
+  remarks = models.TextField(null = True, blank = True)
+
+  def __unicode__(self) :
+    return "%s (%s - %s)" % (unicode(self.location), self.begin_date, self.end_date)
+  
+  def activate(self):
+    super(BaseDataEntry, self).activate()
+
+    if not self.location.active:
+      self.location.activate()
