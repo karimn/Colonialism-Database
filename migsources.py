@@ -24,7 +24,7 @@ get_or_add_priority = functools.partial(migtools.get_or_add_cat_item, cat = Digi
 # Script begins ###############################################################################                                                       
 
 infile = sys.argv[1]
-reader = csv.reader(migtools.UTF8Recoder(open(infile, "r"), "utf-8"), delimiter='\t', quotechar = '"')
+reader = csv.reader(migtools.UTF8Recoder(open(infile, "r"), migtools.STRING_ENCODING), delimiter='\t', quotechar = '"')
 
 num_err_rows = 0
 

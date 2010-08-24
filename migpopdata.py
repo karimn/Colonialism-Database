@@ -221,7 +221,7 @@ def add_row(rdict, num_err_rows):
 # Script begins ###############################################################################                                                       
 
 infile = sys.argv[1]
-reader = csv.reader(open(infile, "r"), delimiter='\t', quotechar = '"')
+reader = csv.reader(migtools.UTF8Recoder(open(infile, "r"), migtools.STRING_ENCODING), delimiter='\t', quotechar = '"')
 
 num_err_rows = 0
 

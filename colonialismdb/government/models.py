@@ -68,5 +68,4 @@ class MainDataEntry(BaseDataEntry):
   officials = models.IntegerField(null = True, blank = True)
   officials_type = models.ForeignKey(OfficialsType, null = True, blank = True)
 
-  sources_note = models.TextField(null = True, blank = True)
 
