@@ -293,7 +293,7 @@ class BaseDataEntry(BaseSubmitModel):
   circa = models.BooleanField(default = False)
   
   # Location info
-  location = models.ForeignKey(Location, related_name = 'population_data_entries')
+  location = models.ForeignKey(Location, related_name = '%(app_label)s_%(class)s_data_entries')
   original_location_name = models.CharField("Original Location Name", max_length = 50, null = True, blank = True)
   alternate_location_name = models.CharField("Alternate Location Name", max_length = 50, null = True, blank = True)
 
