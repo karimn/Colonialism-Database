@@ -37,7 +37,7 @@ class CurrencyAdmin(BaseMergeableCategoryAdmin):
   merge_perm = 'government.merge_currency'
 
 class RevenueTypeAdmin(BaseMergeableCategoryAdmin):
-    government.activate_perm = 'government.activate_revenuetype'
+    activate_perm = 'government.activate_revenuetype'
     merge_perm = 'government.merge_revenuetype'
 
 class ExpenditureTypeAdmin(BaseMergeableCategoryAdmin):
