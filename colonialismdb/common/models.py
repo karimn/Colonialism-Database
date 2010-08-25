@@ -287,6 +287,8 @@ class BaseDataEntry(BaseSubmitModel):
   primary_source = models.TextField(null = True, blank = True)
   page_num = models.IntegerField("Page Number", null = True, blank = True, default = None)
 
+  source = models.ForeignKey('sources.BaseSourceObject', blank = True, null = True, related_name = "%(app_label)s_%(class)s_related")
+
   # Date info
   begin_date = models.DateField("Start Date", null = True, blank = True)
   end_date = models.DateField("End Date", null = True, blank = True)

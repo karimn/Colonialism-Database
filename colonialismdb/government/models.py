@@ -68,4 +68,26 @@ class MainDataEntry(BaseDataEntry):
   officials = models.IntegerField(null = True, blank = True)
   officials_type = models.ForeignKey(OfficialsType, null = True, blank = True)
 
+  def activate(self):
+    super(MainDataEntry, self).activate()
 
+    if self.spatial_area_unit and not self.spatial_area_unit.active:
+      self.spatial_area_unit.activate()
+
+    if self.currency and not self.currency.active:
+      self.currency.activate()
+    
+    if self.revenue_type and not self.revenue_type.active:
+      self.revenue_type.activate()
+      
+    if self.expenditure_type and not self.expenditure_type.active:
+      self.expenditure_type.activate()
+
+    if self.money_supply_type and not self.money_supply_type.active:
+      self.money_supply_type.activate()
+
+    if self.military_type and not self.military_type.active:
+      self.military_type.activate()
+
+    if self.officials_type and not self.officials_type.active:
+      self.officials_type.activate()
