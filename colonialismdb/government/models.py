@@ -12,6 +12,7 @@ class Currency(Category):
   class Meta(Category.Meta):
     permissions = ( ('activate_currency', 'Can activate submitted currency'), 
                     ('merge_currency', 'Can merge occupation currency') )
+    verbose_name_plural = "currencies"
 
 class RevenueType(Category):
   class Meta(Category.Meta):
