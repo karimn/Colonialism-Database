@@ -161,12 +161,22 @@ for i, row in enumerate(reader):
     if rdict.has_key('end_date'):
       mon, day, year = [int(j) for j in rdict['end_date'].split(' ')[0].split('/')]
       rdict['end_date'] = datetime.date(year, mon, day)
-
   except ValueError as e:
     sys.stderr.write('Encountered error in date format at row (%i): %s\n' % (i, e))
     sys.stderr.write('%s\n' % rdict)
     num_err_rows += 1
     continue
+
+  if rdict.has_key('revenue'):
+    rev_match = re.match(r'\$(\d+)\.00', rdict['revenue'])
+
+    if rev_match:
+      rdict['revenue'] = rev_match.group(1)
+    else:
+      sys.stderr.write('Unexpected revenue format in row (%i): %s\n' % (i, e))
+      sys.stderr.write('%s\n' % rdict)
+      num_err_rows += 1
+      continue
 
   rdict['active'] = True
   rdict['submitted_by'] = mig_user 
