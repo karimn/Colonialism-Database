@@ -1,18 +1,7 @@
 from django.db import models
 
-from colonialismdb.common.models import Location, BaseDataEntry, Category
+from colonialismdb.common.models import Location, BaseDataEntry, Category, SpatialAreaUnit, Currency
 from colonialismdb.sources.models import BaseSourceObject 
-
-class SpatialAreaUnit(Category):
-  class Meta(Category.Meta):
-    permissions = ( ('activate_spareaunit', 'Can activate submitted area unit'), 
-                    ('merge_spareaunit', 'Can merge occupation area unit') )
-
-class Currency(Category):
-  class Meta(Category.Meta):
-    permissions = ( ('activate_currency', 'Can activate submitted currency'), 
-                    ('merge_currency', 'Can merge occupation currency') )
-    verbose_name_plural = "currencies"
 
 class RevenueType(Category):
   class Meta(Category.Meta):

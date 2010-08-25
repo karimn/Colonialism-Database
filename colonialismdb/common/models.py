@@ -103,6 +103,17 @@ class Language(Category):
       bo.languages.remove(self)
       bo.languages.add(other)
 
+class SpatialAreaUnit(Category):
+  class Meta(Category.Meta):
+    permissions = ( ('activate_spareaunit', 'Can activate submitted area unit'), 
+                    ('merge_spareaunit', 'Can merge occupation area unit') )
+
+class Currency(Category):
+  class Meta(Category.Meta):
+    permissions = ( ('activate_currency', 'Can activate submitted currency'), 
+                    ('merge_currency', 'Can merge occupation currency') )
+    verbose_name_plural = "currencies"
+
 class PoliticalUnit(BaseSubmitModel,MergeableModel):
   name = models.CharField("name", max_length = 150)
   unit_type = models.ManyToManyField(PoliticalUnitType, null = True, blank = True)
