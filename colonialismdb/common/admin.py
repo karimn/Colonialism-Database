@@ -100,7 +100,26 @@ class BaseSubmitAdmin(BaseSubmit, VersionAdmin) :
 
   actions = ('activate', )
   list_filter = ('active', 'submitted_by')
-  
+
+class BaseMainDataEntryAdmin(BaseSubmitAdmin):
+  def change_view(self, request, object_id, extra_context=None):
+    result = super(BaseMainDataEntryAdmin, self).change_view(request, object_id, extra_context)
+
+    if request.POST.has_key('_addanother'):
+      request.session['reuse_values'] = { 'source' : request.POST['source'], 'location' : request.POST['location'], }
+
+    return result
+
+  def add_view(self, request, form_url = '', extra_context=None):
+    if request.session.has_key('reuse_values'):
+      request.GET = request.GET.copy()
+      request.GET.update(request.session['reuse_values'])
+      del request.session['reuse_values']
+
+    result = super(BaseMainDataEntryAdmin, self).add_view(request, form_url, extra_context)
+
+    return result
+
 class MergeSelectedForm(forms.Form):
   merge_into = forms.ModelChoiceField(queryset = models.Location.objects.all(), empty_label = None)
   ct = forms.IntegerField(widget = forms.HiddenInput)
