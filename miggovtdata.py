@@ -173,7 +173,7 @@ for i, row in enumerate(reader):
     if rev_match:
       rdict['revenue'] = rev_match.group(1)
     else:
-      sys.stderr.write('Unexpected revenue format in row (%i): %s\n' % (i, e))
+      sys.stderr.write('Unexpected revenue format in row (%i)\n' % (i, ))
       sys.stderr.write('%s\n' % rdict)
       num_err_rows += 1
       continue
