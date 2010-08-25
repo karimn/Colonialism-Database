@@ -61,7 +61,8 @@ INSTALLED_APPS = (
     'reversion',
 
     'colonialismdb.government',
-    'colonialsimdb.education',
+    'colonialismdb.education',
+    'colonialismdb.infrastructure',
     'colonialismdb.population',
     'colonialismdb.sources',
     'colonialismdb.common',

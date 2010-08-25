@@ -59,3 +59,6 @@ class MainDataEntry(BaseDataEntry):
       
     if self.education_expenditure_type and not self.education_expenditure_type.active:
       self.education_expenditure_type.activate()
+
+    if self.school_type and not self.school_type.active:
+      self.school_type.activate()

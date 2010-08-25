@@ -47,5 +47,10 @@ class EducationExpenditureTypeAdmin(BaseMergeableCategoryAdmin):
     activate_perm = 'education.activate_educexpendtype'
     merge_perm = 'education.merge_educexpendtype'
     
+class SchoolTypeAdmin(BaseMergeableCategoryAdmin):
+    activate_perm = 'education.activate_schooltype'
+    merge_perm = 'education.merge_schooltype'
+
 admin.site.register(MainDataEntry, MainDataEntryAdmin)
 admin.site.register(EducationExpenditureType, EducationExpenditureTypeAdmin)
+admin.site.register(SchoolType, SchoolTypeAdmin)
