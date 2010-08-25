@@ -285,8 +285,8 @@ class BaseDataEntry(BaseSubmitModel):
   VAL_PRECISION_CHOICES = ((0, 'Unspecified'), (1, 'Uncertain'), (2, 'Estimate'))
 
   # Source info
-  old_source_id = models.IntegerField("Source ID", null = True, blank = True)
-  old_combined_id = models.CharField("Combined ID", max_length = 30)
+  #old_source_id = models.IntegerField("Source ID", null = True, blank = True)
+  #old_combined_id = models.CharField("Combined ID", max_length = 30)
 
   primary_source = models.TextField(null = True, blank = True)
   page_num = models.IntegerField("Page Number", null = True, blank = True, default = None)

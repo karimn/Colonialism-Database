@@ -97,6 +97,15 @@ for i, row in enumerate(reader):
       continue
 
     rdict['source'] = source
+  else:
+    sys.stderr.write('No source info row (%i)\n' % i)
+    sys.stderr.write('%s\n' % rdict)
+    num_err_rows += 1
+    continue
+
+  # No longer storing these
+  del rdict['old_combined_id']
+  del rdict['old_source_id']
 
   try:
     print i, rdict['place_origin'].decode(migtools.STRING_ENCODING), u", ", rdict['large1'].decode(migtools.STRING_ENCODING), u", ", rdict['large2'].decode(migtools.STRING_ENCODING), u", ", rdict['large3'].decode(migtools.STRING_ENCODING)
