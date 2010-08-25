@@ -129,7 +129,7 @@ for i, row in enumerate(reader):
       del rdict[k]
 
   for col_name, add_fun in { 'spatial_area_unit' : get_or_add_area_unit, 
-                             'currency' : get_or_add_race, 
+                             'currency' : get_or_add_currency, 
                              'revenue_type' : get_or_add_revenue_type, 
                              'expenditure_type' : get_or_add_expenditure_type, 
                              'money_supply_type': get_or_add_money_supply_type, 
