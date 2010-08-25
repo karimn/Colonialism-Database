@@ -309,7 +309,7 @@ class BaseDataEntry(BaseSubmitModel):
   iso = models.CharField("ISO", max_length = 100, null = True, blank = True) 
   wb = models.CharField("WB", max_length = 100, null = True, blank = True)
 
-  value_unit = models.CharField("Units", max_length = 15, choices = UNIT_CHOICES, default = 'units')
+  value_unit = models.CharField("Units", max_length = 20, choices = UNIT_CHOICES, default = 'units')
 
   remarks = models.TextField(null = True, blank = True)
 
