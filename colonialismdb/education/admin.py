@@ -1,4 +1,4 @@
-from colonialismdb.education.models import MainDataEntry, EducationExpenditureType
+from colonialismdb.education.models import MainDataEntry, EducationExpenditureType, SchoolType
 from colonialismdb.common.models import SpatialAreaUnit, Currency
 from colonialismdb.sources.models import Table
 from colonialismdb.common.admin import BaseSubmitAdmin, BaseMergeableCategoryAdmin, BaseMainDataEntryAdmin
