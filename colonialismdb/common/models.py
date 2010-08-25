@@ -222,7 +222,8 @@ class Location(PoliticalUnit):
 
     self.geographically_contains.all().update(geographically_in = other)
 
-    self.population_data_entries.all().update(location = other)
+    self.population_maindataentry_related.all().update(location = other)
+    self.government_maindataentry_related.all().update(location = other)
 
     for tbl in self.table_set.all():
       tbl.included_countries.remove(self)
@@ -283,7 +284,6 @@ class BaseDataEntry(BaseSubmitModel):
   old_source_id = models.IntegerField("Source ID", null = True, blank = True)
   old_combined_id = models.CharField("Combined ID", max_length = 30)
 
-  source = models.ForeignKey('sources.BaseSourceObject', blank = True, null = True, related_name = "%(app_label)s_%(class)s_related")
   primary_source = models.TextField(null = True, blank = True)
   page_num = models.IntegerField("Page Number", null = True, blank = True, default = None)
 
@@ -293,7 +293,7 @@ class BaseDataEntry(BaseSubmitModel):
   circa = models.BooleanField(default = False)
   
   # Location info
-  location = models.ForeignKey(Location, related_name = '%(app_label)s_%(class)s_data_entries')
+  location = models.ForeignKey(Location, related_name = '%(app_label)s_%(class)s_related')
   original_location_name = models.CharField("Original Location Name", max_length = 50, null = True, blank = True)
   alternate_location_name = models.CharField("Alternate Location Name", max_length = 50, null = True, blank = True)
 
