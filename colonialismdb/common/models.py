@@ -277,7 +277,11 @@ class BaseDataEntry(BaseSubmitModel):
     abstract = True
 
   GENDER_CHOICES = (('M', 'Male'), ('F', 'Female'))
-  UNIT_CHOICES = (('hundreds', 'Hundreds'), ('thousands', 'Thousands'), ('millions', 'Millions'), ('units', 'Units'))
+  UNIT_CHOICES = (('hundreds', 'Hundreds'), 
+                  ('thousands', 'Thousands'), 
+                  ('millions', 'Millions'), 
+                  ('thousand millions', 'Thousand Millions'),
+                  ('units', 'Units'))
   VAL_PRECISION_CHOICES = ((0, 'Unspecified'), (1, 'Uncertain'), (2, 'Estimate'))
 
   # Source info
