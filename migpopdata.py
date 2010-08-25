@@ -72,11 +72,6 @@ def add_row(rdict, num_err_rows):
       return num_err_rows + 1
 
     rdict['source'] = source
-  else:
-    sys.stderr.write('No source info row (%i)\n' % i)
-    sys.stderr.write('%s\n' % rdict)
-    num_err_rows += 1
-    continue
 
   # No longer storing these
   del rdict['old_combined_id']
