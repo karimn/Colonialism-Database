@@ -1,4 +1,4 @@
-from colonialismdb.government.models import MainDataEntry, SpatialAreaUnit, Currency
+from colonialismdb.government.models import MainDataEntry, SpatialAreaUnit, Currency, RevenueType, ExpenditureType, MoneySupplyType, MilitaryType, OfficialsType
 from colonialismdb.sources.models import Table
 from colonialismdb.common.admin import BaseSubmitAdmin, BaseMergeableCategoryAdmin, BaseMainDataEntryAdmin
 from django.contrib import admin
