@@ -11,9 +11,9 @@ class MainDataEntry(BaseDataEntry):
 
   # Should these be moved to location?
   spatial_area = models.IntegerField(null = True, blank = True)
-  spatial_area_unit = models.ForeignKey(SpatialAreaUnit, null = True, blank = True)
+  spatial_area_unit = models.ForeignKey(SpatialAreaUnit, null = True, blank = True, related_name = '%(app_label)s_%(class)s_related')
 
-  currency = models.ForeignKey(Currency, null = True, blank = True)
+  currency = models.ForeignKey(Currency, null = True, blank = True, related_name = '%(app_label)s_%(class)s_related')
   currency_exchange_rate = models.IntegerField(null = True, blank = True)
 
   railroad_length = models.IntegerField(null = True, blank = True)
