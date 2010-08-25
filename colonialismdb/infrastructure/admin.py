@@ -23,7 +23,7 @@ class MainDataEntryAdmin(BaseMainDataEntryAdmin) :
       ('Road',
         {'fields' : ['road_length', ]}),
 
-      {'Telegraph',
+      ('Telegraph',
         {'fields' : ['telegraph_length', ]}),
 
       ('Source Information', 
