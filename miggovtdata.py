@@ -168,7 +168,7 @@ for i, row in enumerate(reader):
     continue
 
   if rdict.has_key('revenue'):
-    rev_match = re.match(r'\$(\d+)\.00', rdict['revenue'])
+    rev_match = re.match(r'\$(\d+\.\d\d)', rdict['revenue'])
 
     if rev_match:
       rdict['revenue'] = rev_match.group(1)
