@@ -51,7 +51,7 @@ class MainDataEntry(BaseDataEntry):
   currency = models.ForeignKey(Currency, null = True, blank = True)
   currency_exchange_rate = models.IntegerField(null = True, blank = True)
 
-  revenue = models.IntegerField(null = True, blank = True)
+  revenue = models.DecimalField(max_digits = 10, decimal_places = 2, null = True, blank = True)
   revenue_type = models.ForeignKey(RevenueType, null = True, blank = True)
 
   expenditure = models.IntegerField(null = True, blank = True)
