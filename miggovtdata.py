@@ -155,11 +155,11 @@ for i, row in enumerate(reader):
 
   try:
     if rdict.has_key('begin_date'):
-      mon, day, year = [int(j) for j in rdict['begin_date'].split('/')]
+      mon, day, year = [int(j) for j in rdict['begin_date'].split(' ')[0].split('/')]
       rdict['begin_date'] = datetime.date(year, mon, day)
 
     if rdict.has_key('end_date'):
-      mon, day, year = [int(j) for j in rdict['end_date'].split('/')]
+      mon, day, year = [int(j) for j in rdict['end_date'].split(' ')[0].split('/')]
       rdict['end_date'] = datetime.date(year, mon, day)
 
   except ValueError as e:
