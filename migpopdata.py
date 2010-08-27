@@ -230,7 +230,7 @@ reader = csv.reader(migtools.UTF8Recoder(open(infile, "r"), migtools.STRING_ENCO
 num_err_rows = 0
 
 for i, row in enumerate(reader):
-  rdict = dict(zip(('old_source_id', 'old_combined_id', 'page_num', 'begin_date', 'end_date', 'place_origin', 'place_english', 'alternate_location_name', 'large1', 'large2', 'large3', 'religion', 'race', 'ethnicity', 'ethnic_origin', 'age_start', 'age_end', 'remarks', 'link', 'individuals_population_value', 'families_population_value', 'male_population_value', 'female_population_value', 'value_unit', 'is_total', 'population_condition', 'polity', 'iso', 'wb'), row))
+  rdict = dict(zip(('old_source_id', 'old_combined_id', 'primary_source', 'page_num', 'begin_date', 'end_date', 'place_origin', 'place_english', 'alternate_location_name', 'large1', 'large2', 'large3', 'religion', 'race', 'ethnicity', 'ethnic_origin', 'age_start', 'age_end', 'remarks', 'link', 'individuals_population_value', 'families_population_value', 'male_population_value', 'female_population_value', 'value_unit', 'is_total', 'population_condition', 'polity', 'iso', 'wb'), row))
 
   #if rdict['place_english'] or rdict['alternate_location_name'] : 
   #  print i, rdict['place_origin'], ", ", rdict['alternate_location_name'], ", ", rdict['place_english']
