@@ -201,6 +201,12 @@ def add_row(rdict, num_err_rows):
           rdict['age_start'] = over_match.group(1) 
           break
 
+        under_match = re.match(r'Under\s(\d+)', rdict[age_col])
+        if under_match:
+          if rdict.has_key('age_start'): del rdict['age_start']
+          rdict['age_end'] = over_match.group(1)
+          break
+
         total_range_match = re.match(r'Total,\s(\d+)-(\d+)', rdict[age_col])
         if total_range_match:
           rdict['age_start'] = total_range_match.group(1)
