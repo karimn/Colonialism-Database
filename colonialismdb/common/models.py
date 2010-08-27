@@ -36,7 +36,9 @@ class Category(BaseSubmitModel, MergeableModel):
   def merge_into(self, other):
     super(Category, self).merge_into(other)
 
-  name = models.CharField(max_length = 100, unique = True)
+  NAME_MAX_LENGTH= 100
+
+  name = models.CharField(max_length = NAME_MAX_LENGTH, unique = True)
 
 class Religion(Category):
   class Meta(Category.Meta):
@@ -76,8 +78,28 @@ class EthnicOrigin(Category):
 
   def merge_into(self, other):
     super(EthnicOrigin, self).merge_into(other)
-
     self.maindataentry_set.all().update(religion = other)
+
+class LengthUnit(Category):
+  class Meta(Category.Meta):
+    permissions = ( ('activate_length_unit', 'Can activate submitted length unit'), 
+                    ('merge_length_unit', 'Can merge length unit') )
+
+  def merge_into(self, other):
+    super(LengthUnit, self).merge_into(other)
+    self.infrastructure_maindataentry_railroad_set.all().update(railroad_length_unit = other)
+    self.infrastructure_maindataentry_road_set.all().update(road_length_unit = other)
+    self.infrastructure_maindataentry_telegraph_set.all().update(telegraph_length_unit = other)
+
+class WeightUnit(Category):
+  class Meta(Category.Meta):
+    permissions = ( ('activate_weight_unit', 'Can activate submitted weight unit'), 
+                    ('merge_weight_unit', 'Can merge weight unit') )
+
+  def merge_into(self, other):
+    super(WeightUnit, self).merge_into(other)
+    self.infrastructure_maindataentry_freight_set.all().update(railroad_freight_unit = other)
+    self.infrastructure_maindataentry_merchant_ships_cargo_set.all().update(merchant_ships_cargo_unit = other)
 
 class PoliticalUnitType(Category):
   class Meta(Category.Meta):
