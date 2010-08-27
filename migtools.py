@@ -4,7 +4,7 @@ import sys
 import codecs
 import cStringIO
 
-from colonialismdb.common.models import Location
+from colonialismdb.common.models import Location, Category
 from django.core.files import File
 import colonialismdb
 
@@ -28,7 +28,7 @@ def get_or_add_cat_item(item, mig_user, cat):
   if not item or len(item) == 0:
     return None
 
-  item = item.title()
+  item = item.title()[:Category.NAME_MAX_LENGTH] # Truncating category names that are too long
 
   try:
     return cat.objects.get(name = item)
