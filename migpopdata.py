@@ -73,10 +73,6 @@ def add_row(rdict, num_err_rows):
 
     rdict['source'] = source
 
-  # No longer storing these
-  del rdict['old_combined_id']
-  del rdict['old_source_id']
-
   val_specified = False
 
   if rdict.has_key('individuals_population_value'): 
@@ -152,6 +148,10 @@ def add_row(rdict, num_err_rows):
   del rdict['large3']
   del rdict['link']
   del rdict['place_english']
+
+  # No longer storing these
+  del rdict['old_combined_id']
+  del rdict['old_source_id']
   
   for k in rdict.keys():
     if isinstance(rdict[k], basestring) and not rdict[k]:
