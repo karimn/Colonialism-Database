@@ -29,7 +29,7 @@ get_or_add_pop_cond = functools.partial(migtools.get_or_add_cat_item, mig_user =
 
 def add_row(rdict, num_err_rows):
   if rdict['old_combined_id']:
-    cid_matches = re.match(r'([^-]+)-([^\.]+)(?:\.(.+))', rdict['old_combined_id'])
+    cid_matches = re.match(r'([^\.-]+)[\.-]([^\.-]+)', rdict['old_combined_id'])
 
     if not cid_matches:
       sys.stderr.write('Failed to match combined id %s in row (%i)\n' % (rdict['old_combined_id'], i))
@@ -39,10 +39,10 @@ def add_row(rdict, num_err_rows):
     source_id = cid_matches.group(1)
     table_id = cid_matches.group(2)
 
-    if source_id != rdict['old_source_id']:
-      sys.stderr.write('Mismatch of old source ID in row (%i)\n' % i)
-      sys.stderr.write('%s\n' % rdict)
-      return num_err_rows + 1
+    #if source_id != rdict['old_source_id']:
+    #  sys.stderr.write('Mismatch of old source ID in row (%i)\n' % i)
+    #  sys.stderr.write('%s\n' % rdict)
+    #  return num_err_rows + 1
 
     table = None
 
@@ -53,24 +53,22 @@ def add_row(rdict, num_err_rows):
       sys.stderr.write('%s\n' % rdict)
       return num_err_rows + 1
 
-    nr = cid_matches.group(3)
+    #nr = cid_matches.group(3)
 
-    if not nr and table.nr != nr:
-      sys.stderr.write('Table NR mismatch in row (%i)\n' % i)
-      sys.stderr.write('%s\n' % rdict)
-      return num_err_rows + 1
+    #if not nr and table.nr != nr:
+    #  sys.stderr.write('Table NR mismatch in row (%i)\n' % i)
+    #  sys.stderr.write('%s\n' % rdict)
+    #  return num_err_rows + 1
 
     rdict['source'] = table
   else:
     source = None
-
     try:
       Source.objects.get(old_id = rdict['old_source_id'])
     except Source.DoesNotExist as e:
       sys.stderr.write('Source does not exist in row (%i)\n' % i)
       sys.stderr.write('%s\n' % rdict)
       return num_err_rows + 1
-
     rdict['source'] = source
 
   val_specified = False
