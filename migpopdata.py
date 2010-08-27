@@ -186,7 +186,7 @@ def add_row(rdict, num_err_rows):
 
   for age_col in ('age_start', 'age_end'):
     if rdict.has_key(age_col):
-      if rdict[age_col] == 'Unknown':
+      if rdict[age_col] in ('Unknown', 'Age unkown'): # Yes, the typo is in the data to migrate
         del rdict[age_col]
       elif rdict[age_col] in ('Under 1', 'Total', 'Total all ages', 'All ages'):
         del rdict['age_start']
