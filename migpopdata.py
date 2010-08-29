@@ -25,8 +25,6 @@ get_or_add_ethnicity = functools.partial(migtools.get_or_add_cat_item, mig_user 
 get_or_add_ethnic_origin = functools.partial(migtools.get_or_add_cat_item, mig_user = mig_user, cat = EthnicOrigin)
 get_or_add_pop_cond = functools.partial(migtools.get_or_add_cat_item, mig_user = mig_user, cat = PopulationCondition)
 
-#get_or_add_location = functools.partial(migtools.get_or_add_location, mig_user = mig_user)
-
 def add_row(rdict, num_err_rows):
   if rdict['old_combined_id']:
     cid_matches = re.match(r'([^\.-]+)[\.-]([^\.-]+)', rdict['old_combined_id'])

@@ -146,6 +146,7 @@ def add_source_files(source_file_path, src_obj, submitted_by):
   if os.path.isfile(source_file_path):
     source_file = File(open(source_file_path, 'r'))
     src_file = colonialismdb.sources.models.SourceFile(source_file = source_file, for_source = src_obj, active = True, submitted_by = submitted_by)
+    source_file.close()
     src_file.save()
   elif os.path.isdir(source_file_path):
     for f in os.listdir(source_file_path):
