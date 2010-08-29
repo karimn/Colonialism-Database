@@ -24,7 +24,7 @@ class BaseSubmitModel(models.Model):
     self.save()
 
   active = models.BooleanField(default = False)
-  submitted_by = models.ForeignKey(User, null = True, related_name = "submitted_%(app_label)s_%(class)s")
+  submitted_by = models.ForeignKey(User, null = True, editable = False, related_name = "submitted_%(app_label)s_%(class)s")
 
 class Category(BaseSubmitModel, MergeableModel):
   class Meta(BaseSubmitModel.Meta):
@@ -36,7 +36,7 @@ class Category(BaseSubmitModel, MergeableModel):
   def merge_into(self, other):
     super(Category, self).merge_into(other)
 
-  NAME_MAX_LENGTH= 100
+  NAME_MAX_LENGTH = 100
 
   name = models.CharField(max_length = NAME_MAX_LENGTH, unique = True)
 
