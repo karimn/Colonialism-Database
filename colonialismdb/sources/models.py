@@ -92,6 +92,9 @@ class SourceFile(BaseSubmitModel):
   class Meta(BaseSubmitModel.Meta):
     permissions = ( ('activate_sourcefile', 'Can activate source file'), )
 
+  def __unicode__(self):
+    return self.source_file.name
+
   source_file = models.FileField(max_length = 200, upload_to = 'sources/%Y/%m/%d')
   for_source = models.ForeignKey(BaseSourceObject)
 

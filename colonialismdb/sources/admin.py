@@ -23,6 +23,12 @@ class PopulationDataInline(BaseSubmitTabularInline):
 
   activate_perm = 'population.activate_main_data_entry'
 
+class SourceFileAdmin(BaseSubmitAdmin):
+  fields = ('source_file', 'for_source', )
+  list_display = ('__unicode__', 'for_source', )
+
+  activate_perm = 'sources.activate_sourcefile'
+
 class SourceFileInline(BaseSubmitTabularInline):
   model = SourceFile
   max_num = None
@@ -70,4 +76,5 @@ admin.site.register(Source, SourceAdmin)
 admin.site.register(Table, TableAdmin)
 admin.site.register(SourceType, SourceTypeAdmin)
 admin.site.register(SourceSubject, SourceSubjectAdmin)
+admin.site.register(SourceFile, SourceFileAdmin)
 admin.site.register(DigitizationPriority, DigitizationPriorityAdmin)
