@@ -1,4 +1,4 @@
-from colonialismdb.infrastructure.models import MainDataEntry
+from colonialismdb.infrastructure.models import MainDataEntry, MotorVehicleType, PostalItemType, MerchantShipType
 from colonialismdb.common.models import SpatialAreaUnit, Currency
 from colonialismdb.sources.models import Table
 from colonialismdb.common.admin import BaseSubmitAdmin, BaseMergeableCategoryAdmin, BaseMainDataEntryAdmin
@@ -41,4 +41,19 @@ class MainDataEntryAdmin(BaseMainDataEntryAdmin) :
 
   activate_perm = 'infrastructure.activate_maindataentry'
 
+class MotorVehicleTypeAdmin(BaseMergeableCategoryAdmin):
+  activate_perm = 'infrastructure.activate_mvehicletype'
+  merge_perm = 'infrastructure.merge_mvehicletype'
+
+class PostalItemTypeAdmin(BaseMergeableCategoryAdmin):
+  activate_perm = 'infrastructure.activate_postalitemtype'
+  merge_perm = 'infrastructure.merge_postalitemtype'
+
+class MerchantShipTypeAdmin(BaseMergeableCategoryAdmin):
+  activate_perm = 'infrastructure.activate_mshiptype'
+  merge_perm = 'infrastructure.merge_mshiptype'
+
 admin.site.register(MainDataEntry, MainDataEntryAdmin)
+admin.site.register(MotorVehicleType, MotorVehicleTypeAdmin)
+admin.site.register(PostalItemType, PostalItemTypeAdmin)
+admin.site.register(MerchantShipType, MerchantShipTypeAdmin)

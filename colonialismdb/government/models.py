@@ -8,25 +8,45 @@ class RevenueType(Category):
     permissions = ( ('activate_revenuetype', 'Can activate submitted revenue type'), 
                     ('merge_revenuetype', 'Can merge occupation revenue type') )
 
+  def merge_into(self, other):
+    super(RevenueType, self).merge_into(other)
+    self.maindataentry_set.all().update(revenue_type = other)
+
 class ExpenditureType(Category):
   class Meta(Category.Meta):
     permissions = ( ('activate_expendituretype', 'Can activate submitted expenditure type'), 
                     ('merge_expendituretype', 'Can merge occupation expenditure type') )
     
+  def merge_into(self, other):
+    super(ExpenditureType, self).merge_into(other)
+    self.maindataentry_set.all().update(expenditure_type = other)
+
 class MoneySupplyType(Category):
   class Meta(Category.Meta):
     permissions = ( ('activate_moneysupplytype', 'Can activate submitted money supply type'), 
                     ('merge_moneysupplytype', 'Can merge occupation money supply type') )
+
+  def merge_into(self, other):
+    super(MoneySupplyType, self).merge_into(other)
+    self.maindataentry_set.all().update(money_supply_type = other)
 
 class MilitaryType(Category):
   class Meta(Category.Meta):
     permissions = ( ('activate_militarytype', 'Can activate submitted military type'), 
                     ('merge_militarytype', 'Can merge occupation military type') )
 
+  def merge_into(self, other):
+    super(MilitaryType, self).merge_into(other)
+    self.maindataentry_set.all().update(military_type = other)
+
 class OfficialsType(Category):
   class Meta(Category.Meta):
     permissions = ( ('activate_officialstype', 'Can activate submitted officials type'), 
                     ('merge_officialstype', 'Can merge occupation officials type') )
+
+  def merge_into(self, other):
+    super(OfficialsType, self).merge_into(other)
+    self.maindataentry_set.all().update(officials_type = other)
 
 class MainDataEntry(BaseDataEntry):
   class Meta(BaseDataEntry.Meta):

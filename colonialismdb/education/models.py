@@ -8,10 +8,18 @@ class EducationExpenditureType(Category):
     permissions = ( ('activate_educexpendtype', 'Can activate submitted type'), 
                     ('merge_educexpendtype', 'Can merge occupation type') )
 
+  def merge_into(self, other):
+    super(EducationExpenditureType, self).merge_into(other)
+    self.maindataentry_set.all().update(education_expenditure_type = other)
+
 class SchoolType(Category):
   class Meta(Category.Meta):
     permissions = ( ('activate_schooltype', 'Can activate submitted type'), 
                     ('merge_schooltype', 'Can merge occupation type') )
+
+  def merge_into(self, other):
+    super(SchoolType, self).merge_into(other)
+    self.maindataentry_set.all().update(school_type = other)
     
 class MainDataEntry(BaseDataEntry):
   class Meta(BaseDataEntry.Meta):

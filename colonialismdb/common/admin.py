@@ -255,6 +255,14 @@ class EthnicOriginAdmin(BaseMergeableCategoryAdmin):
   activate_perm = 'common.activate_ethnic_origin'
   merge_perm = 'common.merge_ethnic_origin'
 
+class LengthUnitAdmin(BaseMergeableCategoryAdmin):
+  activate_perm = 'common.activate_length_unit'
+  merge_perm = 'common.merge_length_unit'
+
+class WeightUnitAdmin(BaseMergeableCategoryAdmin):
+  activate_perm = 'common.activate_weight_unit'
+  merge_perm = 'common.merge_weight_unit'
+
 class PoliticalUnitTypeAdmin(BaseMergeableCategoryAdmin):
   activate_perm = 'common.activate_polunittype'
   merge_perm = 'common.merge_polunittype'
@@ -270,5 +278,7 @@ admin.site.register(models.Religion, ReligionAdmin)
 admin.site.register(models.Race, RaceAdmin)
 admin.site.register(models.Ethnicity, EthnicityAdmin)
 admin.site.register(models.EthnicOrigin, EthnicOriginAdmin)
+admin.site.register(models.LengthUnit, LengthUnitAdmin)
+admin.site.register(models.WeightUnit, WeightUnitAdmin)
 admin.site.register(models.PoliticalUnitType, PoliticalUnitTypeAdmin)
 admin.site.register(models.Language, LanguageAdmin)
