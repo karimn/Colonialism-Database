@@ -264,7 +264,7 @@ class Location(PoliticalUnit):
     self.population_maindataentry_related.all().update(location = other)
     self.government_maindataentry_related.all().update(location = other)
     self.education_maindataentry_related.all().update(location = other)
-    self.infrastructure_maindataentry_related.all().update(locaation = other)
+    self.infrastructure_maindataentry_related.all().update(location = other)
 
     for tbl in self.table_set.all():
       tbl.included_countries.remove(self)
