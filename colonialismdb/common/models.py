@@ -100,6 +100,7 @@ class WeightUnit(Category):
     super(WeightUnit, self).merge_into(other)
     self.infrastructure_maindataentry_freight_set.all().update(railroad_freight_unit = other)
     self.infrastructure_maindataentry_merchant_ships_cargo_set.all().update(merchant_ships_cargo_unit = other)
+    self.infrastructure_maindataentry_air_cargo_set.all().update(air_cargo_unit = other)
 
 class PoliticalUnitType(Category):
   class Meta(Category.Meta):
