@@ -254,10 +254,17 @@ class Location(PoliticalUnit):
   def merge_into(self, other):
     super(Location, self).merge_into(other)
 
-    self.geographically_contains.all().update(geographically_in = other)
+    # Using a loop because I want save() to be called
+    for geo_in in self.geographically_contains.all():
+      geo_in.geographically_in = other
+      geo_in.save()
+
+    #self.geographically_contains.all().update(geographically_in = other)
 
     self.population_maindataentry_related.all().update(location = other)
     self.government_maindataentry_related.all().update(location = other)
+    self.education_maindataentry_related.all().update(location = other)
+    self.infrastructure_maindataentry_related.all().update(locaation = other)
 
     for tbl in self.table_set.all():
       tbl.included_countries.remove(self)
