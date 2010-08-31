@@ -216,11 +216,23 @@ class PoliticalUnitAdmin(BaseSubmitAdmin, BaseMergeableAdmin):
     actions1.update(actions2)
     return actions1
 
+class GeoSubLocationInline(BaseSubmitTabularInline):
+  model = models.Location 
+  fields = ('full_name', 'active', 'submitted_by',)
+  fk_name = 'geographically_in'
+  extra = 0
+
+  readonly_fields = ('active', 'submitted_by', 'full_name')
+
+  activate_perm = 'common.activate_location'
+
 class LocationAdmin(PoliticalUnitAdmin) :
   #list_display = ('__unicode__', 'active', 'submitted_by')
   exclude = ('full_name', )
   activate_perm = 'common.activate_location'
   merge_perm = 'common.merge_location'
+
+  inlines = [ GeoSubLocationInline, ]
 
 class TemporalLocationAdmin(LocationAdmin):
   activate_perm = 'common.activate_temploc'

@@ -239,7 +239,6 @@ class Location(PoliticalUnit):
               WHERE pl.geographically_in_id = ir.id %s))
              SELECT id FROM in_region""" % (','.join(ids), (("and ir.distance < %i" % max_distance) if max_distance else ''))
 
-
     cursor = connection.cursor() 
     cursor.execute(query) # TODO capture exception on query failure
 
