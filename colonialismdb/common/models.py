@@ -156,6 +156,15 @@ class PoliticalUnit(BaseSubmitModel,MergeableModel):
 
     self.politically_contains.all().update(politically_in = other)
 
+  def delete(self, *args, **kwargs):
+    pol_contains = self.politically_contains.all()
+
+    for loc in pol_contains:
+      loc.politically_in = None
+      loc.save()
+
+    super(PoliticalUnit, self).delete(*args, **kwargs)
+
 class Location(PoliticalUnit):
   geographically_in = models.ForeignKey('self', null = True, blank = True, default = None, verbose_name = "geographically in", related_name = "geographically_contains")
   politically_in = models.ForeignKey(PoliticalUnit, null = True, blank = True, default = None, verbose_name = "politically in", related_name = "politically_contains")
@@ -177,11 +186,11 @@ class Location(PoliticalUnit):
   def delete(self, *args, **kwargs):
     geo_contains = self.geographically_contains.all()
 
-    super(Location, self).delete(*args, **kwargs)
-
     for loc in geo_contains:
       loc.geographically_in = None
       loc.save()
+
+    super(Location, self).delete(*args, **kwargs)
 
   def clean(self):
     if self.geographically_in:

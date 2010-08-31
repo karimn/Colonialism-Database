@@ -16,7 +16,6 @@ class BaseSubmit:
 class BaseSubmitInline(BaseSubmit):
   max_num = 0 # This is to prevent additions
 
-
 class BaseSubmitStackedInline(BaseSubmitInline, admin.StackedInline):
   def queryset(self, request):
     qs = super(BaseSubmitStackedInline, self).queryset(request)
@@ -214,7 +213,16 @@ class PoliticalUnitAdmin(BaseSubmitAdmin, BaseMergeableAdmin):
     actions2 = BaseMergeableAdmin.get_actions(self, request)
 
     actions1.update(actions2)
+    del actions1['delete_selected']
     return actions1
+
+  def nonbulk_delete(self, request, query_set):
+    for loc in query_set.all():
+      loc.delete()
+
+  nonbulk_delete.short_description = "Delete selected political/geographic units"
+
+  actions = ('nonbulk_delete', )
 
 class GeoSubLocationInline(BaseSubmitTabularInline):
   model = models.Location 
