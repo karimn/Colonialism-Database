@@ -27,6 +27,8 @@ class SourceFileAdmin(BaseSubmitAdmin):
   fields = ('source_file', 'for_source', )
   list_display = ('__unicode__', 'for_source', )
 
+  readonly_fields = ('for_source', )
+
   activate_perm = 'sources.activate_sourcefile'
 
 class SourceFileInline(BaseSubmitTabularInline):
