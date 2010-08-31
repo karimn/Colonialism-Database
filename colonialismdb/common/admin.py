@@ -119,8 +119,12 @@ class BaseMainDataEntryAdmin(BaseSubmitAdmin):
 
     return result
 
+class MergeModelChoiceField(forms.ModelChoiceField):
+  def label_from_instance(self, obj):
+    return "%s (%i)" % (unicode(obj), obj.pk)
+
 class MergeSelectedForm(forms.Form):
-  merge_into = forms.ModelChoiceField(queryset = models.Location.objects.all(), empty_label = None)
+  merge_into = MergeModelChoiceField(queryset = models.Location.objects.all(), empty_label = None)
   ct = forms.IntegerField(widget = forms.HiddenInput)
   ids = forms.CharField(widget = forms.HiddenInput)
 
@@ -200,7 +204,8 @@ class BaseMergeableAdmin(VersionAdmin):
   actions = ('merge', )
 
 class PoliticalUnitAdmin(BaseSubmitAdmin, BaseMergeableAdmin):
-  list_display = ('__unicode__', 'active', 'submitted_by')
+  list_display = ('__unicode__', 'pk', 'active', 'submitted_by')
+
   activate_perm = 'common.activate_polunit'
   merge_perm = 'common.merge_polunit'
 
@@ -218,7 +223,10 @@ class PoliticalUnitAdmin(BaseSubmitAdmin, BaseMergeableAdmin):
 
   def nonbulk_delete(self, request, query_set):
     for loc in query_set.all():
-      loc.delete()
+      with reversion.revision:
+        loc.delete()
+        revision.user = request.user
+        revision.comment = "Deleted political/geographic unit"
 
   nonbulk_delete.short_description = "Delete selected political/geographic units"
 
