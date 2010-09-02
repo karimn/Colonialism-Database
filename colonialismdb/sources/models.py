@@ -43,7 +43,7 @@ class DigitizationPriority(Category):
 
 class BaseSourceObject(BaseSubmitModel):
   class Meta(BaseSubmitModel.Meta):
-    pass
+    permissions = ( ('activate_basesource', 'Can activate source'), )
 
   def __unicode__(self):
     """ This is ugly because subclass __unicode__ are not automatically called """
@@ -100,7 +100,8 @@ class SourceFile(BaseSubmitModel):
 
 class Source(BaseSourceObject):
   class Meta(BaseSourceObject.Meta):
-    permissions = ( ('activate_source', 'Can activate source'), )
+    #permissions = ( ('activate_source', 'Can activate source'), )
+    pass
 
   def __unicode__(self):
     if self.volume and len(unicode(self.volume)) > 0:
@@ -142,7 +143,8 @@ class Source(BaseSourceObject):
 
 class Table(BaseSourceObject):
   class Meta(BaseSourceObject.Meta):
-    permissions = ( ('activate_table', 'Can activate table'), )
+    pass
+    #permissions = ( ('activate_table', 'Can activate table'), )
 
   def __unicode__(self):
     return self.name

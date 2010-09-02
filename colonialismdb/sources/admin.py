@@ -1,4 +1,4 @@
-from colonialismdb.sources.models import Source, Table, SourceType, SourceSubject, DigitizationPriority, SourceFile
+from colonialismdb.sources.models import BaseSourceObject, Source, Table, SourceType, SourceSubject, DigitizationPriority, SourceFile
 from colonialismdb.common.admin import BaseSubmitStackedInline, BaseSubmitTabularInline, BaseSubmitAdmin, BaseMergeableCategoryAdmin
 from colonialismdb import population
 from django.contrib import admin
@@ -38,9 +38,11 @@ class SourceFileInline(BaseSubmitTabularInline):
 
   activate_perm = 'sources.activate_sourcefile'
 
-class SourceAdmin(BaseSubmitAdmin) :
-  exclude = ('old_id', )
+class BaseSourceAdmin(BaseSubmitAdmin) :
+  activate_perm = 'sources.activate_basesource'
 
+class SourceAdmin(BaseSourceAdmin) :
+  exclude = ('old_id', )
   list_display = ('author', 'editor', 'title', 'volume', 'year', 'active', 'submitted_by')
   list_display_links = ('author', 'editor', 'title')
   search_fields = ('title', 'original_title')
@@ -48,9 +50,7 @@ class SourceAdmin(BaseSubmitAdmin) :
 
   inlines = [ SourceFileInline, TableInline, PopulationDataInline ]
 
-  activate_perm = 'sources.activate_source'
-
-class TableAdmin(BaseSubmitAdmin):
+class TableAdmin(BaseSourceAdmin):
   exclude = ('old_id', 'old_source_id')
 
   list_display = ('name', 'nr', 'active', 'submitted_by')
@@ -60,7 +60,6 @@ class TableAdmin(BaseSubmitAdmin):
 
   inlines = [ SourceFileInline, PopulationDataInline, ]
 
-  activate_perm = 'sources.activate_table'
 
 class SourceTypeAdmin(BaseMergeableCategoryAdmin) :
   activate_perm = 'sources.activate_sourcetype'
@@ -74,6 +73,7 @@ class DigitizationPriorityAdmin(BaseMergeableCategoryAdmin):
   activate_perm = 'sources.activate_digipriority'
   merge_perm = 'sources.merge_digipriority'
 
+admin.site.register(BaseSourceObject, BaseSourceAdmin)
 admin.site.register(Source, SourceAdmin)
 admin.site.register(Table, TableAdmin)
 admin.site.register(SourceType, SourceTypeAdmin)

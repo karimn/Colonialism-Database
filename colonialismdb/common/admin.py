@@ -104,16 +104,18 @@ class BaseMainDataEntryAdmin(BaseSubmitAdmin):
   def change_view(self, request, object_id, extra_context=None):
     result = super(BaseMainDataEntryAdmin, self).change_view(request, object_id, extra_context)
 
-    if request.POST.has_key('_addanother'):
+    if (request.method == 'POST') and request.POST.has_key('_addanother'):
       request.session['reuse_values'] = { 'source' : request.POST['source'], 'location' : request.POST['location'], }
 
     return result
 
   def add_view(self, request, form_url = '', extra_context=None):
-    if request.session.has_key('reuse_values'):
+    if (request.method == 'GET') and request.session.has_key('reuse_values'):
       request.GET = request.GET.copy()
       request.GET.update(request.session['reuse_values'])
       del request.session['reuse_values']
+    elif request.POST.has_key('_addanother'):
+      request.session['reuse_values'] = { 'source' : request.POST['source'], 'location' : request.POST['location'], }
 
     result = super(BaseMainDataEntryAdmin, self).add_view(request, form_url, extra_context)
 
