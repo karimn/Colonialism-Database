@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.conf.urls.defaults import *
 
 from django.contrib import admin, databrowse
@@ -26,9 +27,15 @@ urlpatterns = patterns('',
     (r'^population/', include('colonialismdb.population.urls')),
 
     (r'^admin/merge_selected/', 'colonialismdb.common.admin.merge_selected'),
-
     (r'^admin/', include(admin.site.urls)),
+
+    #(r'^static/sources/(?P<path>.+)\.(?P<ext>.+)', 'colonialismdb.sources.views.open_src_file'),
+
     (r'^accounts/login/$', 'django.contrib.auth.views.login'),
     (r'^databrowse/(.*)', login_required(databrowse.site.root)),
 )
 
+if settings.DEBUG:
+  urlpatterns += patterns('',
+      (r'^static/(?P<path>sources/.+)$', 'django.views.static.serve', { 'document_root' : settings.MEDIA_ROOT }),  
+  )
