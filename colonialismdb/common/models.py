@@ -370,3 +370,6 @@ class BaseDataEntry(BaseSubmitModel):
 
     if not self.location.active:
       self.location.activate()
+
+    if self.source and not self.source.active:
+      self.source.activate()
