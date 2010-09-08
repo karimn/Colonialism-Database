@@ -1,4 +1,6 @@
 from colonialismdb.common import models
+from colonialismdb.common import widgets
+
 from django.contrib import admin
 from reversion.admin import VersionAdmin
 from reversion import revision
@@ -44,6 +46,27 @@ class BaseSubmitAdmin(BaseSubmit, VersionAdmin) :
       revision.comment = "Submitted new data"
     else:
       obj.save()
+  """
+  def has_change_permission(self, request, obj = None):
+    base_ret = super(BaseSubmitAdmin, self).has_change_permission(request, obj)
+
+    if not base_ret:
+      return False
+
+    if not obj or request.user.has_perm(self.__class__.activate_perm):
+      return True
+    elif obj and request.user == obj.submitted_by:
+      return True
+    else:
+      return False
+  """
+
+  def formfield_for_foreignkey(self, db_field, request=None, **kwargs):
+    if self.autocomplete_fields and db_field.name in self.autocomplete_fields.keys():
+      kwargs['widget'] = widgets.AutocompleteAdminWidget(db_field.rel, self.autocomplete_fields[db_field.name]) 
+      return db_field.formfield(**kwargs)
+    else:
+      return super(BaseSubmitAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
 
   def queryset(self, request):
     qs = super(BaseSubmitAdmin, self).queryset(request)
@@ -220,7 +243,10 @@ class PoliticalUnitAdmin(BaseSubmitAdmin, BaseMergeableAdmin):
     actions2 = BaseMergeableAdmin.get_actions(self, request)
 
     actions1.update(actions2)
-    del actions1['delete_selected']
+
+    if actions1.has_key('delete_selected'):
+      del actions1['delete_selected']
+
     return actions1
 
   def nonbulk_delete(self, request, query_set):

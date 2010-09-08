@@ -27,6 +27,7 @@ urlpatterns = patterns('',
     (r'^population/', include('colonialismdb.population.urls')),
 
     (r'^admin/merge_selected/', 'colonialismdb.common.admin.merge_selected'),
+    (r'^admin/(?P<from_applabel>[^/]+)/(?P<from_model>[^/]+)/(?P<from_id>\d+)/autocomplete/(?P<to_applabel>[^/]+)/(?P<to_model>[^/]+)/$', 'colonialismdb.common.views.autocomplete'),
     (r'^admin/', include(admin.site.urls)),
 
     #(r'^static/sources/(?P<path>.+)\.(?P<ext>.+)', 'colonialismdb.sources.views.open_src_file'),
