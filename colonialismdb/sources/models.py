@@ -75,7 +75,7 @@ class BaseSourceObject(BaseSubmitModel):
     if self.digitization_priority_pi and not self.digitization_priority_pi.active:
       self.digitization_priority_pi.activate()
 
-  label = models.CharField(max_length = 500, null = True, blank = True)
+  name = models.CharField(max_length = 500, null = True, blank = True)
 
   subjects = models.ManyToManyField(SourceSubject, blank = True)
 
@@ -107,13 +107,13 @@ class Source(BaseSourceObject):
 
   def __unicode__(self):
     if self.volume and len(unicode(self.volume)) > 0:
-      return "%s (Volume: %s)" % (self.title, self.volume)
+      return "%s (Volume: %s)" % (self.name, self.volume)
     elif self.year and len(unicode(self.year)) > 0:
-      return "%s (Year: %i)" % (self.title, self.year)
+      return "%s (Year: %i)" % (self.name, self.year)
     elif self.edition and len(unicode(self.edition)) > 0:
-      return "%s (Edition: %s)" % (self.title, self.edition)
+      return "%s (Edition: %s)" % (self.name, self.edition)
 
-    return self.title
+    return self.name
 
   def activate(self):
     super(Source, self).activate()
@@ -125,7 +125,6 @@ class Source(BaseSourceObject):
   
   author = models.CharField(max_length = 100, blank = True)
   editor = models.CharField(max_length = 100, blank = True)
-  title = models.CharField(max_length = 500)
   original_title = models.CharField(max_length = 500, blank = True, null = True)
   year = models.PositiveSmallIntegerField(blank = True, null = True)
   publisher = models.CharField(max_length = 100, blank = True)
@@ -170,7 +169,6 @@ class Table(BaseSourceObject):
 
   nr = models.CharField("NR", max_length = 20)
 
-  name = models.CharField(max_length = 500)
   original_name = models.CharField(max_length = 500, blank = True, null = True)
 
   included_countries = models.ManyToManyField(Location)
