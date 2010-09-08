@@ -75,6 +75,8 @@ class BaseSourceObject(BaseSubmitModel):
     if self.digitization_priority_pi and not self.digitization_priority_pi.active:
       self.digitization_priority_pi.activate()
 
+  label = models.CharField(max_length = 500, null = True, blank = True)
+
   subjects = models.ManyToManyField(SourceSubject, blank = True)
 
   digitization_priority_gra = models.ForeignKey(DigitizationPriority, null = True, blank = True, related_name = 'prority_gra_for_%(class)s')
