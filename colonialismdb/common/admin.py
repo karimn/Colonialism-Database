@@ -131,7 +131,10 @@ class BaseMainDataEntryAdmin(BaseSubmitAdmin):
     result = super(BaseMainDataEntryAdmin, self).change_view(request, object_id, extra_context)
 
     if (request.method == 'POST') and request.POST.has_key('_addanother'):
-      request.session['reuse_values'] = { 'source' : request.POST['source'], 'location' : request.POST['location'], }
+      request.session['reuse_values'] = { 'source' : request.POST['source'], 
+                                          'location' : request.POST['location'],
+                                          'begin_date' : request.POST['begin_date'],
+                                          'end_date' : request.POST['end_date'], }
 
     return result
 
@@ -141,7 +144,10 @@ class BaseMainDataEntryAdmin(BaseSubmitAdmin):
       request.GET.update(request.session['reuse_values'])
       del request.session['reuse_values']
     elif request.POST.has_key('_addanother'):
-      request.session['reuse_values'] = { 'source' : request.POST['source'], 'location' : request.POST['location'], }
+      request.session['reuse_values'] = { 'source' : request.POST['source'], 
+                                          'location' : request.POST['location'],
+                                          'begin_date' : request.POST['begin_date'],
+                                          'end_date' : request.POST['end_date'], }
 
     result = super(BaseMainDataEntryAdmin, self).add_view(request, form_url, extra_context)
 

@@ -33,7 +33,7 @@ class MainDataEntry(BaseDataEntry):
   # Link field not used
 
   individ_fam = models.IntegerField("Individuals / Families", choices = INDIVID_FAM_CHOICES, default = 0)
-  population_gender = models.CharField("gender", max_length = 1, choices = BaseDataEntry.GENDER_CHOICES, default = None, null = True)
+  population_gender = models.CharField("gender", max_length = 1, choices = BaseDataEntry.GENDER_CHOICES, default = 'U', null = True)
   population_value = models.DecimalField("value", max_digits = 16, decimal_places = 2) #, null = True, blank = True)
   value_precision = models.IntegerField("level of precision", choices = BaseDataEntry.VAL_PRECISION_CHOICES, default = 0, null = True)
   

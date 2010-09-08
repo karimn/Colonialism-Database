@@ -325,7 +325,7 @@ class BaseDataEntry(BaseSubmitModel):
     ordering = ['location', 'begin_date', ]
     abstract = True
 
-  GENDER_CHOICES = (('M', 'Male'), ('F', 'Female'))
+  GENDER_CHOICES = (('U', 'Unspecified'), ('M', 'Male'), ('F', 'Female'))
   UNIT_CHOICES = (('hundreds', 'Hundreds'), 
                   ('thousands', 'Thousands'), 
                   ('millions', 'Millions'), 
