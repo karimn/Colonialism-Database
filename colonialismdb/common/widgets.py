@@ -22,7 +22,7 @@ class AutocompleteAdminWidget(forms.HiddenInput):
           label = u''
 
         output.append('''
-        <input type="text" id="lookup_%(name)s" value="%(label)s" />
+        <input type="text" id="lookup_%(name)s" value="%(label)s" class="vTextField" maxlength="%(maxlength)s"/>
         <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
         <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
@@ -44,16 +44,19 @@ class AutocompleteAdminWidget(forms.HiddenInput):
                                                  select : function(event, ui) 
                                                  {
                                                     $('#id_%(name)s').val(ui.item.pk);
-                                                 }
+                                                 },
+                                                 delay : 0
                                                });
           });
         </script> ''' % { 'name' : name, 
                           'label' : label,
+                          'maxlength' : 50,
                           'search_field' : self.search_field,
                           'id' : attrs['id'], 
                           'app_label' : self.rel.to._meta.app_label, 
                           'model' : self.rel.to._meta.module_name })
-        
+
+        return mark_safe(u''.join(output))
 
     def label_for_value(self, value):
         key = self.rel.get_related_field().name

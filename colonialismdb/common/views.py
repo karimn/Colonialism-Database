@@ -12,3 +12,12 @@ def autocomplete(request, from_applabel, from_model, from_id, to_applabel, to_mo
 
   data = [{ 'label' : f.__unicode__(), 'pk' : f.pk } for f in model.objects.filter(**{('%s__istartswith' % search_field) : query})[:10]]
   return HttpResponse(simplejson.dumps(data), mimetype = 'application/json')
+
+def get_label(request, from_applabel, from_model, from_id, to_applabel, to_model):
+  import pdb; pdb.set_trace()
+
+  obj_id = request.GET['id']
+
+  model = models.get_model(to_applabel, to_model)
+
+  return model.objects.get(pk = obj_id)

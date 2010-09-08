@@ -12,7 +12,10 @@ from django.http import HttpResponseRedirect
 
 import reversion
 
-class BaseSubmit:
+class BaseAdmin:
+  autocomplete_fields = None
+
+class BaseSubmit(BaseAdmin):
   readonly_fields = ('active', 'submitted_by')
 
 class BaseSubmitInline(BaseSubmit):

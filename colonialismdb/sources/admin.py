@@ -43,9 +43,9 @@ class BaseSourceAdmin(BaseSubmitAdmin) :
 
 class SourceAdmin(BaseSourceAdmin) :
   exclude = ('old_id', )
-  list_display = ('author', 'editor', 'title', 'volume', 'year', 'active', 'submitted_by')
-  list_display_links = ('author', 'editor', 'title')
-  search_fields = ('title', 'original_title')
+  list_display = ('author', 'editor', 'name', 'volume', 'year', 'active', 'submitted_by')
+  list_display_links = ('author', 'editor', 'name')
+  search_fields = ('name', 'original_title')
   ordering = ['author']
 
   inlines = [ SourceFileInline, TableInline, PopulationDataInline ]
