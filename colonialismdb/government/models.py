@@ -59,7 +59,7 @@ class MainDataEntry(BaseDataEntry):
   spatial_area_unit = models.ForeignKey(SpatialAreaUnit, null = True, blank = True, related_name = '%(app_label)s_%(class)s_related')
 
   currency = models.ForeignKey(Currency, null = True, blank = True, related_name = '%(app_label)s_%(class)s_related')
-  currency_exchange_rate = models.IntegerField(null = True, blank = True)
+  currency_exchange_rate = models.CharField(max_length = 50, null = True, blank = True)
 
   revenue = models.DecimalField(max_digits = 10, decimal_places = 2, null = True, blank = True)
   revenue_type = models.ForeignKey(RevenueType, null = True, blank = True)
