@@ -272,7 +272,7 @@ class LocationAdmin(PoliticalUnitAdmin) :
   exclude = ('full_name', )
   activate_perm = 'common.activate_location'
   merge_perm = 'common.merge_location'
-  autocomplete_fields = { 'geographically_in' : 'full_name', 'politically_in' : 'full_name', }
+  autocomplete_fields = { 'geographically_in' : 'full_name', 'politically_in' : 'name', }
 
   inlines = [ GeoSubLocationInline, ]
 
