@@ -20,7 +20,7 @@ class BaseVersionAdmin(VersionAdmin):
       kwargs['widget'] = widgets.AutocompleteAdminWidget(db_field.rel, self.autocomplete_fields[db_field.name]) 
       return db_field.formfield(**kwargs)
     else:
-      return super(BaseAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
+      return super(BaseVersionAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
 
 class BaseSubmit:
   readonly_fields = ('active', 'submitted_by')
