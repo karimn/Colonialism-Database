@@ -12,7 +12,7 @@ from django.http import HttpResponseRedirect
 
 import reversion
 
-class BaseAdmin:
+class BaseVersionAdmin(VersionAdmin):
   autocomplete_fields = None
 
   def formfield_for_foreignkey(self, db_field, request=None, **kwargs):
@@ -22,7 +22,7 @@ class BaseAdmin:
     else:
       return super(BaseAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
 
-class BaseSubmit(BaseAdmin):
+class BaseSubmit:
   readonly_fields = ('active', 'submitted_by')
 
 class BaseSubmitInline(BaseSubmit):
@@ -46,7 +46,7 @@ class BaseSubmitTabularInline(BaseSubmitInline, admin.TabularInline):
 
     return qs
 
-class BaseSubmitAdmin(BaseSubmit, VersionAdmin) :
+class BaseSubmitAdmin(BaseSubmit, BaseVersionAdmin) :
   @revision.create_on_success
   def save_model(self, request, obj, form, change):
     if not change and obj.active == False:
