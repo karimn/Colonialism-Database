@@ -153,6 +153,8 @@ class BaseMainDataEntryAdmin(BaseSubmitAdmin):
 
     return result
 
+  autocomplete_fields = { 'location' : 'full_name', 'source' : 'name', }
+
 class MergeModelChoiceField(forms.ModelChoiceField):
   def label_from_instance(self, obj):
     return "%s (%i)" % (unicode(obj), obj.pk)
