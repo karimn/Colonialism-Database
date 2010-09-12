@@ -15,6 +15,13 @@ import reversion
 class BaseAdmin:
   autocomplete_fields = None
 
+  def formfield_for_foreignkey(self, db_field, request=None, **kwargs):
+    if self.autocomplete_fields and db_field.name in self.autocomplete_fields.keys():
+      kwargs['widget'] = widgets.AutocompleteAdminWidget(db_field.rel, self.autocomplete_fields[db_field.name]) 
+      return db_field.formfield(**kwargs)
+    else:
+      return super(BaseSubmitAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
+
 class BaseSubmit(BaseAdmin):
   readonly_fields = ('active', 'submitted_by')
 
@@ -49,27 +56,6 @@ class BaseSubmitAdmin(BaseSubmit, VersionAdmin) :
       revision.comment = "Submitted new data"
     else:
       obj.save()
-  """
-  def has_change_permission(self, request, obj = None):
-    base_ret = super(BaseSubmitAdmin, self).has_change_permission(request, obj)
-
-    if not base_ret:
-      return False
-
-    if not obj or request.user.has_perm(self.__class__.activate_perm):
-      return True
-    elif obj and request.user == obj.submitted_by:
-      return True
-    else:
-      return False
-  """
-
-  def formfield_for_foreignkey(self, db_field, request=None, **kwargs):
-    if self.autocomplete_fields and db_field.name in self.autocomplete_fields.keys():
-      kwargs['widget'] = widgets.AutocompleteAdminWidget(db_field.rel, self.autocomplete_fields[db_field.name]) 
-      return db_field.formfield(**kwargs)
-    else:
-      return super(BaseSubmitAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
 
   def queryset(self, request):
     qs = super(BaseSubmitAdmin, self).queryset(request)
@@ -286,6 +272,7 @@ class LocationAdmin(PoliticalUnitAdmin) :
   exclude = ('full_name', )
   activate_perm = 'common.activate_location'
   merge_perm = 'common.merge_location'
+  autocomplete_fields = { 'geographically_in' : 'full_name', 'politically_in' : 'full_name', }
 
   inlines = [ GeoSubLocationInline, ]
 
