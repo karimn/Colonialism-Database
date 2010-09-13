@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-from colonialismdb.common.models import BaseSubmitModel, Category, Language, Location
+from colonialismdb.common.models import BaseSubmitModel, Category, Language, Location, PoliticalUnit
 
 class SourceType(Category):
   class Meta(Category.Meta):
@@ -171,7 +171,7 @@ class Table(BaseSourceObject):
 
   original_name = models.CharField(max_length = 500, blank = True, null = True)
 
-  included_countries = models.ManyToManyField(Location)
+  included_countries = models.ManyToManyField(PoliticalUnit)
 
   begin_page = models.IntegerField()
   end_page = models.IntegerField()
