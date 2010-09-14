@@ -156,6 +156,15 @@ class PoliticalUnit(BaseSubmitModel,MergeableModel):
 
     self.politically_contains.all().update(politically_in = other)
 
+    self.population_maindataentry_related.all().update(location = other)
+    self.government_maindataentry_related.all().update(location = other)
+    self.education_maindataentry_related.all().update(location = other)
+    self.infrastructure_maindataentry_related.all().update(location = other)
+
+    for tbl in self.table_set.all():
+      tbl.included_countries.remove(self)
+      tbl.included_countries.add(other)
+
   def delete(self, *args, **kwargs):
     pol_contains = self.politically_contains.all()
 
@@ -174,7 +183,8 @@ class Location(PoliticalUnit):
 
   class Meta(BaseSubmitModel.Meta):
     permissions = ( ('activate_location', 'Can activate submitted location'),
-                    ('merge_location', 'Can activate location entries') )
+                    ('merge_location', 'Can activate location entries'),
+                    ('convert2polunit', 'Can convert to political unit'), )
 
   def save(self, *args, **kwargs):
     self.clean()
@@ -267,16 +277,27 @@ class Location(PoliticalUnit):
       geo_in.geographically_in = other
       geo_in.save()
 
-    #self.geographically_contains.all().update(geographically_in = other)
 
-    self.population_maindataentry_related.all().update(location = other)
-    self.government_maindataentry_related.all().update(location = other)
-    self.education_maindataentry_related.all().update(location = other)
-    self.infrastructure_maindataentry_related.all().update(location = other)
+  def convert_to_polunit(self):
+    new_polunit = PoliticalUnit(name = self.name, active = self.active, submitted_by = self.submitted_by)
+    new_polunit.save()
+
+    for old_unit_type in self.unit_type.all():
+      new_polunit.unit_type.add(old_unit_type)
+
+    for geo_in in self.geographically_contains.all():
+      geo_in.geographically_in = None 
+      geo_in.politically_in = new_polunit
+      geo_in.save()
+
+    self.population_maindataentry_related.all().update(location = new_polunit)
+    self.government_maindataentry_related.all().update(location = new_polunit)
+    self.education_maindataentry_related.all().update(location = new_polunit)
+    self.infrastructure_maindataentry_related.all().update(location = new_polunit)
 
     for tbl in self.table_set.all():
       tbl.included_countries.remove(self)
-      tbl.included_countries.add(other)
+      tbl.included_countries.add(new_polunit)
 
 class TemporalLocation(Location):
   temporal_is = models.ForeignKey(Location, null = False, blank = False, verbose_name = "is", related_name = "temp_locations")
@@ -298,16 +319,6 @@ class TemporalLocation(Location):
       return self.politically_in
     else:
       return self.temporal_is.get_politically_in()
-
-  """
-  def __unicode__(self): 
-    geo = self.get_geographically_in()
-
-    if geo:
-      return self.name + " (%s - %s)" % (self.begin_date, self.end_date) + ", " + unicode(self.geo)
-    else:
-      return self.name + " (%s - %s)" % (self.begin_date, self.end_date)
-  """
 
   def activate(self):
     super(TemporalLocation, self).activate()
@@ -348,7 +359,8 @@ class BaseDataEntry(BaseSubmitModel):
   circa = models.BooleanField(default = False)
   
   # Location info
-  location = models.ForeignKey(Location, related_name = '%(app_label)s_%(class)s_related')
+  #location = models.ForeignKey(Location, related_name = '%(app_label)s_%(class)s_related')
+  location = models.ForeignKey(PoliticalUnit, related_name = '%(app_label)s_%(class)s_related')
   original_location_name = models.CharField("Original Location Name", max_length = 50, null = True, blank = True)
   alternate_location_name = models.CharField("Alternate Location Name", max_length = 50, null = True, blank = True)
 

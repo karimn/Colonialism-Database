@@ -216,7 +216,7 @@ class BaseMergeableAdmin(VersionAdmin):
   merge.short_description = 'Merge entries'
 
   def get_actions(self, request):
-    actions = super(VersionAdmin, self).get_actions(request)
+    actions = super(BaseMergeableAdmin, self).get_actions(request)
 
     if not request.user.has_perm(self.__class__.merge_perm):
       del actions['merge']
@@ -275,6 +275,26 @@ class LocationAdmin(PoliticalUnitAdmin) :
   autocomplete_fields = { 'geographically_in' : 'full_name', 'politically_in' : 'name', }
 
   inlines = [ GeoSubLocationInline, ]
+
+  actions = PoliticalUnitAdmin.actions + ('convert_to_polunit', )
+
+  def convert_to_polunit(self, request, query_set):
+    for to_convert in query_set.all():
+      with reversion.revision:
+        to_convert.convert_to_polunit()
+        revision.user = request.user
+        revision.comment = 'Location to PoliticalUnit conversion'
+        to_convert.delete()
+
+  convert_to_polunit.short_description = 'Convert to political unit'
+
+  def get_actions(self, request):
+    actions = super(LocationAdmin, self).get_actions(request)
+
+    if not request.user.has_perm('common.convert2polunit'):
+      del actions['convert_to_polunit']
+
+    return actions
 
 class TemporalLocationAdmin(LocationAdmin):
   activate_perm = 'common.activate_temploc'
