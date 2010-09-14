@@ -179,6 +179,18 @@ class Location(PoliticalUnit):
   politically_in = models.ForeignKey(PoliticalUnit, null = True, blank = True, default = None, verbose_name = "politically in", related_name = "politically_contains")
   full_name = models.CharField(max_length = 200, blank = True)
 
+  # Coding systems
+  wb_code = models.CharField("World Bank code", max_length = 3, blank = True, null = True)
+  iso_3166_1_letter_code = models.CharField("ISO 3166-1 (letters) code", max_length = 3, blank = True, null = True)
+  iso_3166_1_num_code = models.DecimalField("ISO 3166-1 (numbers) code", max_digits = 3, decimal_places = 0, blank = True, null = True)
+  iso_3166_2_code = models.CharField("ISO 3166-2 code", max_length = 5, blank = True, null = True)
+  polity_num_code = models.DecimalField("Polity (numbers) code", max_digits = 3, decimal_places = 0, blank = True, null = True)
+  polity_letter_code = models.CharField("Polity (letters) code", max_length = 3, blank = True, null = True)
+  nato_code = models.CharField("NATO code", max_length = 3, blank = True, null = True)
+  fips_code = models.CharField("FIPS code", max_length = 2, blank = True, null = True)
+  undp_code = models.CharField("UNDP code", max_length = 3, blank = True, null = True)
+  ICAO_code = models.CharField("ICAO code", max_length = 2, blank = True, null = True)
+
   # TODO Spatial characteristics 
 
   class Meta(BaseSubmitModel.Meta):
