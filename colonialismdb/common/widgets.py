@@ -4,7 +4,8 @@ from django.utils.safestring import mark_safe
 from django.utils.text import truncate_words
 from django.contrib.admin import widgets
 
-class AutocompleteAdminWidget(forms.HiddenInput):
+#class AutocompleteAdminWidget(forms.HiddenInput):
+class AutocompleteAdminWidget(forms.TextInput):
     def __init__(self, rel, search_field, attrs=None):
         self.rel = rel
         self.search_field = search_field
@@ -28,6 +29,7 @@ class AutocompleteAdminWidget(forms.HiddenInput):
         <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
         <script type="text/javascript">
           $(document).ready(function() { 
+            $('#id_%(name)s').attr('readOnly', 1);
             $('#lookup_%(name)s').autocomplete({ source : function(request, response) 
                                                           {
                                                             $.ajax({ url : 'autocomplete/%(app_label)s/%(model)s/',
