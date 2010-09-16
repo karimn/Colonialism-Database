@@ -24,6 +24,7 @@ class AutocompleteAdminWidget(forms.TextInput):
 
         output.append('''
         <input type="text" id="lookup_%(name)s" value="%(label)s" class="vTextField" maxlength="%(maxlength)s"/>
+        <p class="help">Start typing to see available matches, and press "Enter" or "Tab" to select option</p>
         <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
         <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
