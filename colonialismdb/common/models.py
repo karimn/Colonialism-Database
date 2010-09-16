@@ -149,7 +149,11 @@ class PoliticalUnit(BaseSubmitModel,MergeableModel):
     super(PoliticalUnit, self).activate()
 
   def __unicode__(self):
-    return self.name
+    # Terribly ugly again because subclass method not automatically called
+    try:
+      return unicode(self.location)
+    except Location.DoesNotExist:
+      return self.name
 
   def merge_into(self, other):
     super(PoliticalUnit, self).merge_into(other)
