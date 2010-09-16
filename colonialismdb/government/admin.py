@@ -10,7 +10,7 @@ class MainDataEntryAdmin(BaseMainDataEntryAdmin) :
         {'fields' : ['active', 'submitted_by']}),
 
       ('Location Information', 
-        {'fields' : ['location', 'original_location_name', 'alternate_location_name', 'spatial_area', 'spatial_area_unit']}),
+        {'fields' : ['location', 'original_location_name', 'alternate_location_name', 'spatial_area', 'spatial_area_unit', 'spatial_page_num', ]}),
       
       ('Date Range', 
         {'fields' : ['begin_date', 'end_date', 'circa']}),
@@ -28,7 +28,7 @@ class MainDataEntryAdmin(BaseMainDataEntryAdmin) :
         {'fields' : ['money_supply', 'money_supply_type']}),
 
       ('Personnel',
-        {'fields' : ['military', 'military_type', 'officials', 'officials_type']}),
+        {'fields' : ['military', 'military_type', 'military_page_num', 'officials', 'officials_type']}),
 
       ('Source Information', 
         {'fields' : ['source', 'page_num', 'primary_source', 'polity', 'iso', 'wb']}),

@@ -57,6 +57,7 @@ class MainDataEntry(BaseDataEntry):
   # Should these be moved to location?
   spatial_area = models.IntegerField(null = True, blank = True)
   spatial_area_unit = models.ForeignKey(SpatialAreaUnit, null = True, blank = True, related_name = '%(app_label)s_%(class)s_related')
+  spatial_page_num = models.IntegerField("spatial data source page number", null = True, blank = True, default = None)
 
   currency = models.ForeignKey(Currency, null = True, blank = True, related_name = '%(app_label)s_%(class)s_related')
   currency_exchange_rate = models.CharField(max_length = 50, null = True, blank = True)
@@ -74,6 +75,7 @@ class MainDataEntry(BaseDataEntry):
 
   military = models.IntegerField("military personnel", null = True, blank = True)
   military_type = models.ForeignKey(MilitaryType, null = True, blank = True)
+  military_page_num = models.IntegerField("military data source page number", null = True, blank = True, default = None)
 
   officials = models.IntegerField(null = True, blank = True)
   officials_type = models.ForeignKey(OfficialsType, null = True, blank = True)
