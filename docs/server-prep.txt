@@ -3,7 +3,7 @@ For deployment the documentation available on Django's website should be followe
 1. Install postgreSQL
 2. Install python (currently 2.6)
 3. Install django (currently 1.2)
-4. Install django-reversion
+4. Install django-reversion, south
 5. Install Apache HTTP Server (currently 2.2)
 6. Install mod_wsgi
 7. Install win-psycopg (Had to use 2.0 since 2.2 doesn't work)
@@ -12,3 +12,7 @@ For deployment the documentation available on Django's website should be followe
 10. Need to edit Apache's httpd.conf to load django webframe
 11. Configure Windows Firewall to allow httpd.exe to respond to incoming requests
 
+12. GeoDjango
+  a. Install PostGIS (make sure postgres bin directory in in the path to pick up GEOS libraries)
+  b. Install PROJ.4 (add dir to path)
+  c. Install FWTools (which includes GDAL as well as PROJ.4).  Not sure if there is a need to run "setfw.bat" to initialize env vars
