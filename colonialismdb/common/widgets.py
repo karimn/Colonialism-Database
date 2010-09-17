@@ -50,6 +50,7 @@ class AutocompleteAdminWidget(forms.TextInput):
                                                  },
                                                  delay : 0
                                                });
+            $('#add_id_%(name)s').hide();
           });
         </script> ''' % { 'name' : name, 
                           'label' : label,
