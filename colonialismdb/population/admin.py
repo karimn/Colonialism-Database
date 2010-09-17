@@ -32,6 +32,9 @@ class MainDataEntryAdmin(BaseMainDataEntryAdmin) :
   #raw_id_fields = ( 'location', ) # TODO 'source', )
   exclude_add = ('location', )
 
+  autocomplete_fields = BaseMainDataEntryAdmin.autocomplete_fields 
+  autocomplete_fields.update({ 'religion' : 'name', })
+
   list_display = ('location', 'begin_date', 'end_date', 'active', 'submitted_by')
   ordering = ['begin_date']
 
