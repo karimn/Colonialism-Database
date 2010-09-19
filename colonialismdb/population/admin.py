@@ -6,7 +6,7 @@ from django.contrib import admin
 class MainDataEntryAdmin(BaseMainDataEntryAdmin) :
   fieldsets = [
       (None,
-        {'fields' : ['active', 'submitted_by']}),
+        {'fields' : ['active', 'submitted_by', 'datetime_created', ]}),
 
       ('Location Information', 
         {'fields' : ['location', 'original_location_name', 'alternate_location_name']}),
@@ -29,14 +29,9 @@ class MainDataEntryAdmin(BaseMainDataEntryAdmin) :
 
   radio_fields = { 'value_precision' : admin.HORIZONTAL, 'individ_fam' : admin.HORIZONTAL, 'population_gender' : admin.HORIZONTAL, 'value_unit' : admin.HORIZONTAL, }
 
-  #raw_id_fields = ( 'location', ) # TODO 'source', )
-  exclude_add = ('location', )
-
   autocomplete_fields = BaseMainDataEntryAdmin.autocomplete_fields 
   autocomplete_fields.update({ 'religion' : 'name', })
 
-  list_display = ('location', 'begin_date', 'end_date', 'active', 'submitted_by')
-  ordering = ['begin_date']
 
   activate_perm = 'population.activate_main_data_entry'
 

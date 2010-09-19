@@ -7,7 +7,7 @@ from django.contrib import admin
 class MainDataEntryAdmin(BaseMainDataEntryAdmin) :
   fieldsets = [
       (None,
-        {'fields' : ['active', 'submitted_by']}),
+        {'fields' : ['active', 'submitted_by', 'datetime_created', ]}),
 
       ('Location Information', 
         {'fields' : ['location', 'original_location_name', 'alternate_location_name', 'spatial_area', 'spatial_area_unit', 'spatial_page_num', ]}),

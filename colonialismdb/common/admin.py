@@ -23,7 +23,7 @@ class BaseVersionAdmin(VersionAdmin):
       return super(BaseVersionAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
 
 class BaseSubmit:
-  readonly_fields = ('active', 'submitted_by')
+  readonly_fields = ('active', 'submitted_by', 'datetime_created', )
 
 class BaseSubmitInline(BaseSubmit):
   max_num = 0 # This is to prevent additions
@@ -140,6 +140,8 @@ class BaseMainDataEntryAdmin(BaseSubmitAdmin):
     return result
 
   autocomplete_fields = { 'location' : 'name', 'source' : 'name', }
+  list_display = ('location', 'begin_date', 'end_date', 'active', 'submitted_by', 'datetime_created', )
+  ordering = ('-datetime_created', )
 
 class MergeModelChoiceField(forms.ModelChoiceField):
   def label_from_instance(self, obj):

@@ -25,6 +25,7 @@ class BaseSubmitModel(models.Model):
 
   active = models.BooleanField(default = False)
   submitted_by = models.ForeignKey(User, null = True, editable = False, related_name = "submitted_%(app_label)s_%(class)s")
+  datetime_created = models.DateTimeField("created at", auto_now_add = True, editable = False, default = datetime.datetime(2010,1,1))
 
 class Category(BaseSubmitModel, MergeableModel):
   class Meta(BaseSubmitModel.Meta):
