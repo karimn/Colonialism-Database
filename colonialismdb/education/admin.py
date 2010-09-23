@@ -34,7 +34,7 @@ class MainDataEntryAdmin(BaseMainDataEntryAdmin) :
         {'fields' : ['source', 'page_num', 'primary_source', 'polity', 'iso', 'wb']}),
 
       ('Other Information', 
-        {'fields' : ['remarks', ], 'classes' : ['collapse', ]}),
+        {'fields' : ['remarks', ]}),
   ]
 
   #radio_fields = { 'value_precision' : admin.HORIZONTAL, 'individ_fam' : admin.HORIZONTAL, 'population_gender' : admin.HORIZONTAL, 'value_unit' : admin.HORIZONTAL, }
