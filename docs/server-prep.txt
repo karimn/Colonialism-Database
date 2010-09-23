@@ -16,3 +16,4 @@ For deployment the documentation available on Django's website should be followe
   a. Install PostGIS (make sure postgres bin directory in in the path to pick up GEOS libraries)
   b. Install PROJ.4 (add dir to path)
   c. Install FWTools (which includes GDAL as well as PROJ.4).  Not sure if there is a need to run "setfw.bat" to initialize env vars
+  d. Run postgis.sql and spatial_refs_sys.sql on colonialismdb database
