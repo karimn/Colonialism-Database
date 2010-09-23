@@ -141,6 +141,7 @@ class BaseMainDataEntryAdmin(BaseSubmitAdmin):
 
   autocomplete_fields = { 'location' : 'name', 'source' : 'name', }
   list_display = ('location', 'begin_date', 'end_date', 'active', 'submitted_by', 'datetime_created', )
+  search_fields = ['location__name',]
   ordering = ('-datetime_created', )
 
 class MergeModelChoiceField(forms.ModelChoiceField):
