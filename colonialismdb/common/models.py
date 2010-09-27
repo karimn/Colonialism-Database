@@ -1,5 +1,6 @@
 import datetime
 
+from django.contrib.gis.db import models as geo_models
 from django.db import models, connection
 from django.contrib.auth.models import User
 
@@ -402,3 +403,40 @@ class BaseDataEntry(BaseSubmitModel):
 
     if self.source and not self.source.active:
       self.source.activate()
+
+# This is an auto-generated Django model module created by ogrinspect.
+
+class BaseGeo(geo_models.Model):
+    ft_id = geo_models.IntegerField(unique = True)
+    point_x = geo_models.FloatField()
+    point_y = geo_models.FloatField()
+
+    srid = 4326
+
+    objects = geo_models.GeoManager()
+
+class GeoPoint(BaseGeo):
+    geom = geo_models.PointField(srid=BaseGeo.srid)
+
+class GeoPolygon(BaseGeo):
+    shape_leng = geo_models.FloatField()
+    shape_area = geo_models.FloatField()
+    geom = geo_models.PolygonField(srid=BaseGeo.srid)
+
+# Auto-generated `LayerMapping` dictionary for GeoPoint model
+geopoint_mapping = {
+    'point_x' : 'POINT_X',
+    'point_y' : 'POINT_Y',
+    'ft_id' : 'FT_ID',
+    'geom' : 'POINT',
+}
+
+# Auto-generated `LayerMapping` dictionary for GeoPolygon model
+geopolygon_mapping = {
+    'shape_leng' : 'SHAPE_Leng',
+    'shape_area' : 'SHAPE_Area',
+    'point_x' : 'POINT_X',
+    'point_y' : 'POINT_Y',
+    'ft_id' : 'FT_ID',
+    'geom' : 'POLYGON',
+}
