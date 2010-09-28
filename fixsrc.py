@@ -41,7 +41,7 @@ if __name__ == "__main__":
   mig = []
   """
 
-  mig_file = sys.argv[2]
+  mig_file = sys.argv[1]
   reader = csv.reader(migtools.UTF8Recoder(open(mig_file, "r"), migtools.STRING_ENCODING), delimiter='\t', quotechar = '"')
 
   null_query = MainDataEntry.objects.filter(source = None)
@@ -73,10 +73,11 @@ if __name__ == "__main__":
           if q.count() > 1:
             print("Too many matches")
           else:
-            print("Source found: %s" % rdict['old_source_id'])
             try:
-              q[0].source = BaseSourceObject.objects.get(pk = rdict['old_source_id'])
-              q[0].save()
+              #q[0].source = BaseSourceObject.objects.get(pk = rdict['old_source_id'])
+              #q[0].save()
+              src = BaseSourceObject.objects.get(pk = rdict['old_source_id'])
+              print("Source found: %s, %i" % (rdict['old_source_id'], q[0].id))
             except:
               print("Exception raised on finding and saving missing source")
 

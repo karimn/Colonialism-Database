@@ -421,7 +421,7 @@ class GeoPoint(BaseGeo):
 class GeoPolygon(BaseGeo):
     shape_leng = geo_models.FloatField()
     shape_area = geo_models.FloatField()
-    geom = geo_models.PolygonField(srid=BaseGeo.srid)
+    geom = geo_models.MultiPolygonField(srid=BaseGeo.srid)
 
 # Auto-generated `LayerMapping` dictionary for GeoPoint model
 geopoint_mapping = {
