@@ -15,6 +15,9 @@ For deployment the documentation available on Django's website should be followe
 12. GeoDjango
   a. Install PostGIS (make sure postgres bin directory in in the path to pick up GEOS libraries)
   b. Install PROJ.4 (add dir to path)
-  c. Install FWTools (which includes GDAL as well as PROJ.4).  Not sure if there is a need to run "setfw.bat" to initialize env vars
+  c. Install FWTools (which includes GDAL as well as PROJ.4).  Not sure if there is a need to run "setfw.bat" to initialize env vars.  More Windows hell update:
+    i) gdal_fw.dll does not seem to work
+    ii) Installed GeoDjango in *addition* to FW to get the correct GDAL libraries
+    iii) Just make sure GeoDjango/bin is on the path but remove the part about postgresql 8.3
   d. Run postgis.sql and spatial_refs_sys.sql on colonialismdb database
   e. Grant database permissions per create_template_postgis-1.5.sh
