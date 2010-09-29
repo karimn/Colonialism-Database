@@ -21,6 +21,9 @@ class MainDataEntryAdmin(BaseMainDataEntryAdmin) :
       ('Expenditure',
         {'fields' : ['expenditure', 'expenditure_type']}),
 
+      ('Revenue',
+        {'fields' : ['revenue', 'revenue_type']}),
+
       ('Public Debt',
         {'fields' : ['public_debt',]}),
 
