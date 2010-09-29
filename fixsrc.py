@@ -74,9 +74,9 @@ if __name__ == "__main__":
             print("Too many matches")
           else:
             try:
-              #q[0].source = BaseSourceObject.objects.get(pk = rdict['old_source_id'])
-              #q[0].save()
-              src = BaseSourceObject.objects.get(pk = rdict['old_source_id'])
+              src = Source.objects.get(old_id = rdict['old_source_id'])
+              q[0].source = src
+              q[0].save()
               print("Source found: %s, %i" % (rdict['old_source_id'], q[0].id))
             except:
               print("Exception raised on finding and saving missing source")
