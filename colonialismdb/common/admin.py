@@ -2,6 +2,7 @@ from colonialismdb.common import models
 from colonialismdb.common import widgets
 
 from django.contrib import admin
+from django.contrib.gis import admin as geo_admin
 from reversion.admin import VersionAdmin
 from reversion import revision
 from django import forms
@@ -122,6 +123,7 @@ class BaseMainDataEntryAdmin(BaseSubmitAdmin):
                                           'begin_date' : request.POST['begin_date'],
                                           'end_date' : request.POST['end_date'], 
                                           'page_num' : request.POST['page_num'],
+                                          'primary_source' : request.POST['primary_source'],
                                           'remarks' : request.POST['remarks'], }
 
     return result
@@ -137,6 +139,7 @@ class BaseMainDataEntryAdmin(BaseSubmitAdmin):
                                           'begin_date' : request.POST['begin_date'],
                                           'end_date' : request.POST['end_date'], 
                                           'page_num' : request.POST['page_num'],
+                                          'primary_source' : request.POST['primary_source'],
                                           'remarks' : request.POST['remarks'], }
 
     result = super(BaseMainDataEntryAdmin, self).add_view(request, form_url, extra_context)
@@ -352,6 +355,15 @@ class LanguageAdmin(BaseMergeableCategoryAdmin):
   activate_perm = 'common.activate_language'
   merge_perm = 'common.merge_language'
 
+class BaseGeoAdmin(geo_admin.GeoModelAdmin):
+  list_display = ("ft_id", "point_x", "point_y", )
+
+class GeoPointAdmin(BaseGeoAdmin):
+  pass
+
+class GeoPolygonAdmin(BaseGeoAdmin):
+  list_display = BaseGeoAdmin.list_display + ("shape_leng", "shape_area", )
+
 admin.site.register(models.PoliticalUnit, PoliticalUnitAdmin)
 admin.site.register(models.Location, LocationAdmin)
 admin.site.register(models.TemporalLocation, TemporalLocationAdmin)
@@ -363,3 +375,6 @@ admin.site.register(models.LengthUnit, LengthUnitAdmin)
 admin.site.register(models.WeightUnit, WeightUnitAdmin)
 admin.site.register(models.PoliticalUnitType, PoliticalUnitTypeAdmin)
 admin.site.register(models.Language, LanguageAdmin)
+
+admin.site.register(models.GeoPoint, GeoPointAdmin)
+admin.site.register(models.GeoPolygon, GeoPolygonAdmin)

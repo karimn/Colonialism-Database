@@ -407,21 +407,27 @@ class BaseDataEntry(BaseSubmitModel):
 # This is an auto-generated Django model module created by ogrinspect.
 
 class BaseGeo(geo_models.Model):
-    ft_id = geo_models.IntegerField(unique = True)
-    point_x = geo_models.FloatField()
-    point_y = geo_models.FloatField()
+  ft_id = geo_models.IntegerField("FT ID", unique = True)
+  point_x = geo_models.FloatField("x")
+  point_y = geo_models.FloatField("y")
 
-    srid = 4326
+  srid = 4326
 
-    objects = geo_models.GeoManager()
+  objects = geo_models.GeoManager()
 
 class GeoPoint(BaseGeo):
-    geom = geo_models.PointField(srid=BaseGeo.srid)
+  class Meta:
+    verbose_name = "geographic point"
+
+  geom = geo_models.PointField(srid=BaseGeo.srid)
 
 class GeoPolygon(BaseGeo):
-    shape_leng = geo_models.FloatField()
-    shape_area = geo_models.FloatField()
-    geom = geo_models.MultiPolygonField(srid=BaseGeo.srid)
+  class Meta:
+    verbose_name = "geographic polygon"
+
+  shape_leng = geo_models.FloatField("length")
+  shape_area = geo_models.FloatField("area")
+  geom = geo_models.MultiPolygonField(srid=BaseGeo.srid)
 
 # Auto-generated `LayerMapping` dictionary for GeoPoint model
 geopoint_mapping = {
