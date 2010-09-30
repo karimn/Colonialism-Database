@@ -120,7 +120,9 @@ class BaseMainDataEntryAdmin(BaseSubmitAdmin):
       request.session['reuse_values'] = { 'source' : request.POST['source'], 
                                           'location' : request.POST['location'],
                                           'begin_date' : request.POST['begin_date'],
-                                          'end_date' : request.POST['end_date'], }
+                                          'end_date' : request.POST['end_date'], 
+                                          'page_num' : request.POST['page_num'],
+                                          'remarks' : request.POST['remarks'], }
 
     return result
 
@@ -133,7 +135,9 @@ class BaseMainDataEntryAdmin(BaseSubmitAdmin):
       request.session['reuse_values'] = { 'source' : request.POST['source'], 
                                           'location' : request.POST['location'],
                                           'begin_date' : request.POST['begin_date'],
-                                          'end_date' : request.POST['end_date'], }
+                                          'end_date' : request.POST['end_date'], 
+                                          'page_num' : request.POST['page_num'],
+                                          'remarks' : request.POST['remarks'], }
 
     result = super(BaseMainDataEntryAdmin, self).add_view(request, form_url, extra_context)
 
