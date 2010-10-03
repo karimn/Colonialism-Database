@@ -44,7 +44,7 @@ if __name__ == "__main__":
   mig_file = sys.argv[1]
   reader = csv.reader(migtools.UTF8Recoder(open(mig_file, "r"), migtools.STRING_ENCODING), delimiter='\t', quotechar = '"')
 
-  null_query = MainDataEntry.objects.filter(source = None)
+  #null_query = MainDataEntry.objects.filter(source = None)
 
   for i, row in enumerate(reader):
     rdict = dict(zip(('old_source_id', 'old_combined_id', 'primary_source', 'page_num', 'begin_date', 'end_date', 'place_origin', 'place_english', 'alternate_location_name', 'large1', 'large2', 'large3', 'religion', 'race', 'ethnicity', 'ethnic_origin', 'age_start', 'age_end', 'remarks', 'link', 'individuals_population_value', 'families_population_value', 'male_population_value', 'female_population_value', 'value_unit', 'is_total', 'population_condition', 'polity', 'iso', 'wb'), row))
@@ -67,7 +67,7 @@ if __name__ == "__main__":
         #            rdict[pop_val_name],
         #            rdict['old_source_id']))
 
-        q = null_query.filter(begin_date = begin_date).filter(end_date = end_date).filter(location__name = rdict['place_origin']).filter(population_value = rdict[pop_val_name])
+        q = MainDataEntry.objects.filter(source = None).filter(begin_date = begin_date).filter(end_date = end_date).filter(location__name = rdict['place_origin']).filter(population_value = rdict[pop_val_name])
 
         if q.count() > 0:
           if q.count() > 1:
