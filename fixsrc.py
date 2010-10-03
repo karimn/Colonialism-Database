@@ -75,8 +75,9 @@ if __name__ == "__main__":
           else:
             try:
               src = Source.objects.get(old_id = rdict['old_source_id'])
-              q[0].source = src
-              q[0].save()
+              p = MainDataEntry.objects.get(pk = q[0].id)
+              p = src
+              p.save()
               print("Source found: %s, %i" % (rdict['old_source_id'], q[0].id))
             except:
               print("Exception raised on finding and saving missing source")
