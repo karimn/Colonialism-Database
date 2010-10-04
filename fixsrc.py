@@ -67,18 +67,21 @@ if __name__ == "__main__":
         #            rdict[pop_val_name],
         #            rdict['old_source_id']))
 
-        q = MainDataEntry.objects.filter(source = None).filter(begin_date = begin_date).filter(end_date = end_date).filter(location__name = rdict['place_origin']).filter(population_value = rdict[pop_val_name])
+        q_count = MainDataEntry.objects.filter(source = None).filter(begin_date = begin_date).filter(end_date = end_date).filter(location__name = rdict['place_origin']).filter(population_value = rdict[pop_val_name]).count()
 
-        if q.count() > 0:
-          if q.count() > 1:
-            print("Too many matches")
+        if q_count > 0:
+          src = Source.objects.get(old_id = rdict['old_source_id'])
+
+          if q_count > 1:
+            MainDataEntry.objects.filter(source = None).filter(begin_date = begin_date).filter(end_date = end_date).filter(location__name = rdict['place_origin']).filter(population_value = rdict[pop_val_name]).update(source = src)
+            print("Updated multiple data entries: %i" % q_count)
           else:
+            pd_id = MainDataEntry.objects.filter(source = None).filter(begin_date = begin_date).filter(end_date = end_date).filter(location__name = rdict['place_origin']).filter(population_value = rdict[pop_val_name])[0].id
             try:
-              src = Source.objects.get(old_id = rdict['old_source_id'])
-              p = MainDataEntry.objects.get(pk = q[0].id)
-              p = src
-              p.save()
-              print("Source found: %s, %i" % (rdict['old_source_id'], q[0].id))
-            except:
-              print("Exception raised on finding and saving missing source")
+              pd = MainDataEntry.objects.get(pk = pd_id)
+              pd.source = src
+              pd.save()
+              print("Source found: %s, %i" % (rdict['old_source_id'], pd_id))
+            except Exception as e:
+              print("Exception raised on finding and saving missing source: %s" % e)
 
