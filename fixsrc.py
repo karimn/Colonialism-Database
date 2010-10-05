@@ -80,7 +80,7 @@ if __name__ == "__main__":
             MainDataEntry.objects.filter(source = None).filter(begin_date = begin_date).filter(end_date = end_date).filter(location__name = rdict['place_origin']).filter(population_value = rdict[pop_val_name]).update(source = src)
             print("Updated multiple data entries: %i" % q_count)
           else:
-            pd_id = MainDataEntry.objects.filter(source = None).filter(begin_date = begin_date).filter(end_date = end_date).filter(location__name = rdict['place_origin']).filter(population_value = rdict[pop_val_name])[0].id
+            pd_id = MainDataEntry.objects.filter(source = None).filter(begin_date = begin_date).filter(end_date = end_date).filter(location__name__iexact = rdict['place_origin']).filter(population_value = rdict[pop_val_name])[0].id
             try:
               pd = MainDataEntry.objects.get(pk = pd_id)
 
