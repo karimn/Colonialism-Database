@@ -57,6 +57,7 @@ if __name__ == "__main__":
       begin_date = datetime.datetime.strptime(rdict['begin_date'], "%m/%d/%Y") if rdict['begin_date'] else None
       end_date = datetime.datetime.strptime(rdict['end_date'], "%m/%d/%Y") if rdict['end_date'] else None
     except ValueError:
+      print("Error in begin/end date encountered")
       continue
 
     for pop_val_name in ('individuals_population_value', 'families_population_value', 'male_population_value', 'female_population_value'):
@@ -67,7 +68,7 @@ if __name__ == "__main__":
         #            rdict[pop_val_name],
         #            rdict['old_source_id']))
 
-        q_count = MainDataEntry.objects.filter(source = None).filter(begin_date = begin_date).filter(end_date = end_date).filter(location__name = rdict['place_origin']).filter(population_value = rdict[pop_val_name]).count()
+        q_count = MainDataEntry.objects.filter(source = None).filter(begin_date = begin_date).filter(end_date = end_date).filter(location__name__iexact = rdict['place_origin']).filter(population_value = rdict[pop_val_name]).count()
 
         if q_count > 0:
           src = None
@@ -77,7 +78,7 @@ if __name__ == "__main__":
             pass
 
           if q_count > 1:
-            MainDataEntry.objects.filter(source = None).filter(begin_date = begin_date).filter(end_date = end_date).filter(location__name = rdict['place_origin']).filter(population_value = rdict[pop_val_name]).update(source = src)
+            MainDataEntry.objects.filter(source = None).filter(begin_date = begin_date).filter(end_date = end_date).filter(location__name__iexact = rdict['place_origin']).filter(population_value = rdict[pop_val_name]).update(source = src)
             print("Updated multiple data entries: %i" % q_count)
           else:
             pd_id = MainDataEntry.objects.filter(source = None).filter(begin_date = begin_date).filter(end_date = end_date).filter(location__name__iexact = rdict['place_origin']).filter(population_value = rdict[pop_val_name])[0].id
