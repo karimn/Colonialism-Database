@@ -21,6 +21,8 @@ class MainDataEntry(BaseDataEntry):
 
   INDIVID_FAM_CHOICES = ((0, 'Individuals'), (1, 'Families'))
 
+  old_source_id = models.IntegerField(null = True, blank = True)
+
   religion = models.ForeignKey(Religion, null = True, blank = True, default = None)
   race = models.ForeignKey(Race, null = True, blank = True, default = None)
   ethnicity = models.ForeignKey(Ethnicity, null = True, blank = True, default = None)
