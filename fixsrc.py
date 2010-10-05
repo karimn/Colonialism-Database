@@ -70,7 +70,11 @@ if __name__ == "__main__":
         q_count = MainDataEntry.objects.filter(source = None).filter(begin_date = begin_date).filter(end_date = end_date).filter(location__name = rdict['place_origin']).filter(population_value = rdict[pop_val_name]).count()
 
         if q_count > 0:
-          src = Source.objects.get(old_id = rdict['old_source_id'])
+          src = None
+          try:
+            src = Source.objects.get(old_id = rdict['old_source_id'])
+          except Source.DoesNotExist:
+            pass
 
           if q_count > 1:
             MainDataEntry.objects.filter(source = None).filter(begin_date = begin_date).filter(end_date = end_date).filter(location__name = rdict['place_origin']).filter(population_value = rdict[pop_val_name]).update(source = src)
@@ -79,7 +83,12 @@ if __name__ == "__main__":
             pd_id = MainDataEntry.objects.filter(source = None).filter(begin_date = begin_date).filter(end_date = end_date).filter(location__name = rdict['place_origin']).filter(population_value = rdict[pop_val_name])[0].id
             try:
               pd = MainDataEntry.objects.get(pk = pd_id)
-              pd.source = src
+
+              if src:
+                pd.source = src
+              else:
+                pd.old_source_id = rdict['old_source_id']
+
               pd.save()
               print("Source found: %s, %i" % (rdict['old_source_id'], pd_id))
             except Exception as e:
