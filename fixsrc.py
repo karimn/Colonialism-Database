@@ -78,7 +78,10 @@ if __name__ == "__main__":
             pass
 
           if q_count > 1:
-            MainDataEntry.objects.filter(source = None).filter(begin_date = begin_date).filter(end_date = end_date).filter(location__name__iexact = rdict['place_origin']).filter(population_value = rdict[pop_val_name]).filter(old_source_id = None).update(source = src)
+            if src:
+              MainDataEntry.objects.filter(source = None).filter(begin_date = begin_date).filter(end_date = end_date).filter(location__name__iexact = rdict['place_origin']).filter(population_value = rdict[pop_val_name]).filter(old_source_id = None).update(source = src)
+            else:
+              MainDataEntry.objects.filter(source = None).filter(begin_date = begin_date).filter(end_date = end_date).filter(location__name__iexact = rdict['place_origin']).filter(population_value = rdict[pop_val_name]).filter(old_source_id = None).update(old_source_id = rdict['old_source_id'])
             print("Updated multiple data entries: %i" % q_count)
           else:
             pd_id = MainDataEntry.objects.filter(source = None).filter(begin_date = begin_date).filter(end_date = end_date).filter(location__name__iexact = rdict['place_origin']).filter(population_value = rdict[pop_val_name]).filter(old_source_id = None)[0].id
