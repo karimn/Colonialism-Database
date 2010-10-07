@@ -4,6 +4,9 @@ from django.contrib.gis.db import models as geo_models
 from django.db import models, connection
 from django.contrib.auth.models import User
 
+class LockableModel:
+  locked = models.BooleanField(default = False)
+
 class MergeableModel(models.Model):
   class Meta:
     abstract = True
@@ -156,6 +159,9 @@ class PoliticalUnit(BaseSubmitModel,MergeableModel):
       return unicode(self.location)
     except Location.DoesNotExist:
       return self.name
+
+  def clean(self):
+    super(PoliticalUnit, self).clean()
 
   def merge_into(self, other):
     super(PoliticalUnit, self).merge_into(other)
