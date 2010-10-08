@@ -1,7 +1,7 @@
 from colonialismdb.common import models
 from colonialismdb.common import widgets
 
-from django.contrib import admin
+from django.contrib import admin, messages
 from django.contrib.gis import admin as geo_admin
 from reversion.admin import VersionAdmin
 from reversion import revision
@@ -10,6 +10,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.contrib.contenttypes.models import ContentType
 from django.http import HttpResponseRedirect
+from django.db import transaction
 
 import reversion
 
@@ -81,7 +82,8 @@ class BaseSubmitAdmin(BaseSubmit, BaseVersionAdmin) :
       revision.comment = "Activation"
 
     if rows_activated > 0:
-      self.message_user(request, '%i %s activated' % (rows_activated, 'entry' if rows_activated == 1 else 'entries'))
+      message.info(request, '%i %s activated' % (rows_activated, 'entry' if rows_activated == 1 else 'entries'))
+      #self.message_user(request, '%i %s activated' % (rows_activated, 'entry' if rows_activated == 1 else 'entries'))
 
   activate.short_description = 'Activate'
 
@@ -160,6 +162,7 @@ class MergeSelectedForm(forms.Form):
   ct = forms.IntegerField(widget = forms.HiddenInput)
   ids = forms.CharField(widget = forms.HiddenInput)
 
+@transaction.commit_manually
 def merge_selected(request):
   if request.method == "POST":
     """ 
@@ -182,25 +185,30 @@ def merge_selected(request):
 
       to_merge = ct.model_class().objects.filter(id__in = ids).exclude(id = merge_into.pk)
 
-      for merge in to_merge:
+      try:
+        for merge in to_merge:
+          with reversion.revision:
+            merge.merge_into(merge_into)
+            revision.user = request.user
+            revision.comment = "Merged into %s" % merge_into
+          rows_merged += 1
+
+        for merge in to_merge:
+          with reversion.revision:
+            merge.delete()
+            revision.user = request.user
+            revision.comment = "Deleted after merging"
+
         with reversion.revision:
-          merge.merge_into(merge_into)
+          merge_into.save()
           revision.user = request.user
-          revision.comment = "Merged into %s" % merge_into
-        rows_merged += 1
-
-      for merge in to_merge:
-        with reversion.revision:
-          merge.delete()
-          revision.user = request.user
-          revision.comment = "Deleted after merging"
-
-      with reversion.revision:
-        merge_into.save()
-        revision.user = request.user
-        revision.comment = "%i entries merged into this entry" % rows_merged
-
-      # TODO Print message to confirm merge
+          revision.comment = "%i entries merged into this entry" % rows_merged
+      except models.LockedRowError:
+        transaction.rollback()
+        message.error(request, "One or more of the selected entries to merged is locked")
+      else:
+        transaction.commit()
+        messages.info(request, "%i entries successfully merged" % rows_merged)
 
     return HttpResponseRedirect('/admin/%s/%s' % (ct.app_label, ct.model))
   else:
@@ -209,15 +217,21 @@ def merge_selected(request):
     form = MergeSelectedForm(initial = { 'ct' : request.GET['ct'], 'ids' : request.GET['ids'] })
     form.fields['merge_into'].queryset = ct.model_class().objects.filter(id__in = ids)
 
+    transaction.commit()
+
     return render_to_response('admin/merge_selected.html', 
                               { 'form' : form, 'app_label' : ct.app_label, 'model' : ct.model, }, 
                               context_instance = RequestContext(request))
 
 class BaseMergeableAdmin(VersionAdmin):
+  actions = ('merge', )
+  list_display = ('locked',)
+  readonly_fields = ('locked',)
+
   def merge(self, request, query_set):
-    if query_set.count < 2:
-      # TODO Add error message
-      return
+    if query_set.count() < 2:
+      messages.error(request, "More than one entry needs to be selected")
+      return 
 
     selected = request.POST.getlist(admin.ACTION_CHECKBOX_NAME)
     ct = ContentType.objects.get_for_model(query_set.model)
@@ -233,17 +247,15 @@ class BaseMergeableAdmin(VersionAdmin):
 
     return actions
 
-  actions = ('merge', )
-
 class PoliticalUnitAdmin(BaseSubmitAdmin, BaseMergeableAdmin):
-  list_display = ('__unicode__', 'pk', 'active', 'submitted_by')
+  list_display = ('__unicode__', 'pk', 'active', 'submitted_by') + BaseMergeableAdmin.list_display
 
   activate_perm = 'common.activate_polunit'
   merge_perm = 'common.merge_polunit'
 
   search_fields = ('name', )
 
-  actions = BaseSubmitAdmin.actions + BaseMergeableAdmin.actions
+  actions = BaseSubmitAdmin.actions + BaseMergeableAdmin.actions + ('nonbulk_delete', )
 
   def get_actions(self, request):
     actions1 = BaseSubmitAdmin.get_actions(self, request)
@@ -265,8 +277,7 @@ class PoliticalUnitAdmin(BaseSubmitAdmin, BaseMergeableAdmin):
 
   nonbulk_delete.short_description = "Delete selected political/geographic units"
 
-  actions = ('nonbulk_delete', )
-
+  
 class GeoSubLocationInline(BaseSubmitTabularInline):
   model = models.Location 
   fields = ('full_name', 'active', 'submitted_by',)
@@ -310,10 +321,11 @@ class TemporalLocationAdmin(LocationAdmin):
   activate_perm = 'common.activate_temploc'
   merge_perm = 'common.merge_temploc'
   
-class BaseCategoryAdmin(BaseSubmitAdmin, BaseMergeableAdmin):
-  list_display = ('name', 'active', 'submitted_by')
-
+class BaseCategoryAdmin(BaseSubmitAdmin):
+  list_display = ('name', 'active', 'submitted_by') 
+  
 class BaseMergeableCategoryAdmin(BaseCategoryAdmin, BaseMergeableAdmin):
+  list_display = BaseCategoryAdmin.list_display + BaseMergeableAdmin.list_display
   actions = BaseCategoryAdmin.actions + BaseMergeableAdmin.actions 
 
   def get_actions(self, request):

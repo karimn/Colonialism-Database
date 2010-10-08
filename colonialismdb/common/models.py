@@ -4,16 +4,28 @@ from django.contrib.gis.db import models as geo_models
 from django.db import models, connection
 from django.contrib.auth.models import User
 
-class LockableModel:
-  locked = models.BooleanField(default = False)
+# Not using this mixin because of python problems with "TypeError: Error when calling the metaclass bases"
+#class LockableModelMixin(models.Model):
+#  class Meta:
+#    abstract = True
 
-class MergeableModel(models.Model):
+#  locked = models.BooleanField(default = False)
+
+class LockedRowError(Exception):
+  pass
+
+class MergeableModel(models.Model): #, LockableModelMixin): 
   class Meta:
     abstract = True
 
   def merge_into(self, other):
     if not isinstance(other, type(self)):
-      raise TypeError
+      raise TypeError()
+
+    if self.locked:
+      raise LockedRowError()
+  
+  locked = models.BooleanField(default = False)
 
 class BaseSubmitModel(models.Model):
   class Meta:

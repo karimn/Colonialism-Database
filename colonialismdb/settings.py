@@ -38,6 +38,14 @@ TEMPLATE_LOADERS = (
 #     'django.template.loaders.eggs.load_template_source',
 )
 
+TEMPLATE_CONTEXT_PROCESSORS = (
+  "django.contrib.auth.context_processors.auth",
+  "django.core.context_processors.debug",
+  "django.core.context_processors.i18n",
+  "django.core.context_processors.media",
+  "django.contrib.messages.context_processors.messages"
+)
+
 MIDDLEWARE_CLASSES = (
     'django.middleware.gzip.GZipMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -45,6 +53,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
     'reversion.middleware.RevisionMiddleware',
 )
 
@@ -57,6 +66,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.admindocs',
     'django.contrib.admin',
+    'django.contrib.messages',
     'django.contrib.databrowse',
     'django.contrib.gis',
 
