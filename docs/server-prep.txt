@@ -1,9 +1,9 @@
 For deployment the documentation available on Django's website should be followed (http://docs.djangoproject.com/en/1.2/howto/deployment/).  The steps taken to setup the server PEANUT are as follows:
 
-1. Install postgreSQL
+1. Install postgreSQL (currently 8.4)
 2. Install python (currently 2.6)
-3. Install django (currently 1.2)
-4. Install django-reversion, south
+3. Install django (currently 1.2.3)
+4. Install django-reversion, south, admindocs
 5. Install Apache HTTP Server (currently 2.2)
 6. Install mod_wsgi
 7. Install win-psycopg (Had to use 2.0 since 2.2 doesn't work)
