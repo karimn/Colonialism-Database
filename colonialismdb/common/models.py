@@ -172,6 +172,13 @@ class PoliticalUnit(BaseSubmitModel,MergeableModel):
     except Location.DoesNotExist:
       return self.name
 
+  def autocomplete_label(self):
+    # Terribly ugly again because subclass method not automatically called
+    try:
+      return self.location.autocomplete_label()
+    except Location.DoesNotExist:
+      return unicode(self) 
+
   def clean(self):
     super(PoliticalUnit, self).clean()
 
@@ -246,6 +253,12 @@ class Location(PoliticalUnit):
 
   def __unicode__(self): 
     return self.full_name
+
+  def autocomplete_label(self):
+    if self.politically_in:
+      return "%s (politically in: %s)" % (unicode(self), unicode(self.politically_in))
+    else:
+      return unicode(self)
 
   def activate(self):
     super(Location, self).activate()

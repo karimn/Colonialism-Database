@@ -19,7 +19,11 @@ class BaseVersionAdmin(VersionAdmin):
 
   def formfield_for_foreignkey(self, db_field, request=None, **kwargs):
     if self.autocomplete_fields and db_field.name in self.autocomplete_fields.keys():
-      kwargs['widget'] = widgets.AutocompleteAdminWidget(db_field.rel, self.autocomplete_fields[db_field.name]) 
+      autocomplete_val = self.autocomplete_fields[db_field.name]
+      if len(autocomplete_val) > 1:
+        kwargs['widget'] = widgets.AutocompleteAdminWidget(db_field.rel, autocomplete_val[0], autocomplete_val[1]) 
+      else:
+        kwargs['widget'] = widgets.AutocompleteAdminWidget(db_field.rel, autocomplete_val[0]) 
       return db_field.formfield(**kwargs)
     else:
       return super(BaseVersionAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
@@ -148,7 +152,7 @@ class BaseMainDataEntryAdmin(BaseSubmitAdmin):
 
     return result
 
-  autocomplete_fields = { 'location' : 'name', 'source' : 'name', }
+  autocomplete_fields = { 'location' : ('name', 'autocomplete_label'), 'source' : ('name', ), }
   list_display = ('location', 'begin_date', 'end_date', 'active', 'submitted_by', 'datetime_created', )
   search_fields = ['location__name',]
   ordering = ('-datetime_created', )
@@ -293,7 +297,7 @@ class LocationAdmin(PoliticalUnitAdmin) :
   exclude = ('full_name', )
   activate_perm = 'common.activate_location'
   merge_perm = 'common.merge_location'
-  autocomplete_fields = { 'geographically_in' : 'full_name', 'politically_in' : 'name', }
+  autocomplete_fields = { 'geographically_in' : ('full_name', 'autocomplete_label'), 'politically_in' : ('name', 'autocomplete_label'), }
 
   inlines = [ GeoSubLocationInline, ]
 

@@ -4,11 +4,12 @@ from django.utils.safestring import mark_safe
 from django.utils.text import truncate_words
 from django.contrib.admin import widgets
 
-#class AutocompleteAdminWidget(forms.HiddenInput):
-class AutocompleteAdminWidget(forms.TextInput):
-    def __init__(self, rel, search_field, attrs=None):
+#class AutocompleteAdminWidget(forms.TextInput):
+class AutocompleteAdminWidget(forms.HiddenInput):
+    def __init__(self, rel, search_field, label_method=None, attrs=None):
         self.rel = rel
         self.search_field = search_field
+        self.label_method = label_method
         super(AutocompleteAdminWidget, self).__init__(attrs)
 
     def render(self, name, value, attrs=None):
@@ -36,7 +37,8 @@ class AutocompleteAdminWidget(forms.TextInput):
                                                             $.ajax({ url : 'autocomplete/%(app_label)s/%(model)s/',
                                                                      datatype : 'json',
                                                                      data : { term : request.term,
-                                                                              search_field : '%(search_field)s'
+                                                                              search_field : '%(search_field)s',
+                                                                              label_method : '%(label_method)s',
                                                                             },
                                                                      success : function(data) 
                                                                      {
@@ -56,6 +58,7 @@ class AutocompleteAdminWidget(forms.TextInput):
                           'label' : label,
                           'maxlength' : 50,
                           'search_field' : self.search_field,
+                          'label_method' : self.label_method if self.label_method else '',
                           'id' : attrs['id'], 
                           'app_label' : self.rel.to._meta.app_label, 
                           'model' : self.rel.to._meta.module_name })
