@@ -62,13 +62,13 @@ class MainDataEntry(BaseDataEntry):
   currency = models.ForeignKey(Currency, null = True, blank = True, related_name = '%(app_label)s_%(class)s_related')
   currency_exchange_rate = models.CharField(max_length = 50, null = True, blank = True)
 
-  revenue = models.DecimalField(max_digits = 10, decimal_places = 2, null = True, blank = True)
+  revenue = models.DecimalField(max_digits = 20, decimal_places = 2, null = True, blank = True)
   revenue_type = models.ForeignKey(RevenueType, null = True, blank = True)
 
   expenditure = models.IntegerField(null = True, blank = True)
   expenditure_type = models.ForeignKey(ExpenditureType, null = True, blank = True)
 
-  public_debt = models.IntegerField(null = True, blank = True) 
+  public_debt = models.BigIntegerField(null = True, blank = True) 
 
   money_supply = models.IntegerField(null = True, blank = True)
   money_supply_type = models.ForeignKey(MoneySupplyType, null = True, blank = True)
