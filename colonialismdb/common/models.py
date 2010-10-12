@@ -154,6 +154,49 @@ class Currency(Category):
                     ('merge_currency', 'Can merge occupation currency') )
     verbose_name_plural = "currencies"
 
+# This is an auto-generated Django model module created by ogrinspect.
+
+class BaseGeo(geo_models.Model):
+  ft_id = geo_models.IntegerField("FT ID", unique = True)
+  point_x = geo_models.FloatField("x")
+  point_y = geo_models.FloatField("y")
+
+  srid = 4326
+
+  objects = geo_models.GeoManager()
+
+class GeoPoint(BaseGeo):
+  class Meta:
+    verbose_name = "geographic point"
+
+  geom = geo_models.PointField(srid=BaseGeo.srid)
+
+class GeoPolygon(BaseGeo):
+  class Meta:
+    verbose_name = "geographic polygon"
+
+  shape_leng = geo_models.FloatField("length")
+  shape_area = geo_models.FloatField("area")
+  geom = geo_models.MultiPolygonField(srid=BaseGeo.srid)
+
+# Auto-generated `LayerMapping` dictionary for GeoPoint model
+geopoint_mapping = {
+    'point_x' : 'POINT_X',
+    'point_y' : 'POINT_Y',
+    'ft_id' : 'FT_ID',
+    'geom' : 'POINT',
+}
+
+# Auto-generated `LayerMapping` dictionary for GeoPolygon model
+geopolygon_mapping = {
+    'shape_leng' : 'SHAPE_Leng',
+    'shape_area' : 'SHAPE_Area',
+    'point_x' : 'POINT_X',
+    'point_y' : 'POINT_Y',
+    'ft_id' : 'FT_ID',
+    'geom' : 'POLYGON',
+}
+
 class PoliticalUnit(BaseSubmitModel,MergeableModel):
   name = models.CharField("name", max_length = 150)
   unit_type = models.ManyToManyField(PoliticalUnitType, null = True, blank = True)
@@ -222,7 +265,7 @@ class Location(PoliticalUnit):
   undp_code = models.CharField("UNDP code", max_length = 3, blank = True, null = True)
   ICAO_code = models.CharField("ICAO code", max_length = 2, blank = True, null = True)
 
-  # TODO Spatial characteristics 
+  geo_features = models.ForeignKey(BaseGeo, null = True)
 
   class Meta(BaseSubmitModel.Meta):
     permissions = ( ('activate_location', 'Can activate submitted location'),
@@ -435,45 +478,3 @@ class BaseDataEntry(BaseSubmitModel):
     if self.source and not self.source.active:
       self.source.activate()
 
-# This is an auto-generated Django model module created by ogrinspect.
-
-class BaseGeo(geo_models.Model):
-  ft_id = geo_models.IntegerField("FT ID", unique = True)
-  point_x = geo_models.FloatField("x")
-  point_y = geo_models.FloatField("y")
-
-  srid = 4326
-
-  objects = geo_models.GeoManager()
-
-class GeoPoint(BaseGeo):
-  class Meta:
-    verbose_name = "geographic point"
-
-  geom = geo_models.PointField(srid=BaseGeo.srid)
-
-class GeoPolygon(BaseGeo):
-  class Meta:
-    verbose_name = "geographic polygon"
-
-  shape_leng = geo_models.FloatField("length")
-  shape_area = geo_models.FloatField("area")
-  geom = geo_models.MultiPolygonField(srid=BaseGeo.srid)
-
-# Auto-generated `LayerMapping` dictionary for GeoPoint model
-geopoint_mapping = {
-    'point_x' : 'POINT_X',
-    'point_y' : 'POINT_Y',
-    'ft_id' : 'FT_ID',
-    'geom' : 'POINT',
-}
-
-# Auto-generated `LayerMapping` dictionary for GeoPolygon model
-geopolygon_mapping = {
-    'shape_leng' : 'SHAPE_Leng',
-    'shape_area' : 'SHAPE_Area',
-    'point_x' : 'POINT_X',
-    'point_y' : 'POINT_Y',
-    'ft_id' : 'FT_ID',
-    'geom' : 'POLYGON',
-}
