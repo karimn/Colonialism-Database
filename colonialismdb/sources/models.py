@@ -53,7 +53,7 @@ class BaseSourceObject(BaseSubmitModel):
       return unicode(self.table)
 
   def activate(self):
-    super(Source, self).activate()
+    super(BaseSourceObject, self).activate()
 
     if self.subjects:
       for subject in self.subjects.all():
