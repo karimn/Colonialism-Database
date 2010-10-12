@@ -65,7 +65,7 @@ class BaseSourceObject(BaseSubmitModel):
         if not lang.active:
           lang.activate()
 
-    for f in self.sourcefile_set:
+    for f in self.sourcefile_set.all():
       if not f.active:
         f.activate()
 
