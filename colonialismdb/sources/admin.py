@@ -15,7 +15,7 @@ class PopulationDataInline(BaseSubmitTabularInline):
   model = population.models.MainDataEntry
   fields = ('location', 'begin_date', 'end_date', )
   #exclude = ('old_source_id', 'old_combined_id')
-  readonly_fields = ('active', 'submitted_by')
+  readonly_fields = ('location', 'begin_date', 'end_date', 'active', 'submitted_by')
   list_display_links = ('location', )
 
   fk_name = 'source'
