@@ -197,7 +197,7 @@ geopolygon_mapping = {
     'geom' : 'POLYGON',
 }
 
-class PoliticalUnit(BaseSubmitModel,MergeableModel):
+class PoliticalUnit(BaseSubmitModel, MergeableModel):
   name = models.CharField("name", max_length = 150)
   unit_type = models.ManyToManyField(PoliticalUnitType, null = True, blank = True)
 
@@ -265,7 +265,7 @@ class Location(PoliticalUnit):
   undp_code = models.CharField("UNDP code", max_length = 3, blank = True, null = True)
   ICAO_code = models.CharField("ICAO code", max_length = 2, blank = True, null = True)
 
-  geo_features = models.ForeignKey(BaseGeo, null = True)
+  geo_features = models.ForeignKey(BaseGeo, blank = True, null = True)
 
   class Meta(BaseSubmitModel.Meta):
     permissions = ( ('activate_location', 'Can activate submitted location'),
