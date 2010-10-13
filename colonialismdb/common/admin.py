@@ -259,6 +259,8 @@ class PoliticalUnitAdmin(BaseSubmitAdmin, BaseMergeableAdmin):
 
   search_fields = ('name', )
 
+  readonly_fields = BaseSubmitAdmin.readonly_fields + BaseMergeableAdmin.readonly_fields
+
   actions = BaseSubmitAdmin.actions + BaseMergeableAdmin.actions + ('nonbulk_delete', )
 
   def get_actions(self, request):
