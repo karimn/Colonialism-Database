@@ -1,6 +1,7 @@
 from django.http import HttpResponse, HttpResponseRedirect, Http404, HttpResponseServerError
 from django.db import models
 from django.utils import simplejson
+from django.shortcuts import get_object_or_404, get_list_or_404
 
 import types
 
@@ -13,16 +14,10 @@ def autocomplete(request, from_applabel, from_model, to_applabel, to_model):
   model = models.get_model(to_applabel, to_model)
 
   if label_method:
-    try:
-      label_method_attr = getattr(model, label_method)
-      data = [{ 'label' : label_method_attr(f), 'pk' : f.pk } for f in model.objects.filter(**{('%s__istartswith' % search_field) : query})[:25]]
-    except:
-      return HttpResponseServerError()
+    label_method_attr = getattr(model, label_method)
+    data = [{ 'label' : label_method_attr(f), 'pk' : f.pk } for f in get_list_or_404(model, **{('%s__istartswith' % search_field) : query})[:25]]
   else:
-    try:
-      data = [{ 'label' : f.__unicode__(), 'pk' : f.pk } for f in model.objects.filter(**{('%s__istartswith' % search_field) : query})[:25]]
-    except:
-      return HttpResponseServerError()
+    data = [{ 'label' : f.__unicode__(), 'pk' : f.pk } for f in get_list_or_404(model, **{('%s__istartswith' % search_field) : query})[:25]]
 
   return HttpResponse(simplejson.dumps(data), mimetype = 'application/json')
 
@@ -31,4 +26,4 @@ def get_label(request, from_applabel, from_model, from_id, to_applabel, to_model
 
   model = models.get_model(to_applabel, to_model)
 
-  return model.objects.get(pk = obj_id)
+  return get_object_or_404(model, pk = obj_id)
