@@ -163,6 +163,9 @@ class BaseGeo(geo_models.Model):
 
   srid = 4326
 
+  def __unicode__(self):
+    return unicode(self.ft_id)
+
   objects = geo_models.GeoManager()
 
 class GeoPoint(BaseGeo):
@@ -199,7 +202,7 @@ geopolygon_mapping = {
 
 class PoliticalUnit(BaseSubmitModel, MergeableModel):
   name = models.CharField("name", max_length = 150)
-  unit_type = models.ManyToManyField(PoliticalUnitType, null = True, blank = True)
+  unit_type = models.ManyToManyField(PoliticalUnitType, null = True, blank = True, verbose_name = "type")
 
   class Meta(BaseSubmitModel.Meta):
     permissions = ( ('activate_politicalunit', 'Can activate submitted political unit'),

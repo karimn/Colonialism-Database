@@ -300,10 +300,23 @@ class LocationAdmin(PoliticalUnitAdmin) :
   activate_perm = 'common.activate_location'
   merge_perm = 'common.merge_location'
   autocomplete_fields = { 'geographically_in' : ('full_name', 'autocomplete_label'), 'politically_in' : ('name', 'autocomplete_label'), }
+  readonly_fields = PoliticalUnitAdmin.readonly_fields + ('geo_features',)
 
   inlines = [ GeoSubLocationInline, ]
 
   actions = PoliticalUnitAdmin.actions + ('convert_to_polunit', )
+
+  fieldsets = [
+      (None, 
+        {'fields' : ['active', 'submitted_by', 'datetime_created', 'locked', ]}),
+
+      ("General Information",
+        {'fields' : ['name', 'geographically_in', 'politically_in', 'unit_type', 'geo_features', ]}),
+
+      ("Coding",
+        {'classes' : ['collapse', ],
+         'fields' : ['wb_code', 'iso_3166_1_letter_code', 'iso_3166_1_num_code', 'iso_3166_2_code', 'polity_num_code', 'polity_letter_code', 'nato_code', 'fips_code', 'undp_code', 'ICAO_code', ]})
+  ]
 
   def convert_to_polunit(self, request, query_set):
     for to_convert in query_set.all():
