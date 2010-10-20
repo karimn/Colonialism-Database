@@ -34,7 +34,7 @@ class MainDataEntryAdmin(BaseMainDataEntryAdmin) :
         {'fields' : ['military', 'military_type', 'military_page_num', 'officials', 'officials_type']}),
 
       ('Source Information', 
-        {'fields' : ['source', 'page_num', 'primary_source', 'polity', 'iso', 'wb']}),
+        {'fields' : ['source', 'page_num', 'primary_source']}),
 
       ('Other Information', 
         {'fields' : ['remarks', ]}),

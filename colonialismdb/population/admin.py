@@ -21,7 +21,7 @@ class MainDataEntryAdmin(BaseMainDataEntryAdmin) :
         {'fields' : ['individ_fam', 'population_gender', 'population_value', 'value_unit', 'is_total', 'value_precision']}),
 
       ('Source Information', 
-        {'fields' : ['source', 'page_num', 'primary_source', 'polity', 'iso', 'wb']}),
+        {'fields' : ['source', 'page_num', 'primary_source']}),
 
       ('Other Information', 
         {'fields' : ['remarks', ]}),
