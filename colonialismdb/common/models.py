@@ -469,10 +469,6 @@ class BaseDataEntry(BaseSubmitModel):
 
   is_total = models.BooleanField("Is Total", default = False)
 
-  polity = models.CharField(max_length = 100, null = True, blank = True)
-  iso = models.CharField("ISO", max_length = 100, null = True, blank = True) 
-  wb = models.CharField("WB", max_length = 100, null = True, blank = True)
-
   value_unit = models.CharField("Units", max_length = 20, choices = UNIT_CHOICES, default = 'units')
 
   remarks = models.TextField(null = True, blank = True)

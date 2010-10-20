@@ -76,6 +76,7 @@ INSTALLED_APPS = (
     'colonialismdb.education',
     'colonialismdb.infrastructure',
     'colonialismdb.population',
+    'colonialismdb.economics',
     'colonialismdb.sources',
     'colonialismdb.common',
 
