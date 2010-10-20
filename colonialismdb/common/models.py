@@ -237,6 +237,8 @@ class PoliticalUnit(BaseSubmitModel, MergeableModel):
     self.government_maindataentry_related.all().update(location = other)
     self.education_maindataentry_related.all().update(location = other)
     self.infrastructure_maindataentry_related.all().update(location = other)
+    self.economics_bilateraltradedataentry_related.all().update(location = other)
+    self.economics_bilateraltradedataentry_trade_partner_related.all().update(trade_partner = other)
 
     for tbl in self.table_set.all():
       tbl.included_countries.remove(self)
@@ -389,6 +391,8 @@ class Location(PoliticalUnit):
     self.government_maindataentry_related.all().update(location = new_polunit)
     self.education_maindataentry_related.all().update(location = new_polunit)
     self.infrastructure_maindataentry_related.all().update(location = new_polunit)
+    self.economics_bilateraltradedataentry_related.all().update(location = new_polunit)
+    self.economics_bilateraltradedataentry_trade_partner_related.all().update(trade_partner = new_polunit)
 
     for tbl in self.table_set.all():
       tbl.included_countries.remove(self)
