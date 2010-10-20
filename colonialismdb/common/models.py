@@ -426,6 +426,14 @@ class TemporalLocation(Location):
 
     self.temp_locations.all().update(temporal_is = other)
 
+class FixedBoundaryLocation(TemporalLocation):
+  state_antiquity_raw = models.DecimalField("raw state antiquity value", max_digits = 4, decimal_places = 2)
+  state_antiquity_cumulative = models.DecimalField("cumulative state antiquity value", max_digits = 5, decimal_places = 2)
+
+  class Meta(BaseSubmitModel.Meta):
+    permissions = ( ('activate_fixedbdloc', 'Can activate submitted fixed boundary location'),
+                    ('merge_fixedbdloc', 'Can merge fixed boundary location entries') )
+
 class BaseDataEntry(BaseSubmitModel):
   class Meta(BaseSubmitModel.Meta):
     ordering = ['location', 'begin_date', ]
