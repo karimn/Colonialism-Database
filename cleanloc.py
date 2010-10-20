@@ -3,7 +3,7 @@
 from django.db import transaction
 from django.contrib.auth.models import User
 
-from colonialismdb.common import PoliticalUnit, Location
+from colonialismdb.common.models import PoliticalUnit, Location
 
 mig_user = User.objects.get(username = 'karim')
 
