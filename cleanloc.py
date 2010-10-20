@@ -9,7 +9,7 @@ mig_user = User.objects.get(username = 'karim')
 
 def print_loc(query):
   for l in query:
-    print("'%s', '%s', '%s', %s, %s", l.name, l.geographically_in, l.politically_in, l.geo_features, l.unit_type.count())
+    print("'%s', '%s', '%s', %s, %s" % (l.name, l.geographically_in, l.politically_in, l.geo_features, l.unit_type.count()))
 
 @transaction.commit_manually
 def cleanup_turkey():
