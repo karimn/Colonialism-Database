@@ -15,6 +15,8 @@ len_workweek = datetime.timedelta(6)
 
 model_tables = (('population', ), ('education', ), ('government', ), ('infrastructure', ), ) # ('economics', 'BilateralTradeDataEntry'), )
 
+sep = ","
+
 if __name__ == "__main__":
   begin_week = first_day
   end_week = begin_week + len_workweek
@@ -23,7 +25,7 @@ if __name__ == "__main__":
     today = begin_week
 
     while today <= end_week:
-      sys.stdout.write("\t%s" % today.strftime("%y-%m-%d"))
+      sys.stdout.write("%s%s" % (sep, today.strftime("%y-%m-%d")))
       today = today + datetime.timedelta(1)
 
     begin_week = end_week + datetime.timedelta(1)
@@ -56,7 +58,7 @@ if __name__ == "__main__":
           submitted_entries = getattr(coder, "submitted_%s_%s" % (app_name, class_name))
           num_entries += submitted_entries.filter(datetime_created__year = today.year).filter(datetime_created__month = today.month).filter(datetime_created__day = today.day).count()
 
-        sys.stdout.write("\t%i" % num_entries)
+        sys.stdout.write("%s%i" % (sep, num_entries))
 
         #print("%(coder)s, %(day)s, %(num_entries)i" % { 'coder' : coder.username, 'day' : today.strftime("%y-%m-%d"), 'num_entries' : num_entries })
 
