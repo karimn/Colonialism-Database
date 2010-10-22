@@ -9,7 +9,7 @@ from colonialismdb.common.models import PoliticalUnit, Location
 
 coder_names = ("ahmedn", "chelsea", "mahsa", "nathalie", "tavish", )
 
-first_day = datetime.date(2010, 9, 24) # starting on a Friday; assuming Fri-Thu work week
+first_day = datetime.date(2010, 9, 3) # starting on a Friday; assuming Fri-Thu work week
 last_day = datetime.date.today()
 len_workweek = datetime.timedelta(6)
 
