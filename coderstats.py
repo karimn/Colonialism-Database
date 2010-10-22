@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import datetime
+import sys
 
 from django.contrib.auth.models import User
 
@@ -22,12 +23,30 @@ if __name__ == "__main__":
     today = begin_week
 
     while today <= end_week:
-      for coder_name in coder_names:
-        try:
-          coder = User.objects.get(username = coder_name)
-        except User.DoesNotExist:
-          continue
+      sys.stdout.write("\t%s" % today.strftime("%y-%m-%d"))
+      today = today + datetime.timedelta(1)
 
+    begin_week = end_week + datetime.timedelta(1)
+    end_week = begin_week + len_workweek
+  else:
+    sys.stdout.write("\n")
+
+
+  for coder_name in coder_names:
+    try:
+      coder = User.objects.get(username = coder_name)
+    except User.DoesNotExist:
+      continue
+
+    sys.stdout.write("%s" % coder.username)
+
+    begin_week = first_day
+    end_week = begin_week + len_workweek
+
+    while end_week < datetime.date.today():
+      today = begin_week
+
+      while today <= end_week:
         num_entries = 0
 
         for model_info in model_tables:
@@ -37,12 +56,16 @@ if __name__ == "__main__":
           submitted_entries = getattr(coder, "submitted_%s_%s" % (app_name, class_name))
           num_entries =+ submitted_entries.filter(datetime_created__year = today.year).filter(datetime_created__month = today.month).filter(datetime_created__day = today.day).count()
 
-        print("%(coder)s, %(day)s, %(num_entries)i" % { 'coder' : coder.username, 'day' : today.strftime("%y-%m-%d"), 'num_entries' : num_entries })
+        sys.stdout.write("\t%i" % num_entries)
 
-      today = today + datetime.timedelta(1)
+        #print("%(coder)s, %(day)s, %(num_entries)i" % { 'coder' : coder.username, 'day' : today.strftime("%y-%m-%d"), 'num_entries' : num_entries })
 
-    begin_week = end_week + datetime.timedelta(1)
-    end_week = begin_week + len_workweek
+        today = today + datetime.timedelta(1)
+
+      sys.stdout.write("\n")
+
+      begin_week = end_week + datetime.timedelta(1)
+      end_week = begin_week + len_workweek
 
 
 
