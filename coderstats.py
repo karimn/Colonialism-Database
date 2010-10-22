@@ -25,7 +25,7 @@ if __name__ == "__main__":
     today = begin_week
 
     while today <= end_week:
-      sys.stdout.write("%s%s" % (sep, today.strftime("%y-%m-%d")))
+      sys.stdout.write("%s%s" % (sep, today.strftime("%m/%d/%Y")))
       today = today + datetime.timedelta(1)
 
     begin_week = end_week + datetime.timedelta(1)
@@ -64,10 +64,10 @@ if __name__ == "__main__":
 
         today = today + datetime.timedelta(1)
 
-      sys.stdout.write("\n")
-
       begin_week = end_week + datetime.timedelta(1)
       end_week = begin_week + len_workweek
+
+    sys.stdout.write("\n")
 
 
 
