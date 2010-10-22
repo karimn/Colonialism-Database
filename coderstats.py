@@ -8,8 +8,8 @@ from colonialismdb.common.models import PoliticalUnit, Location
 
 coder_names = ("ahmedn", "chelsea", "mahsa", "nathalie", "tavish", )
 
-first_day = datetime.datetime(2010, 9, 24) # starting on a Friday; assuming Fri-Thu work week
-last_day = datetime.datetime.now()
+first_day = datetime.date(2010, 9, 24) # starting on a Friday; assuming Fri-Thu work week
+last_day = datetime.date.today()
 len_workweek = datetime.timedelta(6)
 
 model_tables = (('population', ), ('education', ), ('government', ), ('infrastructure', ), ) # ('economics', 'BilateralTradeDataEntry'), )
@@ -18,7 +18,7 @@ if __name__ == "__main__":
   begin_week = first_day
   end_week = begin_week + len_workweek
 
-  while end_week < datetime.datetime.now():
+  while end_week < datetime.date.today():
     today = begin_week
 
     while today <= end_week:
