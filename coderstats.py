@@ -35,7 +35,7 @@ if __name__ == "__main__":
           class_name = model_info[1] if len(model_info) > 1 else "maindataentry"
 
           submitted_entries = getattr(coder, "submitted_%s_%s" % (app_name, class_name))
-          num_entries =+ submitted_entries.count()
+          num_entries =+ submitted_entries.filter(datetime_created = today).count()
 
         print("%(coder)s, %(day)s, %(num_entries)i" % { 'coder' : coder.username, 'day' : today.strftime("%y-%m-%d"), 'num_entries' : num_entries })
 
