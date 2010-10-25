@@ -10,8 +10,8 @@ class BilateralTradeDataEntry(common.models.BaseDataEntry):
 
   trade_partner = models.ForeignKey(common.models.PoliticalUnit, related_name = '%(app_label)s_%(class)s_trade_partner_related')
 
-  imports = models.BigIntegerField(null = True, blank = True)
-  exports = models.BigIntegerField(null = True, blank = True)
+  imports = models.DecimalField(max_digits = 20, decimal_places = 10, null = True, blank = True)
+  exports = models.DecimalField(max_digits = 20, decimal_places = 10, null = True, blank = True)
 
   imports_exchange_rate = models.DecimalField(max_digits = 13, decimal_places = 10, null = True, blank = True)
   exports_exchange_rate = models.DecimalField(max_digits = 13, decimal_places = 10, null = True, blank = True)
@@ -25,4 +25,7 @@ class BilateralTradeDataEntry(common.models.BaseDataEntry):
   imports_weight_unit = models.ForeignKey(common.models.WeightUnit, blank = True, null = True, related_name = '%(app_label)s_%(class)s_imports_related')
   exports_weight_unit = models.ForeignKey(common.models.WeightUnit, blank = True, null = True, related_name = '%(app_label)s_%(class)s_exports_related')
 
-  ppi = models.DecimalField("producer price index", max_digits = 12, decimal_places = 10)
+  ppi = models.DecimalField("producer price index", max_digits = 12, decimal_places = 10, null = True, blank = True)
+
+  def __unicode__(self):
+    return "%s + %s (%s - %s)" % (unicode(self.location), unicode(self.trade_partner), self.begin_date, self.end_date)
