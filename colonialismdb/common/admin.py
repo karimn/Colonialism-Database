@@ -167,6 +167,8 @@ class MergeSelectedForm(forms.Form):
   ids = forms.CharField(widget = forms.HiddenInput)
 
 def merge(merge_into, to_merge, user):
+  rows_merged = 0
+
   for merge in to_merge:
     with reversion.revision:
       merge.merge_into(merge_into)
@@ -184,6 +186,8 @@ def merge(merge_into, to_merge, user):
     merge_into.save()
     revision.user = user
     revision.comment = "%i entries merged into this entry" % rows_merged
+
+  return rows_merged
 
 @transaction.commit_manually
 def merge_selected(request):
@@ -209,7 +213,7 @@ def merge_selected(request):
       to_merge = ct.model_class().objects.filter(id__in = ids).exclude(id = merge_into.pk)
 
       try:
-        merge(merge_into, to_merge, request.user)
+        rows_merged = merge(merge_into, to_merge, request.user)
       except models.LockedRowError:
         transaction.rollback()
         message.error(request, "One or more of the selected entries to merged is locked")
