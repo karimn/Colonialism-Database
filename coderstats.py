@@ -78,7 +78,8 @@ if __name__ == "__main__":
               last_timestamp = entr.datetime_created
             else:
               if last_timestamp:
-                work_hours.append((last_begin_range, last_timestamp))
+                work_hours.append((last_begin_range if last_begin_range else last_timestamp, 
+                                   last_timestamp))
 
         day_work_hours = datetime.timedelta() 
         if work_hours:
