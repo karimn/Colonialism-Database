@@ -72,7 +72,7 @@ if __name__ == "__main__":
                 work_hours = list()
                 last_timestamp = last_begin_range = entr.datetime_created
                 continue
-              if entr.datetime_created - last_timestamp > work_gap:
+              if last_timestamp and (entr.datetime_created - last_timestamp > work_gap):
                 work_hours.append((last_begin_range, last_timestamp))
                 last_begin_range = entr.datetime_created
               last_timestamp = entr.datetime_created
