@@ -68,8 +68,9 @@ if __name__ == "__main__":
 
           if filtered_submitted.count() > 0:
             for entr in filtered_submitted.order_by('datetime_created'):
-              if work_hours == None:
-                work_hours = list()
+              if not last_timestamp:
+                if work_hours == None:
+                  work_hours = list()
                 last_timestamp = last_begin_range = entr.datetime_created
                 continue
               if last_timestamp and (entr.datetime_created - last_timestamp > work_gap):
@@ -78,8 +79,7 @@ if __name__ == "__main__":
               last_timestamp = entr.datetime_created
             else:
               if last_timestamp:
-                work_hours.append((last_begin_range if last_begin_range else last_timestamp, 
-                                   last_timestamp))
+                work_hours.append((last_begin_range, last_timestamp))
 
         day_work_hours = datetime.timedelta() 
         if work_hours:
