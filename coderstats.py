@@ -86,6 +86,25 @@ if __name__ == "__main__":
               if last_timestamp:
                 work_hours.append((last_begin_range, last_timestamp))
 
+        submitted_polunits = coder.submitted_common_politicalunit.filter(datetime_created__year = today.year).filter(datetime_created__month = today.month).filter(datetime_created__day = today.day)
+        last_begin_range = None
+        last_timestamp = None
+
+        if submitted_polunits.count() > 0:
+          for pu in submitted_polunits.order_by('datetime_created'):
+            if not last_timestamp:
+              if work_hours == None:
+                work_hours = list()
+              last_timestamp = last_begin_range = pu.datetime_created
+              continue
+            if last_timestamp and (pu.datetime_created - last_timestamp > work_gap):
+              work_hours.append((last_begin_range, last_timestamp))
+              last_begin_range = entr.datetime_created
+            last_timestamp = entr.datetime_created
+          else:
+            if last_timestamp:
+              work_hours.append((last_begin_range, last_timestamp))
+
         day_work_hours = datetime.timedelta() 
         if work_hours:
           work_hours.sort(cmp = lambda l, r: cmp(l[0], r[0]))
