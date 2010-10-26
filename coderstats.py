@@ -50,6 +50,8 @@ if __name__ == "__main__":
     begin_week = first_day
     end_week = begin_week + len_workweek
 
+    num_ranges = list()
+
     while end_week < datetime.date.today():
       today = begin_week
 
@@ -89,8 +91,10 @@ if __name__ == "__main__":
           for work_range in work_hours:
             day_work_hours = day_work_hours + (work_range[1] - work_range[0])
           sys.stdout.write("%s%f" % (sep, float(day_work_hours.seconds) / 60 / 60))
+          num_ranges.append(unicode(len(work_hours)))
         else:
           sys.stdout.write("%s0" % (sep))
+          num_ranges.append("0")
 
 
         #sys.stdout.write("%s%i" % (sep, num_entries))
@@ -101,6 +105,8 @@ if __name__ == "__main__":
       end_week = begin_week + len_workweek
 
     sys.stdout.write("\n")
+
+    sys.stdout.write("%s%s" % (sep, sep.join(num_ranges)))
 
 
 
