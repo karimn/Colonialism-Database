@@ -13,7 +13,7 @@ first_day = datetime.date(2010, 10, 4) # starting on a Friday; assuming Fri-Thu 
 last_day = datetime.date.today()
 len_workweek = datetime.timedelta(6)
 
-work_gap = datetime.timedelta(minutes = 5)
+work_gap = datetime.timedelta(minutes = 15)
 
 model_tables = (('population', ), ('education', ), ('government', ), ('infrastructure', ), ) # ('economics', 'BilateralTradeDataEntry'), )
 
