@@ -85,7 +85,7 @@ if __name__ == "__main__":
         if work_hours:
           for work_range in work_hours:
             day_work_hours = day_work_hours + (work_range[1] - work_range[0])
-          sys.stdout.write("%s%f" % (sep, day_work_hours.seconds / 60 / 60))
+          sys.stdout.write("%s%f" % (sep, float(day_work_hours.seconds) / 60 / 60))
         else:
           sys.stdout.write("%s0" % (sep))
 
