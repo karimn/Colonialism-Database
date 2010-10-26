@@ -21,8 +21,8 @@ sep = ","
 
 if __name__ == "__main__":
   if len(sys.argv) > 1:
-    work_gap = datetime.timedelta(minutes = int(sys.argv[1])
-  
+    work_gap = datetime.timedelta(minutes = int(sys.argv[1]))
+
   begin_week = first_day
   end_week = begin_week + len_workweek
 
