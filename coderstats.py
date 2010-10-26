@@ -68,7 +68,7 @@ if __name__ == "__main__":
 
           if filtered_submitted.count() > 0:
             for entr in filtered_submitted.order_by('datetime_created'):
-              if not work_hours:
+              if work_hours == None:
                 work_hours = list()
                 last_timestamp = last_begin_range = entr.datetime_created
                 continue
