@@ -9,9 +9,11 @@ from colonialismdb.common.models import PoliticalUnit, Location
 
 coder_names = ("ahmedn", "chelsea", "mahsa", "nathalie", "tavish", )
 
-first_day = datetime.date(2010, 9, 3) # starting on a Friday; assuming Fri-Thu work week
+first_day = datetime.date(2010, 10, 4) # starting on a Friday; assuming Fri-Thu work week
 last_day = datetime.date.today()
 len_workweek = datetime.timedelta(6)
+
+work_gap = datetime.timedelta(minutes = 5)
 
 model_tables = (('population', ), ('education', ), ('government', ), ('infrastructure', ), ) # ('economics', 'BilateralTradeDataEntry'), )
 
@@ -25,7 +27,7 @@ if __name__ == "__main__":
     today = begin_week
 
     while today <= end_week:
-      sys.stdout.write("%s%s" % (sep, today.strftime("%m/%d/%Y")))
+      sys.stdout.write("%s%s" % (sep, today.strftime("%a %m/%d")))
       today = today + datetime.timedelta(1)
 
     begin_week = end_week + datetime.timedelta(1)
@@ -50,17 +52,44 @@ if __name__ == "__main__":
 
       while today <= end_week:
         num_entries = 0
+        work_hours = None
 
         for model_info in model_tables:
           app_name = model_info[0]
           class_name = model_info[1] if len(model_info) > 1 else "maindataentry"
+          last_begin_range = None
+          last_timestamp = None
 
           submitted_entries = getattr(coder, "submitted_%s_%s" % (app_name, class_name))
-          num_entries += submitted_entries.filter(datetime_created__year = today.year).filter(datetime_created__month = today.month).filter(datetime_created__day = today.day).count()
 
-        sys.stdout.write("%s%i" % (sep, num_entries))
+          #num_entries += submitted_entries.filter(datetime_created__year = today.year).filter(datetime_created__month = today.month).filter(datetime_created__day = today.day).count()
 
-        #print("%(coder)s, %(day)s, %(num_entries)i" % { 'coder' : coder.username, 'day' : today.strftime("%y-%m-%d"), 'num_entries' : num_entries })
+          filtered_submitted = submitted_entries.filter(datetime_created__year = today.year).filter(datetime_created__month = today.month).filter(datetime_created__day = today.day)
+
+          if filtered_submitted.count() > 0:
+            for entr in filtered_submitted.order_by('datetime_created'):
+              if not work_hours:
+                work_hours = list()
+                last_timestamp = last_begin_range = entr.datetime_created
+                continue
+              if entr.datetime_created - last_timestamp > work_gap:
+                work_hours.append((last_begin_range, last_timestamp))
+                last_begin_range = entr.datetime_created
+              last_timestamp = entr.datetime_created
+            else:
+              if last_timestamp:
+                work_hours.append((last_begin_range, last_timestamp))
+
+        day_work_hours = datetime.timedelta() 
+        if work_hours:
+          for work_range in work_hours:
+            day_work_hours = day_work_hours + (work_range[1] - work_range[0])
+          sys.stdout.write("%s%f" % (sep, day_work_hours.seconds / 60 / 60))
+        else:
+          sys.stdout.write("%s0" % (sep))
+
+
+        #sys.stdout.write("%s%i" % (sep, num_entries))
 
         today = today + datetime.timedelta(1)
 
