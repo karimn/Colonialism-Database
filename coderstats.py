@@ -106,7 +106,7 @@ if __name__ == "__main__":
 
     sys.stdout.write("\n")
 
-    sys.stdout.write("%s%s" % (sep, sep.join(num_ranges)))
+    sys.stdout.write("%s%s\n" % (sep, sep.join(num_ranges)))
 
 
 
