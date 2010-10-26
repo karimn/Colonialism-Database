@@ -96,7 +96,7 @@ if __name__ == "__main__":
             j = 0
             while (i + j + 1 < len(work_hours)) and (work_hours[i][1] > work_hours[i + j + 1][0]):
               j += 1
-            no_overlap.append((work_hours[i][0], work_hours[i + j][1])
+            no_overlap.append((work_hours[i][0], work_hours[i + j][1]))
             i += j + 1
 
           work_hours = no_overlap
