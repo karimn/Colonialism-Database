@@ -113,9 +113,18 @@ if __name__ == "__main__":
           i = 0
           while i < len(work_hours):
             j = 0
-            while (i + j + 1 < len(work_hours)) and (work_hours[i][1] > work_hours[i + j + 1][0]):
-              j += 1
-            no_overlap.append((work_hours[i][0], work_hours[i + j][1]))
+            found = False
+            current_wh = work_hours[i]
+            while current_wh:
+              while (i + j + 1 < len(work_hours)) and (current_wh[1] > work_hours[i + j + 1][0]):
+                j += 1
+                found = True
+              if not found: 
+                no_overlap.append((current_wh[0], work_hours[i + j][1]))
+                current_wh = None
+              else:
+                found = False
+                current_wh = (current_wh[0], work_hours[i + j][1])
             i += j + 1
 
           work_hours = no_overlap
