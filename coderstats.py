@@ -88,6 +88,19 @@ if __name__ == "__main__":
 
         day_work_hours = datetime.timedelta() 
         if work_hours:
+          work_hours.sort(cmp = lambda l, r: cmp(l[0], r[0]))
+
+          no_overlap = list()
+          i = 0
+          while i < len(work_hours):
+            j = 0
+            while (i + j + 1 < len(work_hours)) and (work_hours[i][1] > work_hours[i + j + 1][0]):
+              j += 1
+            no_overlap.append((work_hours[i][0], work_hours[i + j][1])
+            i += j + 1
+
+          work_hours = no_overlap
+
           for work_range in work_hours:
             day_work_hours = day_work_hours + (work_range[1] - work_range[0])
           sys.stdout.write("%s%f" % (sep, float(day_work_hours.seconds) / 60 / 60))
