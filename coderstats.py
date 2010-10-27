@@ -19,6 +19,30 @@ model_tables = (('population', ), ('education', ), ('government', ), ('infrastru
 
 sep = ","
 
+def remove_overlaps(work_hours):
+  work_hours.sort(cmp = lambda l, r: cmp(l[0], r[0]))
+
+  no_overlap = list()
+  i = 0
+  while i < len(work_hours):
+    j = 0
+    found = False
+    current_wh = work_hours[i]
+    while current_wh:
+      while (i + j + 1 < len(work_hours)) and (current_wh[1] > work_hours[i + j + 1][0]):
+        j += 1
+        found = True
+      if not found: 
+        no_overlap.append((current_wh[0], work_hours[i + j][1]))
+        current_wh = None
+      else:
+        found = False
+        if current_wh[1] < work_hours[i + j][1]: # In case absorbed range is a subset of current_wh
+          current_wh = (current_wh[0], work_hours[i + j][1])
+    i += j + 1
+  return no_overlap
+
+
 if __name__ == "__main__":
   if len(sys.argv) > 1:
     work_gap = datetime.timedelta(minutes = int(sys.argv[1]))
@@ -37,7 +61,6 @@ if __name__ == "__main__":
     end_week = begin_week + len_workweek
   else:
     sys.stdout.write("\n")
-
 
   for coder_name in coder_names:
     try:
@@ -107,27 +130,7 @@ if __name__ == "__main__":
 
         day_work_hours = datetime.timedelta() 
         if work_hours:
-          work_hours.sort(cmp = lambda l, r: cmp(l[0], r[0]))
-
-          no_overlap = list()
-          i = 0
-          while i < len(work_hours):
-            j = 0
-            found = False
-            current_wh = work_hours[i]
-            while current_wh:
-              while (i + j + 1 < len(work_hours)) and (current_wh[1] > work_hours[i + j + 1][0]):
-                j += 1
-                found = True
-              if not found: 
-                no_overlap.append((current_wh[0], work_hours[i + j][1]))
-                current_wh = None
-              else:
-                found = False
-                current_wh = (current_wh[0], work_hours[i + j][1])
-            i += j + 1
-
-          work_hours = no_overlap
+          work_hours = remove_overlaps(work_hours) 
 
           for work_range in work_hours:
             day_work_hours = day_work_hours + (work_range[1] - work_range[0])
