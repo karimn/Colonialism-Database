@@ -24,24 +24,18 @@ def remove_overlaps(work_hours):
 
   no_overlap = list()
   i = 0
+  current_wh = None
   while i < len(work_hours):
-    j = 0
-    found = False
-    current_wh = work_hours[i]
-    while current_wh:
-      while (i + j + 1 < len(work_hours)) and (current_wh[1] > work_hours[i + j + 1][0]):
-        j += 1
-        found = True
-      if not found: 
-        no_overlap.append((current_wh[0], work_hours[i + j][1]))
-        current_wh = None
-      else:
-        found = False
-        if current_wh[1] < work_hours[i + j][1]: # In case absorbed range is a subset of current_wh
-          current_wh = (current_wh[0], work_hours[i + j][1])
-    i += j + 1
+    if not current_wh:
+      current_wh = work_hours[i]
+    if (i + 1 < len(work_hours)) and (current_wh[1] > work_hours[i + 1][0]): # Is there an overlap with next range?
+      if current_wh[1] < work_hours[i + 1][1]: # In case absorbed range is a subset of current_wh
+        current_wh = (current_wh[0], work_hours[i + 1][1])
+    else: # no overlap
+      no_overlap.append((current_wh[0], work_hours[i + j][1]))
+      current_wh = None
+    i += 1
   return no_overlap
-
 
 if __name__ == "__main__":
   if len(sys.argv) > 1:
