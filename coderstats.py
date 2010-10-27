@@ -116,8 +116,8 @@ if __name__ == "__main__":
               continue
             if last_timestamp and (pu.datetime_created - last_timestamp > work_gap):
               work_hours.append((last_begin_range, last_timestamp))
-              last_begin_range = entr.datetime_created
-            last_timestamp = entr.datetime_created
+              last_begin_range = pu.datetime_created
+            last_timestamp = pu.datetime_created
           else:
             if last_timestamp:
               work_hours.append((last_begin_range, last_timestamp))
