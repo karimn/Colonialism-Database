@@ -32,7 +32,7 @@ def remove_overlaps(work_hours):
       if current_wh[1] < work_hours[i + 1][1]: # In case absorbed range is a subset of current_wh
         current_wh = (current_wh[0], work_hours[i + 1][1])
     else: # no overlap
-      no_overlap.append((current_wh[0], work_hours[i + j][1]))
+      no_overlap.append(current_wh)
       current_wh = None
     i += 1
   return no_overlap
