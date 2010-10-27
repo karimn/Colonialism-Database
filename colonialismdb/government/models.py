@@ -55,7 +55,7 @@ class MainDataEntry(BaseDataEntry):
     permissions = ( ('activate_maindataentry', 'Can activate submitted govt data entry'), )
 
   # Should these be moved to location?
-  spatial_area = models.IntegerField(null = True, blank = True)
+  spatial_area = models.DecimalField(max_digits = 13, decimal_places = 3, null = True, blank = True)
   spatial_area_unit = models.ForeignKey(SpatialAreaUnit, null = True, blank = True, related_name = '%(app_label)s_%(class)s_related')
   spatial_page_num = models.IntegerField("spatial data source page number", null = True, blank = True, default = None)
 
