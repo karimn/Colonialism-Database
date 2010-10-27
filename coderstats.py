@@ -28,7 +28,8 @@ def remove_overlaps(work_hours):
   while i < len(work_hours):
     if not current_wh:
       current_wh = work_hours[i]
-    if (i + 1 < len(work_hours)) and (current_wh[1] > work_hours[i + 1][0]): # Is there an overlap with next range?
+    if (i + 1 < len(work_hours)) and ((current_wh[1] > work_hours[i + 1][0]) or # Is there an overlap with next range?
+                                      (work_hours[i + 1][0] - current_wh[1] <= work_gap)): # or the gap between the ranges is small enough
       if current_wh[1] < work_hours[i + 1][1]: # In case absorbed range is a subset of current_wh
         current_wh = (current_wh[0], work_hours[i + 1][1])
     else: # no overlap
