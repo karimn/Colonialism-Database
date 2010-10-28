@@ -15,8 +15,8 @@ from colonialismdb.common.models import PoliticalUnit, Location
 from colonialismdb.sources.models import Source
 from colonialismdb.economics.models import BilateralTradeDataEntry
 
-mig_user = User.objects.get(username = 'karim')
-src = Source.objects.get(name = "temp")
+mig_user = User.objects.get(username = 'datamiguser')
+src = Source.objects.get(pk = 3381)
 
 if __name__ == "__main__":
   infile = sys.argv[1]
