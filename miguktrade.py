@@ -76,27 +76,28 @@ if __name__ == "__main__":
       i = 0
       
       while i < len(trade):
-        if (exp_imp[i] == "imports") and ((i + 1) < len(trade)) and partners[i] == partners[i + 1]:
-          new_data = BilateralTradeDataEntry(location = loc, 
-                                             trade_partner = partners[i], 
-                                             imports = trade[i],
-                                             exports = trade[i + 1],
-                                             begin_date = begin_year,
-                                             end_date = end_year,
-                                             source = src,
-                                             submitted_by = mig_user)
-          new_data.save()
-          i += 1
-        elif trade[i]:
-          kwargs = { 'location' : loc, 
-                     'trade_partner' : partners[i], 
-                     exp_imp[i] : trade[i], 
-                     'begin_date' : begin_year,
-                     'end_date' : end_year,
-                     'source' : src,
-                     'submitted_by' : mig_user } 
-          new_data = BilateralTradeDataEntry(**kwargs)
-          new_data.save()
+        if trade[i]:
+          if (exp_imp[i] == "imports") and ((i + 1) < len(trade)) and (partners[i] == partners[i + 1]) and trade[i + 1]:
+            new_data = BilateralTradeDataEntry(location = loc, 
+                                               trade_partner = partners[i], 
+                                               imports = trade[i],
+                                               exports = trade[i + 1],
+                                               begin_date = begin_year,
+                                               end_date = end_year,
+                                               source = src,
+                                               submitted_by = mig_user)
+            new_data.save()
+            i += 1
+          else:
+            kwargs = { 'location' : loc, 
+                       'trade_partner' : partners[i], 
+                       exp_imp[i] : trade[i], 
+                       'begin_date' : begin_year,
+                       'end_date' : end_year,
+                       'source' : src,
+                       'submitted_by' : mig_user } 
+            new_data = BilateralTradeDataEntry(**kwargs)
+            new_data.save()
 
         i += 1
 
