@@ -16,7 +16,11 @@ from colonialismdb.sources.models import Source
 from colonialismdb.economics.models import BilateralTradeDataEntry
 
 mig_user = User.objects.get(username = 'datamiguser')
-src = Source.objects.get(pk = 3381)
+src = None 
+try:
+  src = Source.objects.get(pk = 3381)
+except Source.DoesNotExist:
+  src = Source.objects.get(name = "temp")
 
 if __name__ == "__main__":
   infile = sys.argv[1]
