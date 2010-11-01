@@ -30,7 +30,7 @@ class MainDataEntryAdmin(BaseMainDataEntryAdmin) :
   radio_fields = { 'value_precision' : admin.HORIZONTAL, 'individ_fam' : admin.HORIZONTAL, 'population_gender' : admin.HORIZONTAL, 'value_unit' : admin.HORIZONTAL, }
 
   autocomplete_fields = BaseMainDataEntryAdmin.autocomplete_fields 
-  autocomplete_fields.update({ 'religion' : 'name', })
+  autocomplete_fields.update({ 'religion' : ('name', ), })
 
 
   activate_perm = 'population.activate_main_data_entry'
