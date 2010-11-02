@@ -65,12 +65,12 @@ class MainDataEntry(BaseDataEntry):
   revenue = models.DecimalField(max_digits = 20, decimal_places = 2, null = True, blank = True)
   revenue_type = models.ForeignKey(RevenueType, null = True, blank = True)
 
-  expenditure = models.IntegerField(null = True, blank = True)
+  expenditure = models.DecimalField(max_digits = 20, decimal_places = 2, null = True, blank = True)
   expenditure_type = models.ForeignKey(ExpenditureType, null = True, blank = True)
 
-  public_debt = models.BigIntegerField(null = True, blank = True) 
+  public_debt = models.DecimalField(max_digits = 20, decimal_places = 2, null = True, blank = True)
 
-  money_supply = models.IntegerField(null = True, blank = True)
+  money_supply = models.DecimalField(max_digits = 20, decimal_places = 2, null = True, blank = True)
   money_supply_type = models.ForeignKey(MoneySupplyType, null = True, blank = True)
 
   military = models.IntegerField("military personnel", null = True, blank = True)
