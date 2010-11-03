@@ -39,18 +39,18 @@ class MainDataEntry(BaseDataEntry):
   currency = models.ForeignKey(Currency, null = True, blank = True, related_name = '%(app_label)s_%(class)s_related')
   currency_exchange_rate = models.CharField(max_length = 50, null = True, blank = True)
 
-  railroad_revenue = models.IntegerField(null = True, blank = True, help_text = "Gross railway revenue for the year")
-  railroad_expenditure = models.IntegerField(null = True, blank = True, help_text = "Gross railway expenditure (including building and extraordinary costs) for the year")
-  railroad_length = models.BigIntegerField(null = True, blank = True)
+  railroad_revenue = models.DecimalField(max_digits = 20, decimal_places = 2, null = True, blank = True, help_text = "Gross railway revenue for the year")
+  railroad_expenditure = models.DecimalField(max_digits = 20, decimal_places = 2, null = True, blank = True, help_text = "Gross railway expenditure (including building and extraordinary costs) for the year")
+  railroad_length = models.DecimalField(max_digits = 20, decimal_places = 2, null = True, blank = True)
   railroad_length_unit = models.ForeignKey(LengthUnit, null = True, blank = True, related_name = "infrastructure_maindataentry_railroad_set")
   railroad_num_passengers = models.BigIntegerField("railroad passengers per year", null = True, blank = True)
-  railroad_passenger_km = models.BigIntegerField("railroad passenger-kilometers", null = True, blank = True, help_text = "Passenger-kilometers (total km traveled) per year") 
-  railroad_freight = models.BigIntegerField(null = True, blank = True, help_text = "Quantity of railway freight carried per year")
+  railroad_passenger_km = models.DecimalField(max_digits = 20, decimal_places = 2, null = True, blank = True, help_text = "Passenger-kilometers (total km traveled) per year") 
+  railroad_freight = models.DecimalField(max_digits = 20, decimal_places = 2, null = True, blank = True, help_text = "Quantity of railway freight carried per year")
   railroad_freight_unit = models.ForeignKey(WeightUnit, null = True, blank = True, related_name = "infrastructure_maindataentry_freight_set")
   
-  road_revenue = models.IntegerField(null = True, blank = True, help_text = "Gross road revenue for the year")
-  road_expenditure = models.IntegerField(null = True, blank = True, help_text = "Gross road expenditure for the year")
-  road_length = models.BigIntegerField(null = True, blank = True)
+  road_revenue = models.DecimalField(max_digits = 20, decimal_places = 2, null = True, blank = True, help_text = "Gross road revenue for the year")
+  road_expenditure = models.DecimalField(max_digits = 20, decimal_places = 2, null = True, blank = True, help_text = "Gross road expenditure for the year")
+  road_length = models.DecimalField(max_digits = 20, decimal_places = 2, null = True, blank = True)
   road_length_unit = models.ForeignKey(LengthUnit, null = True, blank = True, related_name = "infrastructure_maindataentry_road_set")
 
   num_motor_vehicles = models.BigIntegerField("number of motor vehicles", null = True, blank = True)
@@ -58,15 +58,15 @@ class MainDataEntry(BaseDataEntry):
 
   num_telephones = models.BigIntegerField("number of telephones registered / in use", null = True, blank = True)
   
-  telegraph_length = models.BigIntegerField(null = True, blank = True)
+  telegraph_length = models.DecimalField(max_digits = 20, decimal_places = 2, null = True, blank = True)
   telegraph_length_unit = models.ForeignKey(LengthUnit, null = True, blank = True, related_name = "infrastructure_maindataentry_telegraph_set")
   telegraph_num_stations = models.BigIntegerField("number of telegraph stations", blank = True, null = True)
   telegraph_num_sent = models.BigIntegerField("number of telgraphs sent", blank = True, null = True, help_text = "per year")
 
   # TODO TelegraphWires?
 
-  postal_revenue = models.IntegerField(null = True, blank = True, help_text = "Gross postal revenue for the year")
-  postal_expenditure = models.IntegerField(null = True, blank = True, help_text = "Gross postal expenditure for the year")
+  postal_revenue = models.DecimalField(max_digits = 20, decimal_places = 2, null = True, blank = True, help_text = "Gross postal revenue for the year")
+  postal_expenditure = models.DecimalField(max_digits = 20, decimal_places = 2, null = True, blank = True, help_text = "Gross postal expenditure for the year")
   postal_num_stations = models.BigIntegerField("number of postal stations", blank = True, null = True)
   postal_num_items = models.BigIntegerField("number of items sent", blank = True, null = True, help_text = "per year")
   postal_items_type = models.ForeignKey(PostalItemType, null = True, blank = True)
@@ -79,7 +79,7 @@ class MainDataEntry(BaseDataEntry):
   merchant_ships_cargo = models.BigIntegerField(null = True, blank = True)
   merchant_ships_cargo_unit = models.ForeignKey(WeightUnit, blank = True, null = True, related_name = "infrastructure_maindataentry_merchant_ships_cargo_set")
 
-  air_cargo = models.BigIntegerField(null = True, blank = True)
+  air_cargo = models.DecimalField(max_digits = 20, decimal_places = 2, null = True, blank = True)
   air_cargo_unit = models.ForeignKey(WeightUnit, blank = True, null = True, related_name = "infrastructure_maindataentry_air_cargo_set")
 
   air_passenger_km = models.BigIntegerField("air passenger-kilometers", null = True, blank = True, help_text = "Passenger-kilometers (total km traveled) per year") 

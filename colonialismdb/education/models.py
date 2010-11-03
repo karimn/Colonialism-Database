@@ -32,13 +32,13 @@ class MainDataEntry(BaseDataEntry):
   SCH_GENDER_CHOICES = (('male', 'Male'), ('female', 'Female'), ('both', 'Both'))
 
   # Should these be moved to location?
-  spatial_area = models.IntegerField(null = True, blank = True)
+  spatial_area = models.DecimalField(max_digits = 20, decimal_places = 2, null = True, blank = True)
   spatial_area_unit = models.ForeignKey(SpatialAreaUnit, null = True, blank = True, related_name = '%(app_label)s_%(class)s_related')
 
   currency = models.ForeignKey(Currency, null = True, blank = True, related_name = '%(app_label)s_%(class)s_related')
   currency_exchange_rate = models.IntegerField(null = True, blank = True)
 
-  education_expenditure = models.IntegerField(null = True, blank = True)
+  education_expenditure = models.DecimalField(max_digits = 20, decimal_places = 2, null = True, blank = True)
   education_expenditure_type = models.ForeignKey(EducationExpenditureType, null = True, blank = True)
   is_total_expenditure = models.BooleanField(default = False)
 
