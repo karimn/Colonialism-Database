@@ -60,6 +60,7 @@ class TableAdmin(BaseSourceAdmin):
 
   inlines = [ SourceFileInline, PopulationDataInline, ]
 
+  autocomplete_fields = { 'source' : ('name', ),  }
 
 class SourceTypeAdmin(BaseMergeableCategoryAdmin) :
   activate_perm = 'sources.activate_sourcetype'
