@@ -167,14 +167,14 @@ class Table(BaseSourceObject):
 
   source = models.ForeignKey(Source)
 
-  nr = models.CharField("NR", max_length = 20)
+  nr = models.CharField("NR", max_length = 20, null = True, blank = True)
 
   original_name = models.CharField(max_length = 500, blank = True, null = True)
 
   included_countries = models.ManyToManyField(PoliticalUnit)
 
-  begin_page = models.IntegerField()
-  end_page = models.IntegerField()
+  begin_page = models.IntegerField(null = True, blank = True)
+  end_page = models.IntegerField(null = True, blank = True) 
 
   begin_year = models.PositiveSmallIntegerField(blank = True, null = True)
   end_year = models.PositiveSmallIntegerField(blank = True, null = True)
