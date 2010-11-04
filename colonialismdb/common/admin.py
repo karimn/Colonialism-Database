@@ -120,17 +120,17 @@ class BaseSubmitAdmin(BaseSubmit, BaseVersionAdmin) :
   list_filter = ('active', 'submitted_by')
 
 class BaseMainDataEntryAdmin(BaseSubmitAdmin):
+  autocomplete_fields = { 'location' : ('name', 'autocomplete_label'), 'source' : ('name', ), }
+  list_display = ('location', 'begin_date', 'end_date', 'active', 'submitted_by', 'datetime_created', )
+  search_fields = ['location__name',]
+  ordering = ('-datetime_created', )
+  reuse_fields = ('source', 'location', 'begin_date', 'end_date', 'page_num', 'primary_source', 'remarks', )
+
   def change_view(self, request, object_id, extra_context=None):
     result = super(BaseMainDataEntryAdmin, self).change_view(request, object_id, extra_context)
 
     if (request.method == 'POST') and request.POST.has_key('_addanother'):
-      request.session['reuse_values'] = { 'source' : request.POST['source'], 
-                                          'location' : request.POST['location'],
-                                          'begin_date' : request.POST['begin_date'],
-                                          'end_date' : request.POST['end_date'], 
-                                          'page_num' : request.POST['page_num'],
-                                          'primary_source' : request.POST['primary_source'],
-                                          'remarks' : request.POST['remarks'], }
+      request.session['reuse_values'] = dict(zip(self.reuse_fields, [request.POST[f] for f in self.reuse_fields]))
 
     return result
 
@@ -140,22 +140,12 @@ class BaseMainDataEntryAdmin(BaseSubmitAdmin):
       request.GET.update(request.session['reuse_values'])
       del request.session['reuse_values']
     elif request.POST.has_key('_addanother'):
-      request.session['reuse_values'] = { 'source' : request.POST['source'], 
-                                          'location' : request.POST['location'],
-                                          'begin_date' : request.POST['begin_date'],
-                                          'end_date' : request.POST['end_date'], 
-                                          'page_num' : request.POST['page_num'],
-                                          'primary_source' : request.POST['primary_source'],
-                                          'remarks' : request.POST['remarks'], }
+      request.session['reuse_values'] = dict(zip(self.reuse_fields, [request.POST[f] for f in self.reuse_fields]))
 
     result = super(BaseMainDataEntryAdmin, self).add_view(request, form_url, extra_context)
 
     return result
 
-  autocomplete_fields = { 'location' : ('name', 'autocomplete_label'), 'source' : ('name', ), }
-  list_display = ('location', 'begin_date', 'end_date', 'active', 'submitted_by', 'datetime_created', )
-  search_fields = ['location__name',]
-  ordering = ('-datetime_created', )
 
 class MergeModelChoiceField(forms.ModelChoiceField):
   def label_from_instance(self, obj):
