@@ -171,7 +171,7 @@ class Table(BaseSourceObject):
 
   original_name = models.CharField(max_length = 500, blank = True, null = True)
 
-  included_countries = models.ManyToManyField(PoliticalUnit)
+  included_countries = models.ManyToManyField(PoliticalUnit, null = True, blank = True)
 
   begin_page = models.IntegerField(null = True, blank = True)
   end_page = models.IntegerField(null = True, blank = True) 
