@@ -140,7 +140,9 @@ class Source(BaseSourceObject):
   source_type = models.ForeignKey(SourceType, blank = True, null = True) 
   keywords = models.TextField(blank = True)
 
-  location = models.CharField(max_length = 500, blank = True)
+  location = models.CharField(max_length = 500, blank = True, null = True)
+
+  primary_sources = models.ManyToManyField("self", blank = True, null = True)
 
 class Table(BaseSourceObject):
   class Meta(BaseSourceObject.Meta):
