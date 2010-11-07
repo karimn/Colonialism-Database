@@ -87,9 +87,6 @@ class MainDataEntry(BaseDataEntry):
   def activate(self):
     super(MainDataEntry, self).activate()
 
-    if self.spatial_area_unit and not self.spatial_area_unit.active:
-      self.spatial_area_unit.activate()
-
     if self.currency and not self.currency.active:
       self.currency.activate()
 
