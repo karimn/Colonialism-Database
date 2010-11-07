@@ -43,7 +43,7 @@ class MainDataEntryAdmin(BaseMainDataEntryAdmin) :
   #radio_fields = { 'value_precision' : admin.HORIZONTAL, 'individ_fam' : admin.HORIZONTAL, 'population_gender' : admin.HORIZONTAL, 'value_unit' : admin.HORIZONTAL, }
 
   activate_perm = 'government.activate_maindataentry'
-  reuse_fields = BaseMainDataEntryAdmin.reuse_fields + ('spatial_area', 'spatial_area_unit', 'spatial_page_num',)
+  reuse_fields = BaseMainDataEntryAdmin.reuse_fields + ('spatial_area_unit', 'spatial_page_num',)
 
 class SpatialAreaUnitAdmin(BaseMergeableCategoryAdmin) :
   activate_perm = 'government.activate_spareaunit'
