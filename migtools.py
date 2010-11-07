@@ -5,11 +5,15 @@ import codecs
 import cStringIO
 
 from colonialismdb.common.models import Location, Category
+
 from django.core.files import File
+from django.contrib.auth.models import User
 import colonialismdb
 
 #STRING_ENCODING = 'ISO-8859-1'
 STRING_ENCODING = 'utf-8'
+
+mig_user = User.objects.get(username = 'datamiguser')
 
 class UTF8Recoder:
   """
