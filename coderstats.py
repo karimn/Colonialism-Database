@@ -9,7 +9,7 @@ from colonialismdb.common.models import PoliticalUnit, Location
 
 coder_names = ("ahmedn", "chelsea", "mahsa", "nathalie", "tavish", )
 
-first_day = datetime.date(2010, 10, 4) # starting on a Friday; assuming Fri-Thu work week
+first_day = datetime.date(2010, 10, 1) # Starting on a Monday
 last_day = datetime.date.today()
 len_workweek = datetime.timedelta(6)
 
@@ -51,6 +51,8 @@ if __name__ == "__main__":
     while today <= end_week:
       sys.stdout.write("%s%s" % (sep, today.strftime("%a %m/%d")))
       today = today + datetime.timedelta(1)
+    else:
+      sys.stdout.write("%sWeekly Total" % sep)
 
     begin_week = end_week + datetime.timedelta(1)
     end_week = begin_week + len_workweek
@@ -72,6 +74,7 @@ if __name__ == "__main__":
 
     while end_week < datetime.date.today():
       today = begin_week
+      weekly_total = 0
 
       while today <= end_week:
         num_entries = 0
@@ -129,16 +132,17 @@ if __name__ == "__main__":
 
           for work_range in work_hours:
             day_work_hours = day_work_hours + (work_range[1] - work_range[0])
-          sys.stdout.write("%s%f" % (sep, float(day_work_hours.seconds) / 60 / 60))
+          daily_total = float(day_work_hours.seconds) / 60 / 60
+          weekly_total += daily_total
+          sys.stdout.write("%s%f" % (sep, daily_total))
           num_ranges.append(unicode(len(work_hours)))
         else:
           sys.stdout.write("%s0" % (sep))
           num_ranges.append("0")
 
-
-        #sys.stdout.write("%s%i" % (sep, num_entries))
-
         today = today + datetime.timedelta(1)
+      else:
+        sys.stdout.write("%s%f" % (sep, weekly_total))
 
       begin_week = end_week + datetime.timedelta(1)
       end_week = begin_week + len_workweek
