@@ -52,7 +52,10 @@ if __name__ == "__main__":
     if i < 1:
       continue
 
-    rdict = dict(zip(("location", "year", "imports", "exports", "primary_source_1", "primary_source_2"), row[1:]))
+    rdict = dict(zip(("location", "year", "imports", "exports", "alt_imports", "alt_exports", "primary_source_1", "primary_source_2"), row[1:]))
+
+    del rdict["alt_imports"]
+    del rdict["alt_exports"]
 
     for loc_field in ("location", ):
       locs = Location.objects.filter(name__iexact = rdict[loc_field]).filter(politically_in = None)[:1]
@@ -99,7 +102,7 @@ if __name__ == "__main__":
       entry = AggregateTradeDataEntry(**rdict)
       entry.save()
       num_mig += 1
-      sys.stdout.write("[%i] %s - %s\n" % (i, entry.location, entry.trade_partner))
+      sys.stdout.write("[%i] %s \n" % (i, entry.location))
     except (ValueError, DatabaseError, ValidationError) as e:
       sys.stderr.write('Failed to save data row (%i): %s\n' % (i, e))
       num_err_rows += 1
