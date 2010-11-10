@@ -45,8 +45,7 @@ if __name__ == "__main__":
   if len(sys.argv) > 2:
     src = Source.objects.get(pk = int(sys.argv[2]))
   else:
-    raise RuntimeError
-    #src = Table.objects.get(pk = 3390)
+    src = Table.objects.get(pk = 3393)
 
   for i, row in enumerate(reader):
     if i < 1:
