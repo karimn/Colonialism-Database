@@ -12,9 +12,9 @@ if __name__ == "__main__":
       if bidata.exports == -9:
         bidata.delete()
       else:
-        bidata.exports = None
+        bidata.imports = None
         bidata.save()
     else:
-      bidata.imports = None
+      bidata.exports = None
       bidata.save()
 
