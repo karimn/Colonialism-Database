@@ -1,5 +1,7 @@
 #!/usr/bin/python
 
+import migtools
+
 from django.db.models import Q
 
 from colonialismdb.economics.models import BilateralTradeDataEntry
