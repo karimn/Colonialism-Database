@@ -97,14 +97,14 @@ if __name__ == "__main__":
     try:
       entry = BilateralTradeDataEntry(**rdict)
 
-      if entry.imports == -9:
-        if entry.exports == -9:
+      if entry.imports == "-9":
+        if entry.exports == "-9":
           sys.stdout.write("[%i] %s - %s (dropped; missing data)\n" % (i, entry.location, entry.trade_partner))
           continue
         else:
           entry.imports = None
-      elif entry.exports == -9:
-        entry.exports == -9
+      elif entry.exports == "-9":
+        entry.exports == None 
       else: # TEMPORARY: add only entries with missing data
         sys.stdout.write("[%i] %s - %s (ignored for now)\n" % (i, entry.location, entry.trade_partner))
         continue 
