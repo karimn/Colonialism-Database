@@ -40,7 +40,6 @@ class DigitizationPriority(Category):
     self.priority_gra_for_table.all().update(digitization_priority_gra = other)
     self.priority_pi_for_table.all().update(digitization_priority_pi = other)
 
-
 class BaseSourceObject(BaseSubmitModel):
   class Meta(BaseSubmitModel.Meta):
     permissions = ( ('activate_basesource', 'Can activate source'), )
@@ -50,7 +49,12 @@ class BaseSourceObject(BaseSubmitModel):
     try:
       return unicode(self.source)
     except Source.DoesNotExist:
+      pass
+    
+    try:
       return unicode(self.table)
+    except Table.DoesNotExist:
+      return unicode(self.sourceternaryrelationship)
 
   def activate(self):
     super(BaseSourceObject, self).activate()
@@ -90,15 +94,21 @@ class BaseSourceObject(BaseSubmitModel):
 
   languages = models.ManyToManyField(Language)
 
-class SourceFile(BaseSubmitModel):
-  class Meta(BaseSubmitModel.Meta):
-    permissions = ( ('activate_sourcefile', 'Can activate source file'), )
+class SourceTernaryRelationship(BaseSourceObject):
+  source = models.ForeignKey(BaseSourceObject, related_name = "source_for_ternary")
+  primary_source = models.ForeignKey(BaseSourceObject, related_name = "primary_source_for_ternary")
 
   def __unicode__(self):
-    return self.source_file.name
+    return "%s (Primary Source: %s" % (unicode(self.source), unicode(self.primary_source))
 
-  source_file = models.FileField(max_length = 200, upload_to = 'sources/%Y/%m/%d')
-  for_source = models.ForeignKey(BaseSourceObject)
+  def activate(self):
+    super(SourceTernaryRelationship, self).activate()
+
+    if self.source and not self.source.active:
+      self.source.activate()
+
+    if self.primary_source and not self.primary_source.active:
+      self.primary_source.activate()
 
 class Source(BaseSourceObject):
   class Meta(BaseSourceObject.Meta):
@@ -182,3 +192,13 @@ class Table(BaseSourceObject):
   end_year = models.PositiveSmallIntegerField(blank = True, null = True)
 
   prc = models.CharField(max_length = 100, blank = True, null = True)
+
+class SourceFile(BaseSubmitModel):
+  class Meta(BaseSubmitModel.Meta):
+    permissions = ( ('activate_sourcefile', 'Can activate source file'), )
+
+  def __unicode__(self):
+    return self.source_file.name
+
+  source_file = models.FileField(max_length = 200, upload_to = 'sources/%Y/%m/%d')
+  for_source = models.ForeignKey(BaseSourceObject)
