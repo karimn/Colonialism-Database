@@ -37,7 +37,7 @@ class MainDataEntryAdmin(BaseMainDataEntryAdmin) :
         {'fields' : ['air_cargo', 'air_cargo_unit', 'air_passenger_km', ]}),
 
       ('Source Information', 
-        {'fields' : ['source', 'page_num', 'primary_source']}),
+        {'fields' : ['source', 'page_num', 'primary_source_obj', 'primary_source_text']}),
 
       ('Other Information', 
         {'fields' : ['remarks', ]}),

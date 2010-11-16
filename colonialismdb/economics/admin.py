@@ -21,7 +21,7 @@ class AggregateTradeDataEntryAdmin(BaseTradeDataEntryAdmin):
         {'fields' : ['imports', 'imports_value_unit', 'exports', 'exports_value_unit', 'currency', ]}),
 
       ('Source Information', 
-        {'fields' : ['source', 'page_num', 'primary_source']}),
+        {'fields' : ['source', 'page_num', 'primary_source_obj', 'primary_source_text']}),
 
       ('Other Information', 
         {'fields' : ['remarks', ]}),
@@ -45,7 +45,7 @@ class BilateralTradeDataEntryAdmin(BaseTradeDataEntryAdmin):
                      'imports_weight', 'imports_weight_unit', 'exports_weight', 'exports_weight_unit', 'ppi']}),
 
       ('Source Information', 
-        {'fields' : ['source', 'page_num', 'primary_source']}),
+        {'fields' : ['source', 'page_num', 'primary_source_obj', 'primary_source_text']}),
 
       ('Other Information', 
         {'fields' : ['remarks', ]}),

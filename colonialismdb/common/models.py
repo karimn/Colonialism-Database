@@ -455,7 +455,9 @@ class BaseDataEntry(BaseSubmitModel):
   #old_source_id = models.IntegerField("Source ID", null = True, blank = True)
   #old_combined_id = models.CharField("Combined ID", max_length = 30)
 
-  primary_source = models.TextField(null = True, blank = True)
+  primary_source_text = models.TextField("primary source notes", null = True, blank = True)
+  primary_source_obj = models.ForeignKey("sources.BaseSourceObject", verbose_name = "primary source", null = True, blank = True, 
+                                         related_name = "%(app_label)s_%(class)s_primary_related")
   page_num = models.IntegerField("Page Number", null = True, blank = True, default = None)
 
   source = models.ForeignKey('sources.BaseSourceObject', related_name = "%(app_label)s_%(class)s_related")

@@ -31,7 +31,7 @@ class MainDataEntryAdmin(BaseMainDataEntryAdmin) :
         {'fields' : ['num_teachers', 'teacher_gender', 'is_total_teachers']}),
 
       ('Source Information', 
-        {'fields' : ['source', 'page_num', 'primary_source']}),
+        {'fields' : ['source', 'page_num', 'primary_source_obj', 'primary_source_text']}),
 
       ('Other Information', 
         {'fields' : ['remarks', ]}),

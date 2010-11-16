@@ -21,7 +21,7 @@ class MainDataEntryAdmin(BaseMainDataEntryAdmin) :
         {'fields' : ['individ_fam', 'population_gender', 'population_value', 'value_unit', 'is_total', 'value_precision']}),
 
       ('Source Information', 
-        {'fields' : ['source', 'page_num', 'primary_source']}),
+        {'fields' : ['source', 'page_num', 'primary_source_obj', 'primary_source_text']}),
 
       ('Other Information', 
         {'fields' : ['remarks', ]}),
@@ -31,7 +31,6 @@ class MainDataEntryAdmin(BaseMainDataEntryAdmin) :
 
   autocomplete_fields = BaseMainDataEntryAdmin.autocomplete_fields 
   autocomplete_fields.update({ 'religion' : ('name', ), })
-
 
   activate_perm = 'population.activate_main_data_entry'
 
