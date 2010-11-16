@@ -19,7 +19,9 @@ class MainDataEntryAdmin(BaseMainDataEntryAdmin) :
         {'fields' : ['currency', 'currency_exchange_rate']}),
 
       ('Railroad',
-        {'fields' : ['railroad_revenue', 'railroad_expenditure', 'railroad_length', 'railroad_length_unit', 'railroad_num_passengers', 'railroad_passenger_km', 'railroad_freight', 'railroad_freight_unit', ]}),
+        {'fields' : ['railroad_revenue', 'railroad_expenditure', 'railroad_length', 'railroad_length_unit', 'railroad_num_passengers', 
+                     'railroad_num_passengers_value_unit', 'railroad_passenger_km', 'railroad_freight', 'railroad_freight_unit',
+                     'railroad_freight_ton_km' ]}),
 
       ('Road',
         {'fields' : ['road_revenue', 'road_expenditure', 'road_length', 'road_length_unit', 'num_motor_vehicles', 'motor_vehicles_type', ]}),
@@ -30,11 +32,13 @@ class MainDataEntryAdmin(BaseMainDataEntryAdmin) :
       ('Postal',
         {'fields' : ['postal_revenue', 'postal_expenditure', 'postal_num_stations', 'postal_num_items', 'postal_items_type', 'postal_num_boxes', 'postal_num_staff',  ]}),
 
-      ('Merchant Ships',
-        {'fields' : ['merchant_ships_num', 'merchant_ships_type', 'merchant_ships_cargo', 'merchant_ships_cargo_unit', ]}),
+      ('Ships',
+        {'fields' : ['ships_all_num', 'ships_motor_num', 'ships_sail_num', 'ships_steam_num', 'ships_steammotor_num',
+                     'ships_all_ton', 'ships_motor_ton', 'ships_sail_ton', 'ships_steam_ton', 'ships_steammotor_ton',
+                     'merchant_ships_num', 'merchant_ships_type', 'merchant_ships_cargo', 'merchant_ships_cargo_unit', ]}),
 
       ('Aviation',
-        {'fields' : ['air_cargo', 'air_cargo_unit', 'air_passenger_km', ]}),
+        {'fields' : ['air_cargo', 'air_cargo_unit', 'air_cargo_ton_km', 'air_passenger_km', ]}),
 
       ('Source Information', 
         {'fields' : ['source', 'page_num', 'primary_source_obj', 'primary_source_text']}),
@@ -43,7 +47,7 @@ class MainDataEntryAdmin(BaseMainDataEntryAdmin) :
         {'fields' : ['remarks', ]}),
   ]
 
-  #radio_fields = { 'value_precision' : admin.HORIZONTAL, 'individ_fam' : admin.HORIZONTAL, 'population_gender' : admin.HORIZONTAL, 'value_unit' : admin.HORIZONTAL, }
+  radio_fields = { "railroad_num_passengers_value_unit" : admin.HORIZONTAL, }
 
   activate_perm = 'infrastructure.activate_maindataentry'
 

@@ -44,9 +44,11 @@ class MainDataEntry(BaseDataEntry):
   railroad_length = models.DecimalField(max_digits = 20, decimal_places = 2, null = True, blank = True)
   railroad_length_unit = models.ForeignKey(LengthUnit, null = True, blank = True, related_name = "infrastructure_maindataentry_railroad_set")
   railroad_num_passengers = models.BigIntegerField("railroad passengers per year", null = True, blank = True)
+  railroad_num_passengers_value_unit = models.CharField("passengers value units", max_length = 20, choices = BaseDataEntry.UNIT_CHOICES, default = 'units')
   railroad_passenger_km = models.DecimalField(max_digits = 20, decimal_places = 2, null = True, blank = True, help_text = "Passenger-kilometers (total km traveled) per year") 
   railroad_freight = models.DecimalField(max_digits = 20, decimal_places = 2, null = True, blank = True, help_text = "Quantity of railway freight carried per year")
   railroad_freight_unit = models.ForeignKey(WeightUnit, null = True, blank = True, related_name = "infrastructure_maindataentry_freight_set")
+  railroad_freight_ton_km = models.BigIntegerField("freight ton-kilometers", null = True, blank = True, help_text = "Freight ton-kilometers (total km traveled) per year")
   
   road_revenue = models.DecimalField(max_digits = 20, decimal_places = 2, null = True, blank = True, help_text = "Gross road revenue for the year")
   road_expenditure = models.DecimalField(max_digits = 20, decimal_places = 2, null = True, blank = True, help_text = "Gross road expenditure for the year")
@@ -68,19 +70,32 @@ class MainDataEntry(BaseDataEntry):
   postal_revenue = models.DecimalField(max_digits = 20, decimal_places = 2, null = True, blank = True, help_text = "Gross postal revenue for the year")
   postal_expenditure = models.DecimalField(max_digits = 20, decimal_places = 2, null = True, blank = True, help_text = "Gross postal expenditure for the year")
   postal_num_stations = models.BigIntegerField("number of postal stations", blank = True, null = True)
-  postal_num_items = models.BigIntegerField("number of items sent", blank = True, null = True, help_text = "per year")
+  postal_num_items = models.BigIntegerField("number of items sent/received", blank = True, null = True, help_text = "per year")
   postal_items_type = models.ForeignKey(PostalItemType, null = True, blank = True)
   postal_num_boxes = models.BigIntegerField("number of postal boxes", null = True, blank = True)
   postal_num_staff = models.BigIntegerField("number of postal staff", null = True, blank = True)
 
+  ships_all_num = models.BigIntegerField("number of all ships", null = True, blank = True)
+  ships_motor_num = models.BigIntegerField("number of motor ships", null = True, blank = True)
+  ships_sail_num = models.BigIntegerField("number of sail ships", null = True, blank = True)
+  ships_steam_num = models.BigIntegerField("number of steam ships", null = True, blank = True)
+  ships_steammotor_num = models.BigIntegerField("number of steam and motor ships", null = True, blank = True)
+
+  ships_all_ton = models.BigIntegerField("tonnage of all ships", null = True, blank = True)
+  ships_motor_ton = models.BigIntegerField("tonnage of motor ships", null = True, blank = True)
+  ships_sail_ton = models.BigIntegerField("tonnage of sail ships", null = True, blank = True)
+  ships_steam_ton = models.BigIntegerField("tonnage of steam ships", null = True, blank = True)
+  ships_steammotor_ton = models.BigIntegerField("tonnage of steam and motor ships", null = True, blank = True)
+
+  # TODO remove below merchant ship fields and integrate them with above ships fields
   merchant_ships_num = models.BigIntegerField("number of merchant ships registered", null = True, blank = True)
   merchant_ships_type = models.ForeignKey(MerchantShipType, blank = True, null = True)
-
   merchant_ships_cargo = models.BigIntegerField(null = True, blank = True)
   merchant_ships_cargo_unit = models.ForeignKey(WeightUnit, blank = True, null = True, related_name = "infrastructure_maindataentry_merchant_ships_cargo_set")
 
   air_cargo = models.DecimalField(max_digits = 20, decimal_places = 2, null = True, blank = True)
   air_cargo_unit = models.ForeignKey(WeightUnit, blank = True, null = True, related_name = "infrastructure_maindataentry_air_cargo_set")
+  air_cargo_ton_km = models.BigIntegerField("air cargo ton-kilometers", null = True, blank = True, help_text = "Cargo ton-kilometers (total km traveled) per year")
 
   air_passenger_km = models.BigIntegerField("air passenger-kilometers", null = True, blank = True, help_text = "Passenger-kilometers (total km traveled) per year") 
 
