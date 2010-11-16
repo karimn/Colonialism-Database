@@ -10,6 +10,8 @@ from django.core.files import File
 from django.contrib.auth.models import User
 import colonialismdb
 
+DEBUG = False
+
 #STRING_ENCODING = 'ISO-8859-1'
 STRING_ENCODING = 'utf-8'
 
