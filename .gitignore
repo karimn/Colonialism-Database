@@ -4,5 +4,6 @@
 local_settings.py
 *~
 *.pdf
+*.log
 log.err
 migrations/
