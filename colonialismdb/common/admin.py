@@ -338,7 +338,7 @@ class TemporalLocationAdmin(LocationAdmin):
   merge_perm = 'common.merge_temploc'
   
 class BaseCategoryAdmin(BaseSubmitAdmin):
-  list_display = ('name', 'active', 'submitted_by', 'datetime_created', 'locked') 
+  list_display = ('name', 'active', 'submitted_by', 'datetime_created', ) 
   readonly_fields = ('locked',)
   
 class BaseMergeableCategoryAdmin(BaseCategoryAdmin, BaseMergeableAdmin):
