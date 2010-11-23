@@ -50,7 +50,22 @@ class MainDataEntryAdmin(BaseMainDataEntryAdmin) :
         {'fields' : ['remarks', ]}),
   ]
 
-  radio_fields = { "railroad_num_passengers_value_unit" : admin.HORIZONTAL, }
+  radio_fields = { 
+                   "railroad_num_passengers_value_unit" : admin.HORIZONTAL,
+                   "railroad_passenger_km_value_unit" : admin.HORIZONTAL,
+                   "railroad_freight_value_unit" : admin.HORIZONTAL,
+                   "railroad_freight_ton_km_value_unit" : admin.HORIZONTAL,
+                   "num_motor_vehicles_value_unit" : admin.HORIZONTAL,
+                   "telegraph_num_sent_value_unit" : admin.HORIZONTAL,
+                   "postal_num_items_value_unit" : admin.HORIZONTAL,
+                   "ships_all_ton_value_unit" : admin.HORIZONTAL,
+                   "ships_motor_ton_value_unit" : admin.HORIZONTAL,
+                   "ships_sail_ton_value_unit" : admin.HORIZONTAL,
+                   "ships_steam_ton_value_unit" : admin.HORIZONTAL,
+                   "ships_steammotor_ton_value_unit" : admin.HORIZONTAL,
+                   "air_cargo_ton_km_value_unit" : admin.HORIZONTAL,
+                   "air_passenger_km_value_unit" : admin.HORIZONTAL,
+                 }
 
   activate_perm = 'infrastructure.activate_maindataentry'
 
