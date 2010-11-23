@@ -20,25 +20,28 @@ class MainDataEntryAdmin(BaseMainDataEntryAdmin) :
 
       ('Railroad',
         {'fields' : ['railroad_revenue', 'railroad_expenditure', 'railroad_length', 'railroad_length_unit', 'railroad_num_passengers', 
-                     'railroad_num_passengers_value_unit', 'railroad_passenger_km', 'railroad_freight', 'railroad_freight_unit',
-                     'railroad_freight_ton_km' ]}),
+                     'railroad_num_passengers_value_unit', 'railroad_passenger_km', 'railroad_passenger_km_value_unit', 'railroad_freight', 
+                     'railroad_freight_value_unit', 'railroad_freight_unit', 'railroad_freight_ton_km', 'railroad_freight_ton_km_value_unit' ]}),
 
       ('Road',
-        {'fields' : ['road_revenue', 'road_expenditure', 'road_length', 'road_length_unit', 'num_motor_vehicles', 'motor_vehicles_type', ]}),
+        {'fields' : ['road_revenue', 'road_expenditure', 'road_length', 'road_length_unit', 'num_motor_vehicles', 'num_motor_vehicles_value_unit', 
+                     'motor_vehicles_type', ]}),
 
-      ('Telephones/Telegraph',
-        {'fields' : ['num_telephones', 'telegraph_length', 'telegraph_length_unit', 'telegraph_num_stations', 'telegraph_num_sent', ]}),
+      ('Telephones/Telegraph/Television',
+        {'fields' : ['num_telephones', 'telegraph_length', 'telegraph_length_unit', 'telegraph_num_stations', 'telegraph_num_sent', 'telegraph_num_sent_value_unit' ]}),
 
       ('Postal',
-        {'fields' : ['postal_revenue', 'postal_expenditure', 'postal_num_stations', 'postal_num_items', 'postal_items_type', 'postal_num_boxes', 'postal_num_staff',  ]}),
+        {'fields' : ['postal_revenue', 'postal_expenditure', 'postal_num_stations', 'postal_num_items', 'postal_num_items_value_unit', 'postal_items_type', 'postal_num_boxes', 'postal_num_staff',  ]}),
 
       ('Ships',
         {'fields' : ['ships_all_num', 'ships_motor_num', 'ships_sail_num', 'ships_steam_num', 'ships_steammotor_num',
-                     'ships_all_ton', 'ships_motor_ton', 'ships_sail_ton', 'ships_steam_ton', 'ships_steammotor_ton',
+                     'ships_all_ton', 'ships_all_ton_value_unit', 'ships_motor_ton', 'ships_motor_ton_value_unit', 
+                     'ships_sail_ton', 'ships_sail_ton_value_unit', 'ships_steam_ton', 'ships_steam_ton_value_unit', 'ships_steammotor_ton',
+                     'ships_steammotor_ton_value_unit',
                      'merchant_ships_num', 'merchant_ships_type', 'merchant_ships_cargo', 'merchant_ships_cargo_unit', ]}),
 
       ('Aviation',
-        {'fields' : ['air_cargo', 'air_cargo_unit', 'air_cargo_ton_km', 'air_passenger_km', ]}),
+        {'fields' : ['air_cargo', 'air_cargo_unit', 'air_cargo_ton_km','air_cargo_ton_km_value_unit', 'air_passenger_km', 'air_passenger_km_value_unit' ]}),
 
       ('Source Information', 
         {'fields' : ['source', 'page_num', 'primary_source_obj', 'primary_source_text']}),
