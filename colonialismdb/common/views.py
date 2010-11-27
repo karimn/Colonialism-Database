@@ -12,13 +12,14 @@ def autocomplete(request, from_applabel, from_model, to_applabel, to_model):
   label_method = request.GET['label_method']
 
   model = models.get_model(to_applabel, to_model)
-  data = [{ 'label' : '[None]', 'pk' : '' }]
-  
+
   if label_method:
     label_method_attr = getattr(model, label_method)
-    data.extend([{ 'label' : label_method_attr(f), 'pk' : f.pk } for f in get_list_or_404(model, **{('%s__istartswith' % search_field) : query})[:25]])
+    data = [{ 'label' : label_method_attr(f), 'pk' : f.pk } for f in get_list_or_404(model, **{('%s__istartswith' % search_field) : query})[:25]]
   else:
-    data.extend([{ 'label' : f.__unicode__(), 'pk' : f.pk } for f in get_list_or_404(model, **{('%s__istartswith' % search_field) : query})[:25]])
+    data = [{ 'label' : f.__unicode__(), 'pk' : f.pk } for f in get_list_or_404(model, **{('%s__istartswith' % search_field) : query})[:25]]
+
+  data.append({ 'label' : '[None]', 'pk' : '' })
 
   return HttpResponse(simplejson.dumps(data), mimetype = 'application/json')
 
