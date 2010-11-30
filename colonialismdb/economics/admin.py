@@ -42,7 +42,7 @@ class BilateralTradeDataEntryAdmin(BaseTradeDataEntryAdmin):
 
       ('Trade',
         {'fields' : ['imports', 'imports_value_unit', 'exports', 'exports_value_unit', 'imports_exchange_rate', 'exports_exchange_rate', 'gfd_exchange_rate', 'exchange_rate_scalar', 'currency',
-                     'imports_weight', 'imports_weight_unit', 'exports_weight', 'exports_weight_unit', 'ppi']}),
+                     'imports_weight', 'imports_weight_unit', 'exports_weight', 'exports_weight_unit']}),
 
       ('Source Information', 
         {'fields' : ['source', 'page_num', 'primary_source_obj', 'primary_source_text']}),
