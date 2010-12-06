@@ -97,13 +97,7 @@ if __name__ == "__main__":
 
     rdict["source"] = src
 
-    def strip_rdict(x):
-      if isinstance(x[1], basestring):
-        return (x[0], x[1].strip())
-      else:
-        return (x[0], x[1])
-
-    rdict = dict(map(strip_rdict, rdict.items())) # Remove blank strings
+    rdict = dict(map(migtools.strip_rdict, rdict.items())) # Remove blank strings
     rdict = dict(filter(lambda x: x[1], rdict.items())) # removing null values
     
     if rdict.has_key("railroad_length"):
