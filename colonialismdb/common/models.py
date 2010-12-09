@@ -295,7 +295,7 @@ class Location(PoliticalUnit):
 
   def clean(self):
     if self.geographically_in:
-      self.full_name = self.name + ", " + unicode(self.geographically_in)
+      self.full_name = unicode(self.name) + u", " + unicode(self.geographically_in)
     else:
       self.full_name = self.name 
 
@@ -470,8 +470,8 @@ class BaseDataEntry(BaseSubmitModel):
   # Location info
   #location = models.ForeignKey(Location, related_name = '%(app_label)s_%(class)s_related')
   location = models.ForeignKey(PoliticalUnit, related_name = '%(app_label)s_%(class)s_related')
-  original_location_name = models.CharField("Original Location Name", max_length = 100, null = True, blank = True)
-  alternate_location_name = models.CharField("Alternate Location Name", max_length = 100, null = True, blank = True)
+  original_location_name = models.CharField("Original Location Name", max_length = 200, null = True, blank = True)
+  alternate_location_name = models.CharField("Alternate Location Name", max_length = 200, null = True, blank = True)
 
   is_total = models.BooleanField("Is Total", default = False)
 
