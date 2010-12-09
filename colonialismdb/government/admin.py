@@ -25,7 +25,7 @@ class MainDataEntryAdmin(BaseMainDataEntryAdmin) :
         {'fields' : ['revenue', 'revenue_type']}),
 
       ('Public Debt',
-        {'fields' : ['public_debt',]}),
+        {'fields' : ['public_debt', 'public_debt_type']}),
 
       ('Money Supply',
         {'fields' : ['money_supply', 'money_supply_type']}),

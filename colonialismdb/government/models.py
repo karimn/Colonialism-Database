@@ -21,6 +21,15 @@ class ExpenditureType(Category):
     super(ExpenditureType, self).merge_into(other)
     self.maindataentry_set.all().update(expenditure_type = other)
 
+class PublicDebtType(Category):
+  class Meta(Category.Meta):
+    permissions = ( ('activate_publicdebttype', 'Can activate submitted public debt type'), 
+                    ('merge_publicdebttype', 'Can merge occupation public debt type') )
+    
+  def merge_into(self, other):
+    super(PublicDebtType, self).merge_into(other)
+    self.maindataentry_set.all().update(public_debt_type = other)
+
 class MoneySupplyType(Category):
   class Meta(Category.Meta):
     permissions = ( ('activate_moneysupplytype', 'Can activate submitted money supply type'), 
@@ -60,7 +69,7 @@ class MainDataEntry(BaseDataEntry):
   spatial_page_num = models.IntegerField("spatial data source page number", null = True, blank = True, default = None)
 
   currency = models.ForeignKey(Currency, null = True, blank = True, related_name = '%(app_label)s_%(class)s_related')
-  currency_exchange_rate = models.CharField(max_length = 50, null = True, blank = True)
+  currency_exchange_rate = models.CharField(max_length = 200, null = True, blank = True)
 
   revenue = models.DecimalField(max_digits = 20, decimal_places = 2, null = True, blank = True)
   revenue_type = models.ForeignKey(RevenueType, null = True, blank = True)
@@ -69,6 +78,7 @@ class MainDataEntry(BaseDataEntry):
   expenditure_type = models.ForeignKey(ExpenditureType, null = True, blank = True)
 
   public_debt = models.DecimalField(max_digits = 20, decimal_places = 2, null = True, blank = True)
+  public_debt_type = models.ForeignKey(PublicDebtType, null = True, blank = True)
 
   money_supply = models.DecimalField(max_digits = 20, decimal_places = 2, null = True, blank = True)
   money_supply_type = models.ForeignKey(MoneySupplyType, null = True, blank = True)
@@ -103,3 +113,6 @@ class MainDataEntry(BaseDataEntry):
 
     if self.officials_type and not self.officials_type.active:
       self.officials_type.activate()
+
+    if self.public_debt_type and not self.public_debt_type.active:
+      self.public_debt_type.activate()
