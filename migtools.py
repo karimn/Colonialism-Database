@@ -8,6 +8,7 @@ from colonialismdb.common.models import Location, Category
 
 from django.core.files import File
 from django.contrib.auth.models import User
+from django.db.models import Q
 import colonialismdb
 
 DEBUG = False
@@ -16,6 +17,9 @@ DEBUG = False
 STRING_ENCODING = 'utf-8'
 
 mig_user = User.objects.get(username = 'datamiguser')
+
+# Match a single comma followed by three digits, with a positive lookbehind for a single digit
+decimal_comma_replacer = re.compile("(?<=\d),(\d{3})")
 
 class UTF8Recoder:
   """
@@ -50,19 +54,17 @@ class LocationTooComplicated(Exception):
   def __str__(self):
     return self.problem
   
-def get_or_add_location(place_name, mig_user, in1 = None, in2 = None, in3 = None):
-  place_name = place_name.title()
+def get_or_add_location(place_name, mig_user = mig_user, in1 = None, in2 = None, in3 = None):
+  return get_or_add_location((place_name, in1, in2, in3), mig_user)
+
+def get_or_add_location(place_list, mig_user = mig_user):
+  place_list = map(lambda x: x.title(), filter(lambda x: x, place_list))
   prev_loc = None
   prev_tree = Location.objects.all()
   location_created = False
 
-  for in_loc_name in (in3, in2, in1):
-    if not in_loc_name:
-      continue
-
-    in_loc_name = in_loc_name.title()
-
-    found_loc = prev_tree.filter(name__exact = in_loc_name)
+  for in_loc_name in reversed(place_list):
+    found_loc = prev_tree.filter(Q(name__exact = in_loc_name), Q(politically_in = None))
     found_loc_count = found_loc.count()
 
     if found_loc_count > 1:
@@ -71,7 +73,7 @@ def get_or_add_location(place_name, mig_user, in1 = None, in2 = None, in3 = None
       if prev_loc:
         immediate_subloc_tree = prev_loc.get_geographic_sub_locations(include_self = False, max_distance = 1)
 
-        immed_found_loc = immediate_subloc_tree.filter(name__exact = in_loc_name)
+        immed_found_loc = immediate_subloc_tree.filter(Q(name__exact = in_loc_name), Q(politically_in = None))
         if immed_found_loc.count() > 0: # Just taking the first match no matter what for now
           loc = immed_found_loc[0] 
 
@@ -91,29 +93,7 @@ def get_or_add_location(place_name, mig_user, in1 = None, in2 = None, in3 = None
     prev_loc = loc
     prev_tree = prev_loc.get_geographic_sub_locations(include_self = False)
 
-  retrying = False
-  places = prev_tree.filter(name__exact = place_name)
-
-  while True:
-    if len(places) == 1:
-      return places[0]
-
-    elif len(places) == 0:
-      new_loc = Location(name = place_name, geographically_in = prev_loc, active = True, submitted_by = mig_user) #, log = default_log)
-      new_loc.save()
-
-      return new_loc
-
-    else:
-      if retrying:
-        raise LocationTooComplicated('Found multiple location matches for requested place')
-
-      if prev_loc:
-        places = prev_tree.filter(name__exact = place_name, geographically_in = prev_loc.pk)
-      else:
-        places = []
-        
-      retrying = True
+  return prev_loc
 
 def get_source_file_path(rdict, i, num_err_rows):
   source_file_path = None 
@@ -138,17 +118,15 @@ def get_source_file_path(rdict, i, num_err_rows):
         #elif subproj_dir == 'datalabel':
         #  source_file_path = 'e:\\colonialism\\project_thebase\\subproject_colonialism\\%s' % relative_path_match.group(1).lower()
         else:
-          sys.stderr.write('Failed to match relative source file path in row (%i)\n' % (i,))
-          sys.stderr.write('%s\n' % rdict)
+          sys.stderr.write('Failed to match relative source file path in row (%i): %s\n' % (i, rdict))
           return None, num_err_rows + 1
       else:
-        sys.stderr.write('Failed to match source file path in row (%i)\n' % (i,))
-        sys.stderr.write('%s\n' % rdict)
+        sys.stderr.write('Failed to match source file path in row (%i): %s\n' % (i,rdict))
         return None, num_err_rows + 1
 
   return source_file_path, num_err_rows
 
-def add_source_files(source_file_path, src_obj, submitted_by):
+def add_source_files(source_file_path, src_obj, submitted_by = mig_user):
   if os.path.isfile(source_file_path):
     source_file = File(open(source_file_path, 'rb'))
     try:
@@ -165,3 +143,15 @@ def add_source_files(source_file_path, src_obj, submitted_by):
     return False
   
   return True
+
+def strip_rdict(x, chars = None):
+  if isinstance(x[1], basestring):
+    return (x[0], x[1].strip(chars))
+  else:
+    return (x[0], x[1])
+
+def replace_decimal_comma(x, exclude_columns = None):
+  if (not isinstance(x[1], basestring)) or (x[0] in exclude_columns):
+    return x
+  else:
+    return (x[0], decimal_comma_replacer.sub(r"\1", x[1]))
