@@ -329,6 +329,13 @@ class Location(PoliticalUnit):
     return Location.objects.filter(pk__in = Location.get_location_ids_geographically_in((self,), include_self, max_distance))
 
   @staticmethod
+  def get_toplevel(politically_toplevel_only = False):
+    if politically_toplevel_only:
+      return Location.objects.filter(geographically_in = None, politically_in = None)
+    else:
+      return Location.objects.filter(geographically_in = None)
+
+  @staticmethod
   def get_location_ids_geographically_in(locations, include_self = True, max_distance = None):
     ids = [str(loc.pk) for loc in locations]
     query = None
