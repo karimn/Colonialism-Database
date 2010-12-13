@@ -20,6 +20,6 @@ if __name__ == "__main__":
 
   for l_name, l_list in loc_dict.iteritems():
     if len(l_list) > 1:
-      print("%s : %i\n" % (l_name, len(l_list)))
+      print("%s : %i" % (l_name, len(l_list)))
 
 
