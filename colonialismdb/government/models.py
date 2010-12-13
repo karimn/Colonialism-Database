@@ -80,9 +80,6 @@ class MainDataEntry(BaseDataEntry):
   public_debt = models.DecimalField(max_digits = 20, decimal_places = 2, null = True, blank = True)
   public_debt_type = models.ForeignKey(PublicDebtType, null = True, blank = True)
 
-  money_supply = models.DecimalField(max_digits = 20, decimal_places = 2, null = True, blank = True)
-  money_supply_type = models.ForeignKey(MoneySupplyType, null = True, blank = True)
-
   military = models.IntegerField("military personnel", null = True, blank = True)
   military_type = models.ForeignKey(MilitaryType, null = True, blank = True)
   military_page_num = models.IntegerField("military data source page number", null = True, blank = True, default = None)
