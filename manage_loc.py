@@ -1,5 +1,7 @@
 #!/usr/bin/python
 
+import sys
+
 from django.db import transaction
 from django.db.models import Q
 from django.contrib.auth.models import User
@@ -10,6 +12,12 @@ from colonialismdb.common.admin import merge
 mig_user = User.objects.get(username = 'karim')
 
 if __name__ == "__main__":
+  if len(sys.argv) > 1:
+    loc_name = sys.argv[1]
+
+    for l in Location.get_toplevel().filter(name__iexact = loc_name):
+      print("%s (politically in %s)" % (l.name, l.politically_in)
+
   loc_dict = dict()
   for l in Location.get_toplevel():
     l_name = l.name.lower()
