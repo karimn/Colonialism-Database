@@ -28,7 +28,7 @@ if __name__ == "__main__":
         put_in_loc = Location.objects.get(pk = sys.argv[3])
       else:
         put_in_loc = Location.get_toplevel().get(name__iexact = sys.argv[3])
-      merge_into.geographicall_in = put_in_loc
+      merge_into.geographically_in = put_in_loc
       merge_into.save()
 
 
