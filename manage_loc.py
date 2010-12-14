@@ -16,7 +16,7 @@ if __name__ == "__main__":
     loc_name = sys.argv[1]
 
     for l in Location.get_toplevel().filter(name__iexact = loc_name):
-      print("%s (politically in %s)" % (l.name, l.politically_in)
+      print("%s (politically in %s)" % (l.name, l.politically_in))
 
   loc_dict = dict()
   for l in Location.get_toplevel():
