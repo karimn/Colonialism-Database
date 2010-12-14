@@ -13,16 +13,14 @@ if __name__ == "__main__":
   if len(sys.argv) > 1:
     loc_name = sys.argv[1]
 
-    if Location.get_toplevel().filter(name__iexact = loc_name).count() > 1:
-      merge_into = Location.get_toplevel().filter(name__iexact = loc_name)[0]
+    merge_into = Location.get_toplevel().filter(name__iexact = loc_name)[0]
 
+    if Location.get_toplevel().filter(name__iexact = loc_name).count() > 1:
       for l in Location.get_toplevel().filter(name__iexact = loc_name)[1:]:
         l.merge_into(merge_into)
         l.save()
-
       for l in Location.get_toplevel().filter(name__iexact = loc_name)[1:]:
         l.delete()
-
       merge_into.save()
 
     if len(sys.argv) > 3:
@@ -30,5 +28,7 @@ if __name__ == "__main__":
         put_in_loc = Location.objects.get(pk = sys.argv[3])
       else:
         put_in_loc = Location.toplevel().get(name__iexact = sys.argv[3])
+      merge_into.geographicall_in = put_in_loc
+      merge_into.save()
 
 
