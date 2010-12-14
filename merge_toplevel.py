@@ -12,16 +12,18 @@ from colonialismdb.common.admin import merge
 if __name__ == "__main__":
   if len(sys.argv) > 1:
     loc_name = sys.argv[1]
-    merge_into = Location.get_toplevel().filter(name__iexact = loc_name)[0]
 
-    for l in Location.get_toplevel().filter(name__iexact = loc_name)[1:]:
-      l.merge_into(merge_into)
-      l.save()
+    if Location.get_toplevel().filter(name__iexact = loc_name).count() > 1:
+      merge_into = Location.get_toplevel().filter(name__iexact = loc_name)[0]
 
-    for l in Location.get_toplevel().filter(name__iexact = loc_name)[1:]:
-      l.delete()
+      for l in Location.get_toplevel().filter(name__iexact = loc_name)[1:]:
+        l.merge_into(merge_into)
+        l.save()
 
-    merge_into.save()
+      for l in Location.get_toplevel().filter(name__iexact = loc_name)[1:]:
+        l.delete()
+
+      merge_into.save()
 
     if len(sys.argv) > 3:
       if sys.argv[2] == "pk":
