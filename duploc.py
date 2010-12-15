@@ -35,7 +35,7 @@ if __name__ == "__main__":
         action = raw_input()
         if action == 's':
           break
-        elif action.isdigit(action) and (int(action) >= 1) and (int(action) <= len(locs)):
+        elif action.isdigit() and (int(action) >= 1) and (int(action) <= len(locs)):
           merge_into = locs[int(action) - 1]
           to_merge = filter(lambda x: x.pk != merge_into.pk, locs)
           for l in to_merge:
