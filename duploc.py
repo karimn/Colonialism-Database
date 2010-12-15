@@ -23,8 +23,12 @@ if __name__ == "__main__":
   print("%i duplicates found\n" % len(loc_dict))
 
   for loc_name, locs in loc_dict.iteritems():
-    print("Unique name: %s (%i duplicates)" % (loc_name, len(locs)))
-    for loc in locs:
-      print("\t* %s (politically in %s)" % (loc, loc.politically_in))
-    #raw_input()
+    try:
+      print("Unique name: %s (%i duplicates)" % (loc_name, len(locs)))
+      for loc in locs:
+        print("\t* %s (politically in %s)" % (loc, loc.politically_in))
+      #raw_input()
+    except UnicodeEncodeError:
+      # Windows decode error workaround
+      print("<UnicodeEncodeError Encountered, ignoring for now>")
 
