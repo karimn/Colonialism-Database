@@ -25,6 +25,6 @@ if __name__ == "__main__":
   for loc_name, locs in loc_dict.iteritems():
     print("Unique name: %s (%i duplicates)" % (loc_name, len(locs)))
     for loc in locs:
-      print("\t* %s (politically in %s)" % (unicode(loc), unicode(loc.politically_in)))
+      print("\t* %s (politically in %s)" % (loc, loc.politically_in))
     #raw_input()
 
