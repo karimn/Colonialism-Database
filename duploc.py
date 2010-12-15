@@ -22,6 +22,8 @@ if __name__ == "__main__":
 
   print("%i duplicates found\n" % len(loc_dict))
 
+  quit = False
+
   for loc_name, locs in loc_dict.iteritems():
     try:
       print("Unique name: %s (%i duplicates)" % (loc_name, len(locs)))
@@ -30,10 +32,13 @@ if __name__ == "__main__":
         print("\t%i) %s (politically in %s) (pk = %i)" % (i+1, loc, loc.politically_in, loc.pk))
         pks.append(loc.pk)
       print("pks: %s\n" % " ".join([unicode(i) for i in pks]))
-      sys.stdout.write("Merge into (enter row number or 's' to skip): ")
+      sys.stdout.write("Merge into (enter row number, 's' to skip, or 'q' to quit): ")
       while True:
         action = raw_input()
         if action == 's':
+          break
+        elif action == 'q':
+          quit = True
           break
         elif action.isdigit() and (int(action) >= 1) and (int(action) <= len(locs)):
           merge_into = locs[int(action) - 1]
@@ -45,6 +50,8 @@ if __name__ == "__main__":
             l.delete()
           merge_into.save()
           break
+      if quit:
+        break
 
     except UnicodeEncodeError:
       # Windows decode error workaround
