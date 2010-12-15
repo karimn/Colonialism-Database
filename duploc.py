@@ -20,9 +20,11 @@ if __name__ == "__main__":
 
   loc_dict = dict(filter(lambda x: len(x[1]) > 1, loc_dict.items()))
 
+  print("%i duplicates found\n" % len(loc_dict))
+
   for loc_name, locs in loc_dict.iteritems():
     print("Unique name: %s (%i duplicates)" % (loc_name, len(locs)))
     for loc in locs:
       print("\t* %s (politically in %s)" % (unicode(loc), unicode(loc.politically_in)))
-    raw_input()
+    #raw_input()
 
