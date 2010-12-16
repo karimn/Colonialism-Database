@@ -45,7 +45,6 @@ if __name__ == "__main__":
           to_merge = filter(lambda x: x.pk != merge_into.pk, locs)
           for l in to_merge:
             l.merge_into(merge_into)
-            l.save()
           for l in to_merge:
             l.delete()
           merge_into.save()
