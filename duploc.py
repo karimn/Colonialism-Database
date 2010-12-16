@@ -29,7 +29,8 @@ if __name__ == "__main__":
       print("Unique name: %s (%i duplicates)" % (loc_name, len(locs)))
       pks = []
       for i, loc in enumerate(locs):
-        print("\t%i) %s (politically in %s) (pk = %i)" % (i+1, loc, loc.politically_in, loc.pk))
+        loc_data =  loc.get_all_data()
+        print("\t%i) %s (politically in %s) (pk = %i) (data entries = %i)" % (i+1, loc, loc.politically_in, loc.pk, len(loc_data)))
         pks.append(loc.pk)
       print("pks: %s\n" % " ".join([unicode(i) for i in pks]))
       sys.stdout.write("Merge into (enter row number, 's' to skip, or 'q' to quit): ")
@@ -41,13 +42,20 @@ if __name__ == "__main__":
           quit = True
           break
         elif action.isdigit() and (int(action) >= 1) and (int(action) <= len(locs)):
+          sys.stdout.write("Merging")
           merge_into = locs[int(action) - 1]
+          sys.stdout.write("all into '%s (pk = %i)'..." % (unicode(merge_into), merge_into.pk))
           to_merge = filter(lambda x: x.pk != merge_into.pk, locs)
           for l in to_merge:
             l.merge_into(merge_into)
           for l in to_merge:
             l.delete()
-          merge_into.save()
+          try:
+            merge_into.save()
+          except Location.DoesNotExist:
+            pass
+
+          sys.stdout.write("...completed (data entries = %i)\n" % len(merge_into.get_all_data()))
           break
       if quit:
         break

@@ -228,6 +228,18 @@ class PoliticalUnit(BaseSubmitModel, MergeableModel):
   def clean(self):
     super(PoliticalUnit, self).clean()
 
+  def get_all_data(self):
+    all_data = []
+
+    all_data.extend(self.population_maindataentry_related.all())
+    all_data.extend(self.government_maindataentry_related.all())
+    all_data.extend(self.education_maindataentry_related.all())
+    all_data.extend(self.infrastructure_maindataentry_related.all())
+    all_data.extend(self.economics_bilateraltradedataentry_related.all())
+    all_data.extend(self.economics_bilateraltradedataentry_trade_partner_related.all())
+    
+    return all_data
+
   def merge_into(self, other):
     super(PoliticalUnit, self).merge_into(other)
 
@@ -278,8 +290,12 @@ class Location(PoliticalUnit):
                     ('convert2polunit', 'Can convert to political unit'), )
 
   def save(self, *args, **kwargs):
-    self.clean()
-    super(Location, self).save(*args, **kwargs)
+    try:
+      self.clean()
+    finally:
+      # Sometimes the old geographically_in location no longer exists.  No matter, I still want the
+      # base save() to be called
+      super(Location, self).save(*args, **kwargs)
 
     for loc in self.geographically_contains.all():
       loc.clean()
@@ -372,6 +388,9 @@ class Location(PoliticalUnit):
 
   def get_politically_in(self):
     return self.politically_in
+
+  def get_all_data(self):
+    return super(Location, self).get_all_data()
 
   def merge_into(self, other):
     super(Location, self).merge_into(other)
