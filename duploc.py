@@ -29,8 +29,8 @@ if __name__ == "__main__":
       print("Unique name: %s (%i duplicates)" % (loc_name, len(locs)))
       pks = []
       for i, loc in enumerate(locs):
-        loc_data =  loc.get_all_data()
-        print("\t%i) %s (politically in %s) (pk = %i) (data entries = %i)" % (i+1, loc, loc.politically_in, loc.pk, len(loc_data)))
+        loc_data = [] #loc.get_all_data()
+        print("\t%i) %s (politically in %s) (pk = %i)" % (i+1, loc, loc.politically_in, loc.pk))
         pks.append(loc.pk)
       print("pks: %s\n" % " ".join([unicode(i) for i in pks]))
       sys.stdout.write("Merge into (enter row number, 's' to skip, or 'q' to quit): ")
@@ -55,7 +55,7 @@ if __name__ == "__main__":
           except Location.DoesNotExist:
             pass
 
-          sys.stdout.write("...completed (data entries = %i)\n" % len(merge_into.get_all_data()))
+          sys.stdout.write("...completed\n") #len(merge_into.get_all_data()))
           break
       if quit:
         break
