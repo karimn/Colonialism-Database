@@ -41,7 +41,8 @@ if __name__ == "__main__":
         print("Unique name: %s (%i duplicates)" % (loc_name, len(locs)))
         for i, loc_pk in enumerate(locs):
           loc = Location.objects.get(pk = loc_pk)
-          loc_data = [] #loc.get_all_data()
+          #loc_data = loc.get_all_data()
+          #print("\t%i) %s (politically in %s) (pk = %i) (data entries = %i)" % (i+1, loc, loc.politically_in, loc.pk, len(loc_data)))
           print("\t%i) %s (politically in %s) (pk = %i)" % (i+1, loc, loc.politically_in, loc.pk))
         print("pks: %s\n" % " ".join([unicode(i) for i in locs]))
         while True:
@@ -56,7 +57,7 @@ if __name__ == "__main__":
           elif action.isdigit() and (int(action) >= 1) and (int(action) <= len(locs)):
             sys.stdout.write("Merging ")
             merge_into = Location.objects.get(pk = locs[int(action) - 1])
-            sys.stdout.write("all into '%s (pk = %i)'..." % (unicode(merge_into), merge_into.pk))
+            sys.stdout.write("all into '%s' (pk = %i)..." % (unicode(merge_into), merge_into.pk))
             to_merge_pks = filter(lambda x: x != merge_into.pk, locs)
             to_merge = map(lambda x: Location.objects.get(pk = x), to_merge_pks)
             for l in to_merge:
@@ -70,7 +71,9 @@ if __name__ == "__main__":
               merge_into.save()
             except Location.DoesNotExist:
               sys.stdout.write("\n*** Location not found exception raised on saving location to merge to--ignoring\n")
-            sys.stdout.write("...done\n\n") #len(merge_into.get_all_data()))
+            #merge_into_data = merge_into.get_all_data()
+            #sys.stdout.write("...done (data entries %i)\n\n" % len(merge_into_data)) #len(merge_into.get_all_data()))
+            sys.stdout.write("...done\n\n") 
             break
         if quit:
           break
