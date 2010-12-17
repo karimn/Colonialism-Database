@@ -341,6 +341,14 @@ class Location(PoliticalUnit):
     return Location.objects.filter(in_location = self.pk).count() == 0
 
   """
+  def is_geo_ancestor_of(self, other):
+    next_ancestor = other.geographically_in
+    while next_ancestor:
+      if next_ancestor.pk == self.pk:
+        return True
+      next_ancestor = next_ancestor.geographically_in
+    return False
+
   def get_geographic_sub_locations(self, include_self = True, max_distance = None):
     return Location.objects.filter(pk__in = Location.get_location_ids_geographically_in((self,), include_self, max_distance))
 
