@@ -14,8 +14,8 @@ from colonialismdb.common.models import PoliticalUnit, Location
 
 if __name__ == "__main__":
   parser = argparse.ArgumentParser()
-  parser.add_argument("--noskip", action = 'store_true')
-  parser.add_argument("--src", action = 'store_true')
+  parser.add_argument("--noskip", action = 'store_true', help = "do not use the skip file")
+  parser.add_argument("--src", action = 'store_true', help = "display data entry source info for locations")
   args = parser.parse_args()
 
   loc_dict = dict()
