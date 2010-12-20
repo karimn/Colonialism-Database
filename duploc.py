@@ -2,6 +2,9 @@
 
 import sys
 import pickle
+import argparse
+
+import databyloc
 
 from django.db import transaction
 from django.db.models import Q
@@ -10,6 +13,11 @@ from django.contrib.auth.models import User
 from colonialismdb.common.models import PoliticalUnit, Location
 
 if __name__ == "__main__":
+  parser = argparse.ArgumentParser()
+  parser.add_argument("--noskip", action = 'store_true')
+  parser.add_argument("--src", action = 'store_true')
+  args = parser.parse_args()
+
   loc_dict = dict()
   
   for loc in Location.objects.all():
@@ -26,12 +34,13 @@ if __name__ == "__main__":
   quit = False
   skipped = set()
 
-  try:
-    skipped_file = open("duploc.skip", "r")
-    skipped = pickle.load(skipped_file)
-    skipped_file.close()
-  except IOError:
-    pass
+  if not args.noskip:
+    try:
+      skipped_file = open("duploc.skip", "r")
+      skipped = pickle.load(skipped_file)
+      skipped_file.close()
+    except IOError:
+      pass
 
   try:
     for loc_name, locs in loc_dict.iteritems():
@@ -44,6 +53,8 @@ if __name__ == "__main__":
           #loc_data = loc.get_all_data()
           #print("\t%i) %s (politically in %s) (pk = %i) (data entries = %i)" % (i+1, loc, loc.politically_in, loc.pk, len(loc_data)))
           print("\t%i) %s (politically in %s) (pk = %i)" % (i+1, loc, loc.politically_in, loc.pk))
+          if args.src:
+            databyloc.print_data_sources((loc.pk,), False, 1)
         print("pks: %s\n" % " ".join([unicode(i) for i in locs]))
         while True:
           sys.stdout.write("Merge into (enter row number, 's' to skip, or 'q' to quit): ")
@@ -81,7 +92,8 @@ if __name__ == "__main__":
         # Windows decode error workaround
         print("<UnicodeEncodeError Encountered, ignoring for now>")
   finally:
-    skipped_file = open("duploc.skip", "w")
-    pickle.dump(skipped, skipped_file)
-    skipped_file.close()
+    if not args.noskip:
+      skipped_file = open("duploc.skip", "w")
+      pickle.dump(skipped, skipped_file)
+      skipped_file.close()
 
