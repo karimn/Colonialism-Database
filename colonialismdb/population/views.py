@@ -1,89 +1,66 @@
-from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render_to_response
-from django.views.generic import list_detail
+from population.models import *
 from django.db.models import Q
+from django.contrib import auth
+from django.http import *
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 
-import csv
+def	popsearch(request):
+	startdate = request.GET.get('startdate','')
+	enddate = request.GET.get('enddate','')
+	page = request.GET.get('page','')
+	search = request.GET.get('search','')
+	location = request.GET.get('location','')
+	locations2 = []
 
-import forms, models
-
-from colonialismdb.common.utils import UnicodeWriter
-
-def index(request):
-  #return HttpResponseRedirect('query/')
-
-  form = forms.MainPopulationQueryForm()
-  return render_to_response('population/index.html', { 'form' : form, })
-
-def query(request):
-  #import pdb; pdb.set_trace()
-
-  if 'new_query' in request.GET:
-    form = forms.MainPopulationQueryForm(request.GET)
-
-    if form.is_valid():
-      query = models.MainDataEntry.objects.filter(active = True)
-
-      locations = form.cleaned_data['location']
-      
-      if len(locations) != 0:
-        location_ids = models.Location.get_location_ids_in(locations)
-        query = query.filter(location__in = location_ids)
-
-      if form.cleaned_data['begin_date']:
-        query = query.filter(begin_date__gte=form.cleaned_data['begin_date'])
-
-      if form.cleaned_data['end_date']:
-        query = query.filter(end_date__lte=form.cleaned_data['end_date'])
-
-      count_types = form.cleaned_data['count_type']
-
-      if (len(count_types) > 1) or ((len(count_types) == 1) and count_types[0] != 'all'):
-        if 'individ' in count_types:
-          query = query.filter(individuals_population_value__isnull = False)
-
-        if 'fam' in count_types:
-          query = query.filter(families_population_value__isnull = False)
-
-        if 'males' in count_types:
-          query = query.filter(male_population_value__isnull = False)
-
-        if 'females' in count_types:
-          query = query.filter(female_population_value__isnull = False)
-
-      request.session['query'] = query
-
-      page = request.GET.get('page', '1')
-     
-      return list_detail.object_list(
-          request,
-          queryset = query,
-          template_name = 'population/query_results.html',
-          template_object_name = 'data_entry',
-          paginate_by = 50,
-          page = page)
-  else:
-    page = request.GET.get('page', '1')
-
-    #TODO Allow multiple queries per session
-    return list_detail.object_list(
-        request,
-        queryset = request.session['query'], 
-        template_name = 'population/query_results.html',
-        template_object_name = 'data_entry',
-        paginate_by = 50,
-        page = page)
+	for x in MainDataEntry.objects.select_related():
+		if not x.location.location.name in locations2:
+			locations2.append(str(x.location.location.name))
+	
+	locations = str(locations2)
 
 
-def download_data(request):
-  response = HttpResponse(mimetype='text/csv')
-  response['Content-Disposition'] = 'attachment; filename=population_data.csv'
+	if search == "Search date values":
+	#	if not startdate or startdate == "":
+	#		startdate = "1870-01-01"
+	#	if not enddate or enddate == "":
+	#		enddate = "2006-12-31"
+		if startdate and enddate:
+			qset = (Q(begin_date__range=(startdate,enddate)) | Q(end_date__range=(startdate,enddate)))
+			disp = MainDataEntry.objects.filter(qset).select_related().order_by('id')
+			paginator = Paginator(disp,1)
+			try:
+				page = int(request.GET.get('page',1))
+			except ValueError:
+				page = 1
+			try:
+				disp = paginator.page(page)
+			except (EmptyPage, InvalidPage):
+				disp = paginator.page(paginator.num_pages)
+	else:
+		disp = []
+	"""
+	if search == "Search location values":
+		if location:
+			qset = (Q(begin_date__range=(startdate,enddate)) | Q(end_date__range=(startdate,enddate)))
+			disp = AggregateTradeDataEntry.objects.filter(qset).values().order_by('id')
+			paginator = Paginator(disp,1)
+			try:
+				page = int(request.GET.get('page',1))
+			except ValueError:
+				page = 1
+			try:
+				disp = paginator.page(page)
+			except (EmptyPage, InvalidPage):
+				disp = paginator.page(paginator.num_pages)
+	else:
+		disp = []
+	"""
 
-  writer = UnicodeWriter(response, delimiter = "\t")
+	"""Source search
+	for x in AggregateTradeDataEntry.objects.select_related():
+		l.append(str(x.source.source.source.source))
+	"""
 
-  for data_entry in request.session['query'].values_list():
-    writer.writerow(data_entry)
 
-  return response
-
+	return render_to_response("population.html",{"results":disp,"sdate":startdate,"edate":enddate,"query":enddate,"location":location, "search":search, "locations":locations})
