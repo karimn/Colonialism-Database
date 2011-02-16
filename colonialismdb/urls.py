@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 
 from common.models import Location, Religion, Ethnicity, Race, EthnicOrigin
 from population.models import MainDataEntry
+from common.models import *
 
 databrowse.site.register(Location)
 databrowse.site.register(Religion)
@@ -22,9 +23,14 @@ urlpatterns = patterns('',
 
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
     # to INSTALLED_APPS to enable admin documentation:
-    # (r'^admin/doc/', include('django.contrib.admindocs.urls')),
+    (r'^admin/doc/', include('django.contrib.admindocs.urls')),
+    (r'^$','common.views.index'),
+    (r'^economics$','economics.views.econsearch'),
+    (r'^education$','education.views.edusearch'),
+    (r'^government$','government.views.govtsearch'),
+    (r'^population$','population.views.popsearch'),    
 
-    (r'^population/', include('colonialismdb.population.urls')),
+    #(r'^population/', include('colonialismdb.population.urls')),
 
     (r'^admin/merge_selected/', 'colonialismdb.common.admin.merge_selected'),
     (r'^admin/(?P<from_applabel>[^/]+)/(?P<from_model>[^/]+)/((add)|(\d+))/autocomplete/(?P<to_applabel>[^/]+)/(?P<to_model>[^/]+)/$', 'colonialismdb.common.views.autocomplete'),
@@ -32,7 +38,7 @@ urlpatterns = patterns('',
     (r'^admin/doc/', include('django.contrib.admindocs.urls')),
     (r'^admin/', include(admin.site.urls)),
 
-    #(r'^static/sources/(?P<path>.+)\.(?P<ext>.+)', 'colonialismdb.sources.views.open_src_file'),
+    (r'^static/sources/(?P<path>.+)\.(?P<ext>.+)', 'colonialismdb.sources.views.open_src_file'),
 
     (r'^accounts/login/$', 'django.contrib.auth.views.login'),
     (r'^databrowse/(.*)', login_required(databrowse.site.root)),
