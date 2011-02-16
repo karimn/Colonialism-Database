@@ -2,9 +2,12 @@ from django.http import HttpResponse, HttpResponseRedirect, Http404, HttpRespons
 from django.db import models
 from django.utils import simplejson
 from django.shortcuts import get_object_or_404, get_list_or_404
+from django.shortcuts import render_to_response
 
 import types
 
+def index(request):
+  return render_to_response("mainindex.html")
 
 def autocomplete(request, from_applabel, from_model, to_applabel, to_model):
   query = request.GET['term']
