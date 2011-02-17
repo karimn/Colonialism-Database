@@ -7,9 +7,28 @@ from django.db.models import Q
 from django.contrib import auth
 from django.http import *
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
-from django.utils import simplejson
 
-import json
+def test(request):
+	locations2 = []
+	for x in AggregateTradeDataEntry.objects.select_related():
+		if not x.location.location.name in locations2:
+			locations2.append(str(x.location.location.name))
+	
+	locations = str(locations2)
+	lsearch = request.GET.get('lsearch')
+	res = []
+	if lsearch:
+		linput = request.GET.get('slocations')
+		l1 = linput.split(", ")
+		qs = ""	
+		res = []
+		for x in l1:
+			res += MainDataEntry.objects.filter(Q(location__name="%s" % x)).select_related()
+	else:
+		linput = ""
+		res = []
+	
+	return render_to_response("test.html",{"slocations":request.GET.get('slocations'),"results":res,"locations":locations})
 
 
 def	econsearch(request):
@@ -19,6 +38,7 @@ def	econsearch(request):
 	search = request.GET.get('search','')
 	location = request.GET.get('location','')
 	locations2 = []
+	ldisp = []
 
 	for x in AggregateTradeDataEntry.objects.select_related():
 		if not x.location.location.name in locations2:
@@ -46,23 +66,26 @@ def	econsearch(request):
 				disp = paginator.page(paginator.num_pages)
 	else:
 		disp = []
-	"""
-	if search == "Search location values":
-		if location:
-			qset = (Q(begin_date__range=(startdate,enddate)) | Q(end_date__range=(startdate,enddate)))
-			disp = AggregateTradeDataEntry.objects.filter(qset).values().order_by('id')
+	
+	lsearch = request.GET.get('lsearch','')
+	if lsearch == "Search locations":
+		linput = request.GET.get('locations')
+		l1 = linput.split(", ")
+		qs = ""	
+		res = []
+		for x in l1:
+			res = res + AggregateTradeDataEntry.objects.filter(Q(location__name="%s" % x)).select_related()
 			paginator = Paginator(disp,1)
 			try:
 				page = int(request.GET.get('page',1))
 			except ValueError:
 				page = 1
 			try:
-				disp = paginator.page(page)
+				res = paginator.page(page)
 			except (EmptyPage, InvalidPage):
-				disp = paginator.page(paginator.num_pages)
+				res = paginator.page(paginator.num_pages)
 	else:
-		disp = []
-	"""
+		res = []
 
 	"""Source search
 	for x in AggregateTradeDataEntry.objects.select_related():
@@ -70,4 +93,6 @@ def	econsearch(request):
 	"""
 
 
-	return render_to_response("economics.html",{"results":disp,"sdate":startdate,"edate":enddate,"query":enddate,"location":location, "search":search, "locations":locations})
+	return render_to_response("economics.html",{"results":disp,"sdate":startdate,"edate":enddate,"query":enddate, "search":search, "locations":locations, "lresults":res})
+	
+#return render_to_response("test.html",{"locations":linput,"res":res})
