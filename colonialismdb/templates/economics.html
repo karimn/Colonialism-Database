@@ -547,13 +547,19 @@ tr>input:hover {
 						});
 				});
 			</script>
-			Location:  <input type="text" id="location" name="location" value="{{ location|escape }}" /><br />
-			<input type="submit" name="search" value="Search location values" />
+			Location:  <input type="text" id="location" name="locations" /><br />
+			<input type="submit" name="lsearch" value="Search locations" />
+		</form>
+		
+		<form action='economics' method="GET">
+			<br /><br /><br />
+			Source :  <input type="text" id="source" name="source" /><br /> <!-- Should this be made into a dropdown ? Will increase page load time ! -->
+			<input type="submit" name="ssearch" value="Search source" />
 		</form>
 
 	</div>
 	{% if query %}
-		<div id="results">
+		<div id="results">	
 			{% if results %}
 				<table>
 					<tr><td>ID</td><td>Active</td><td>Submitted By</td><td>Created</td><td>Page No</td><td>Source ID</td><td>Begin Date</td><td>End Date</td><td>Circa</td><td>Location</td><td>Original Location Name</td><td>Alternate Location Name</td><td>Is Total ?</td><td>Value Units</td><td>Remarks</td><td>Imports</td><td>Exports</td><td>Imports Value Units</td><td>Exports Value Units</td><td>Currency</td><td>Primary Source Text</td><td>Primary Source Object</td></tr>
@@ -572,6 +578,31 @@ tr>input:hover {
 		</span>
 			{% if results.has_next %}
 		    		<a href="?startdate={{ sdate }}&enddate={{ edate }}&page={{ results.next_page_number }}&search={{ search }}"><span class="pagination-text-left">next</span></a>
+			{% endif %}
+		</span>
+	</div>			
+	</div>
+	{% endif %}
+	
+	
+	
+	{% if lresults %}
+		<table>
+			<tr><td>ID</td><td>Active</td><td>Submitted By</td><td>Created</td><td>Page No</td><td>Source ID</td><td>Begin Date</td><td>End Date</td><td>Circa</td><td>Location</td><td>Original Location Name</td><td>Alternate Location Name</td><td>Is Total ?</td><td>Value Units</td><td>Remarks</td><td>Imports</td><td>Exports</td><td>Imports Value Units</td><td>Exports Value Units</td><td>Currency</td><td>Primary Source Text</td><td>Primary Source Object</td></tr>
+		{% for data in lresults.object_list %}
+			<tr><td>{{ data.id }}</td><td>{{ data.active }}</td><td>{{ data.submitted_by }}</td><td>{{ data.datetime_created }}</td><td>{{ data.page_num }}</td><td>{{ data.source }}</td><td>{{ data.begin_date }}</td><td>{{ data.end_date }}</td><td>{{ data.circa }}</td><td>{{ data.location_id }}</td><td>{{ data.original_location_name }}</td><td>{{ data.alternate_location_name }}</td><td>{{ data.is_total }}</td><td>{{ data.value_unit }}</td><td>{{ data.remarks }}</td><td>{{ data.imports }}</td><td>{{ data.exports }}</td><td>{{ data.imports_value_unit }}</td><td>{{ data.exports_value_unit }}</td><td>{{ data.currency }}</td><td>{{ data.primary_source_text }}</td><td>{{ data.primary_source_obj_id }}</td></tr>
+			{% endfor %}
+		</table><br />
+	<div class="pagination">
+		<span class="step-links">
+			{% if lresults.has_previous %}
+			    <a href="?startdate={{ sdate }}&enddate={{ edate }}&page={{ lresults.previous_page_number }}&search={{ search }}"><span class="pagination-text-right">previous</span></a>
+			{% endif %}
+		<span class="current">
+		    	Page {{ lresults.number }} of {{ lresults.paginator.num_pages }}.
+		</span>
+			{% if lresults.has_next %}
+		    		<a href="?startdate={{ sdate }}&enddate={{ edate }}&page={{ lresults.next_page_number }}&search={{ search }}"><span class="pagination-text-left">next</span></a>
 			{% endif %}
 		</span>
 	</div>			

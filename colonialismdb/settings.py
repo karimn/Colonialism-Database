@@ -79,6 +79,6 @@ INSTALLED_APPS = (
     'colonialismdb.economics',
     'colonialismdb.sources',
     'colonialismdb.common',
-
+    
     'south',
 )
