@@ -1,7 +1,7 @@
 <!doctype html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-	<title>Peanut Search >> Population Data >> Search</title>
+	<title>Peanut Search >> Economics Data >> Search</title>
 	<meta http-equiv="content-type" content="text/html;charset=utf-8" />
 	<link rel="stylesheet" media="screen" type="text/css" href="media/peanut.css" />
 	<link rel="stylesheet" media="screen" type="text/css" href="/jquery-ui-1.8.9.custom.css" />
@@ -528,10 +528,10 @@ tr>input:hover {
 	</script>
 	<div id="links"><span id="tag">Search: </span>| <a href="../government">Government Data</a> | <a href="../education">Education Data</a> | <a href="../population">Population Data</a> | <a href="../economics">Economics Data</a> ||<a href="../logoutuser">Logout</a> ||</div>
 	<div id="form" align="center">
-		<form action='population' method="GET">
+		<form action='necon' method="GET">
 			<div>
-			Start date:  <input type="text" id="startdate" name="startdate" value="{{ startdate|escape }}" />
-			End date:  <input type="text" id="enddate" name="enddate" value="{{ enddate|escape }}" />
+			Start date:  <input type="text" id="startdate" name="startdate" value="{{ sdate|escape }}" />
+			End date:  <input type="text" id="enddate" name="enddate" value="{{ edate|escape }}" />
 			<input type="submit" name="datesearch" value="Search dates" /><br /><br /><br />
 			</div>
 			<script type="text/javascript">
@@ -550,16 +550,12 @@ tr>input:hover {
 			<br /><br /><br />
 			Source:  <input type="text" id="sourceinput" name="sourceinput" value = "{{ sourceinput|escape }}" /><br />
 			<input type="submit" name="sourcesearch" value="Search sources" />
-			Age/Gender filter:
-			<input type="checkbox" name="vehicle" value="Bike" /> Male<br />
-			<input type="checkbox" name="vehicle" value="Bike" /> Female<br />
-			
 		</form>
 		<div id="results">
 			{% if locresults %}
 				<table>
 					<tr><td>ID</td><td>Active</td><td>Submitted By ID</td><td>Created</td><td>Page No</td><td>Source ID</td><td>Begin Date</td><td>End Date</td><td>Circa</td><td>Location ID</td><td>Original Location Name</td><td>Alternate Location Name</td><td>Is Total ?</td><td>Value Units</td><td>Remarks</td><td>Religion ID</td><td>Race ID</td><td>Ethicity ID</td><td>Ethic origin ID</td><td>Age Start</td><td>Age End</td><td>Individual Family</td><td>Population Gender</td><td>Population Value</td><td>Value Precision</td><td>Population Condition ID</td><td>Occupation ID</td><td>Old Source ID</td><td>Primary Source Text</td><td>Primary Source Object ID</td></tr>
-				{% for data in results.object_list %}
+				{% for data in locresults.object_list %}
 					<tr><td>{{ data.id }}</td><td>{{ data.active }}</td><td>{{ data.submitted_by }}</td><td>{{ data.datetime_created }}</td><td>{{ data.page_num }}</td><td>{{ data.source }}</td><td>{{ data.begin_date }}</td><td>{{ data.end_date }}</td><td>{{ data.circa }}</td><td>{{ data.location }}</td><td>{{ data.original_location_name }}</td><td>{{ data.alternate_location_name }}</td><td>{{ data.is_total }}</td><td>{{ data.value_unit }}</td><td>{{ data.remarks }}</td><td>{{ data.religion }}</td><td>{{ data.race }}</td><td>{{ data.ethnicity }}</td><td>{{ data.ethnic_origin }}</td><td>{{ data.age_start }}</td><td>{{ data.age_end }}</td><td>{{ data.individ_fam }}</td><td>{{ data.population_gender }}</td><td>{{ data.population_value }}</td><td>{{ data.value_precision }}</td><td>{{ data.population_condition }}</td><td>{{ data.occupation }}</td><td>{{ data.old_source }}</td><td>{{ data.primary_source_text }}</td><td>{{ data.primary_source_obj }}</td></tr>
 				{% endfor %}
 				</table>
@@ -580,7 +576,7 @@ tr>input:hover {
 			{% if dateresults %}
 				<table>
 					<tr><td>ID</td><td>Active</td><td>Submitted By ID</td><td>Created</td><td>Page No</td><td>Source ID</td><td>Begin Date</td><td>End Date</td><td>Circa</td><td>Location ID</td><td>Original Location Name</td><td>Alternate Location Name</td><td>Is Total ?</td><td>Value Units</td><td>Remarks</td><td>Religion ID</td><td>Race ID</td><td>Ethicity ID</td><td>Ethic origin ID</td><td>Age Start</td><td>Age End</td><td>Individual Family</td><td>Population Gender</td><td>Population Value</td><td>Value Precision</td><td>Population Condition ID</td><td>Occupation ID</td><td>Old Source ID</td><td>Primary Source Text</td><td>Primary Source Object ID</td></tr>
-				{% for data in results.object_list %}
+				{% for data in dateresults.object_list %}
 					<tr><td>{{ data.id }}</td><td>{{ data.active }}</td><td>{{ data.submitted_by }}</td><td>{{ data.datetime_created }}</td><td>{{ data.page_num }}</td><td>{{ data.source }}</td><td>{{ data.begin_date }}</td><td>{{ data.end_date }}</td><td>{{ data.circa }}</td><td>{{ data.location }}</td><td>{{ data.original_location_name }}</td><td>{{ data.alternate_location_name }}</td><td>{{ data.is_total }}</td><td>{{ data.value_unit }}</td><td>{{ data.remarks }}</td><td>{{ data.religion }}</td><td>{{ data.race }}</td><td>{{ data.ethnicity }}</td><td>{{ data.ethnic_origin }}</td><td>{{ data.age_start }}</td><td>{{ data.age_end }}</td><td>{{ data.individ_fam }}</td><td>{{ data.population_gender }}</td><td>{{ data.population_value }}</td><td>{{ data.value_precision }}</td><td>{{ data.population_condition }}</td><td>{{ data.occupation }}</td><td>{{ data.old_source }}</td><td>{{ data.primary_source_text }}</td><td>{{ data.primary_source_obj }}</td></tr>
 				{% endfor %}
 				</table>
@@ -601,7 +597,7 @@ tr>input:hover {
 			{% if sourceresults %}
 				<table>
 					<tr><td>ID</td><td>Active</td><td>Submitted By ID</td><td>Created</td><td>Page No</td><td>Source ID</td><td>Begin Date</td><td>End Date</td><td>Circa</td><td>Location ID</td><td>Original Location Name</td><td>Alternate Location Name</td><td>Is Total ?</td><td>Value Units</td><td>Remarks</td><td>Religion ID</td><td>Race ID</td><td>Ethicity ID</td><td>Ethic origin ID</td><td>Age Start</td><td>Age End</td><td>Individual Family</td><td>Population Gender</td><td>Population Value</td><td>Value Precision</td><td>Population Condition ID</td><td>Occupation ID</td><td>Old Source ID</td><td>Primary Source Text</td><td>Primary Source Object ID</td></tr>
-				{% for data in results.object_list %}
+				{% for data in sourceresults.object_list %}
 					<tr><td>{{ data.id }}</td><td>{{ data.active }}</td><td>{{ data.submitted_by }}</td><td>{{ data.datetime_created }}</td><td>{{ data.page_num }}</td><td>{{ data.source }}</td><td>{{ data.begin_date }}</td><td>{{ data.end_date }}</td><td>{{ data.circa }}</td><td>{{ data.location }}</td><td>{{ data.original_location_name }}</td><td>{{ data.alternate_location_name }}</td><td>{{ data.is_total }}</td><td>{{ data.value_unit }}</td><td>{{ data.remarks }}</td><td>{{ data.religion }}</td><td>{{ data.race }}</td><td>{{ data.ethnicity }}</td><td>{{ data.ethnic_origin }}</td><td>{{ data.age_start }}</td><td>{{ data.age_end }}</td><td>{{ data.individ_fam }}</td><td>{{ data.population_gender }}</td><td>{{ data.population_value }}</td><td>{{ data.value_precision }}</td><td>{{ data.population_condition }}</td><td>{{ data.occupation }}</td><td>{{ data.old_source }}</td><td>{{ data.primary_source_text }}</td><td>{{ data.primary_source_obj }}</td></tr>
 				{% endfor %}
 				</table>

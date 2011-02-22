@@ -7,44 +7,68 @@ from django.core.paginator import Paginator, InvalidPage, EmptyPage
 
 
 def	govtsearch(request):
-	startdate = request.GET.get('startdate','')
-	enddate = request.GET.get('enddate','')
-	page = request.GET.get('page','')
-	search = request.GET.get('search','')
-	location = request.GET.get('location','')
-	#locations = MainDataEntry.objects.select_related().get().values()
-	if search and search == "Search date values":
-	#	if not startdate or startdate == "":
-	#		startdate = "1870-01-01"
-	#	if not enddate or enddate == "":
-	#		enddate = "2006-12-31"
-		if startdate and enddate:
-			qset = (Q(begin_date__range=(startdate,enddate)) | Q(end_date__range=(startdate,enddate)))
-			disp = MainDataEntry.objects.select_related().filter(qset).order_by('id')
-			paginator = Paginator(disp,1)
-			try:
-				page = int(request.GET.get('page',1))
-			except ValueError:
-				page = 1
-			try:
-				disp = paginator.page(page)
-			except (EmptyPage, InvalidPage):
-				disp = paginator.page(paginator.num_pages)
+	locations_list = []
+	for x in MainDataEntry.objects.select_related():
+		if not x.location.location.name in locations_list:
+			locations_list.append(str(x.location.location.name))
+	if request.GET.get('datesearch'):
+		datesearch = request.GET.get('datesearch')
+		startdate = request.GET.get('startdate')
+		enddate = request.GET.get('enddate')
+		qset = (Q(begin_date__range=(startdate,enddate)) | Q(end_date__range=(startdate,enddate)))
+		dateresults = MainDataEntry.objects.filter(qset).select_related().order_by('id')
+		paginator = Paginator(dateresults,1)
+		try:
+			page = int(request.GET.get('page',1))
+		except ValueError:
+			page = 1
+		try:
+			dateresults = paginator.page(page)
+		except (EmptyPage, InvalidPage):
+			dateresults = paginator.page(paginator.num_pages)
 	else:
-		disp = []
-#	if search == "Search location values":
-#		if location:
-			#qset = (Q(begin_date__range=(startdate,enddate)) | Q(end_date__range=(startdate,enddate)))
-			#disp = MainDataEntry.objects.select_related().filter(qset).values().order_by('id')
-#			paginator = Paginator(disp,1)
-#			try:
-#				page = int(request.GET.get('page',1))
-#			except ValueError:
-#				page = 1
-#			try:
-#				disp = paginator.page(page)
-#			except (EmptyPage, InvalidPage):
-#				disp = paginator.page(paginator.num_pages)
-#	else:
-#		disp = []
-	return render_to_response("government.html",{"results":disp,"sdate":startdate,"edate":enddate,"query":enddate,"location":location, "search":search,"locations":location})
+		datesearch = ""
+		startdate = ""
+		enddate = ""
+		dateresults = []
+	if request.GET.get('locationsearch'):
+		locationsearch = request.GET.get('locationsearch')
+		searchlocations = request.GET.get("locations")
+		if searchlocations:
+			loclist = searchlocations.split(", ")
+			qs = ""
+			locresults = []
+			for x in loclist:
+				locresults += MainDataEntry.objects.filter(Q(location__name="%s" % x)).select_related().order_by('id')
+			paginator = Paginator(locresults,1)
+			try:
+				page = request.GET.get('page','1')
+			except ValueError:
+				page = '1'
+			try:
+				locresults = paginator.page(page)
+			except (EmptyPage, InvalidPage):
+				locresults = paginator.page(paginator.num_pages)
+	else:
+		searchlocations = ""
+		locationsearch = ""
+		locresults = []
+	if request.GET.get('sourcesearch'):
+		sourcesearch = request.GET.get('sourcesearch')
+		sourceinput = request.GET.get('sourceinput')
+		sourceresults = MainDataEntry.objects.select_related().filter(Q(source__name__icontains=sourceinput)).order_by('id')
+		paginator = Paginator(sourceresults,1)
+		try:
+			page = request.GET.get('page','1')
+		except ValueError:
+			page = '1'
+		try:
+			sourceresults = paginator.page(page)
+		except (EmptyPage, InvalidPage):
+			sourceresults = paginator.page(paginator.num_pages)
+	else:
+		sourcesearch = ""
+		sourceinput = ""
+		sourceresults = []
+		
+	return render_to_response("government.html",{"locations_list":locations_list,"searchlocations":searchlocations,"locresults":locresults,"locationsearch":locationsearch,"datesearch":datesearch,"startdate":startdate,"enddate":enddate,"dateresults":dateresults,"sourcesearch":sourcesearch,"sourceinput":sourceinput,"sourceresults":sourceresults})
