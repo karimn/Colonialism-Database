@@ -15,14 +15,14 @@
 			locarray = new Array();
 			locarray = {{ locations|safe }};
 			$().ready(function(){
-				$("#location").autocomplete(locarray, {
+				$("#locations").autocomplete(locarray, {
 					multiple: true,
 					mustMatch: true,
 					autoFill: true
 					});
 			});
 		</script>
-		<input type="text" id="slocations" name="slocations" value = "{{ slocations|safe }}" />
+		<input type="text" id="locations" name="locations" value = "{{ slocations }}" />
 		<input type="submit" name="lsearch" value="Search locations" />
 	</form>
 	<div>
