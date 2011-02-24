@@ -8,11 +8,11 @@ from django.utils.encoding import smart_str, smart_unicode
 
 def popsearch(request):
 	locations_list = []
-	for x in MainDataEntry.objects.select_related():
-		clocation = smart_unicode(x.location.location.name,encoding='utf-8',errors='ignore')
-		if not  clocation in locations_list:
-			#locations_list.append(smart_str(x.location.location.name))
-			locations_list.append(clocation)
+	#for x in MainDataEntry.objects.select_related():
+	#	clocation = smart_unicode(x.location.location.name,encoding='utf-8',errors='ignore')
+	#	if not  clocation in locations_list:
+	#		#locations_list.append(smart_str(x.location.location.name))
+	#		locations_list.append(clocation)
 	if request.GET.get('datesearch'):
 		datesearch = request.GET.get('datesearch')
 		startdate = request.GET.get('startdate')
@@ -72,5 +72,23 @@ def popsearch(request):
 		sourcesearch = ""
 		sourceinput = ""
 		sourceresults = []
+	if request.GET.get('agegendersearch'):
+		genders = request.GET.get('gender')
+		if request.GET.get('minage'):
+			minage = request.GET.get('minage')
+		else:
+			minage = 0
+		if request.GET.get('maxage'):
+			maxage = request.GET.get('maxage')
+		else:
+			maxage = 100
+		agegenderresults = MainDataEntry.objects.select_related().filter(Q(population_gender=genders) & Q(age_start__isnull=False) & Q(age_end__isnull=False) & Q(age_start__lt=minage) & Q(age_end__lt=maxage)).order_by('id')
 		
-	return render_to_response("population.html",{"locations_list":locations_list,"searchlocations":searchlocations,"locresults":locresults,"locationsearch":locationsearch,"datesearch":datesearch,"startdate":startdate,"enddate":enddate,"dateresults":dateresults,"sourcesearch":sourcesearch,"sourceinput":sourceinput,"sourceresults":sourceresults})
+		#filter(Q(age_start__lt=12))
+	else:
+		genders = []
+		agegenderresults = []
+		minage = ''
+		maxage = ''
+	
+	return render_to_response("population.html",{"locations_list":locations_list,"searchlocations":searchlocations,"locresults":locresults,"locationsearch":locationsearch,"datesearch":datesearch,"startdate":startdate,"enddate":enddate,"dateresults":dateresults,"sourcesearch":sourcesearch,"sourceinput":sourceinput,"sourceresults":sourceresults,"genders":genders,"agegenderresults":agegenderresults,"minage":minage,"maxage":maxage})

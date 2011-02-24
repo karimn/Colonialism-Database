@@ -47,4 +47,5 @@ def test(request):
 			res += Economics.MainDataEntry.objects.filter(Q(location__name="%s" % x)).select_related()
 	else:
 		res = []
+		linput = ""
 	return render_to_response("test.html",{"locations":linput,"res":res})
