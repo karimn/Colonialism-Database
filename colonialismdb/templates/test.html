@@ -8,20 +8,27 @@
 	<script src="http://code.jquery.com/jquery-1.5.min.js" type="text/javascript"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.js" type="text/javascript"></script>
 	<script src="http://jquery.bassistance.de/autocomplete/jquery.autocomplete.js" type="text/javascript"></script>
+	<style>
+		#input {
+			position: fixed;
+			position: absolute;
+			top: 20%;
+		}
+		* {
+			font: 12px Ubuntu;
+		}
+	</style>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$('#locations').keyup(function(){
+				$(this).parent().append("<div id='input'></div>");
+				$('#input').html("Searching for:"+$(this).val());
+		});
+		});
+	</script>
 </head>
 <body>
 	<form action="test">
-		<script type="text/javascript">
-			locarray = new Array();
-			locarray = {{ locations|safe }};
-			$().ready(function(){
-				$("#locations").autocomplete(locarray, {
-					multiple: true,
-					mustMatch: true,
-					autoFill: true
-					});
-			});
-		</script>
 		<input type="text" id="locations" name="locations" value = "{{ slocations }}" />
 		<input type="submit" name="lsearch" value="Search locations" />
 	</form>
@@ -36,15 +43,3 @@
 	</div>
 </body>
 </html>
-
-<!--
-	<div>
-		<table>
-			<tr><td>ID</td><td>Active</td><td>Submitted By</td><td>Created</td><td>Page No</td><td>Source ID</td><td>Begin Date</td><td>End Date</td><td>Circa</td><td>Location</td><td>Original Location Name</td><td>Alternate Location Name</td><td>Is Total ?</td><td>Value Units</td><td>Remarks</td><td>Imports</td><td>Exports</td><td>Imports Value Units</td><td>Exports Value Units</td><td>Currency</td><td>Primary Source Text</td><td>Primary Source Object</td></tr>
-		{% for data in results.object_list %}
-			<tr><td>{{ data.id }}</td><td>{{ data.active }}</td><td>{{ data.submitted_by }}</td><td>{{ data.datetime_created }}</td><td>{{ data.page_num }}</td><td>{{ data.source }}</td><td>{{ data.begin_date }}</td><td>{{ data.end_date }}</td><td>{{ data.circa }}</td><td>{{ data.location_id }}</td><td>{{ data.original_location_name }}</td><td>{{ data.alternate_location_name }}</td><td>{{ data.is_total }}</td><td>{{ data.value_unit }}</td><td>{{ data.remarks }}</td><td>{{ data.imports }}</td><td>{{ data.exports }}</td><td>{{ data.imports_value_unit }}</td><td>{{ data.exports_value_unit }}</td><td>{{ data.currency }}</td><td>{{ data.primary_source_text }}</td><td>{{ data.primary_source_obj_id }}</td></tr>
-		{% endfor %}
-		</table><br />
-	</div>
-
--->

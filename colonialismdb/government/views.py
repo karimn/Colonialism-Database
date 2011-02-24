@@ -8,9 +8,9 @@ from django.core.paginator import Paginator, InvalidPage, EmptyPage
 
 def	govtsearch(request):
 	locations_list = []
-	for x in MainDataEntry.objects.select_related():
-		if not x.location.location.name in locations_list:
-			locations_list.append(str(x.location.location.name))
+	#for x in MainDataEntry.objects.select_related():
+	#	if not x.location.location.name in locations_list:
+	#		locations_list.append(str(x.location.location.name))
 	if request.GET.get('datesearch'):
 		datesearch = request.GET.get('datesearch')
 		startdate = request.GET.get('startdate')
