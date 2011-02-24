@@ -75,16 +75,15 @@ def popsearch(request):
 	if request.GET.get('agegendersearch'):
 		genders = request.GET.get('gender')
 		if request.GET.get('minage'):
-			minage = request.GET.get('minage')
+			minage = int(request.GET.get('minage'))
 		else:
 			minage = 0
 		if request.GET.get('maxage'):
-			maxage = request.GET.get('maxage')
+			maxage = int(request.GET.get('maxage'))
 		else:
 			maxage = 100
-		agegenderresults = MainDataEntry.objects.select_related().filter(Q(population_gender=genders) & Q(age_start__isnull=False) & Q(age_end__isnull=False) & Q(age_start__lt=minage) & Q(age_end__lt=maxage)).order_by('id')
-		
-		#filter(Q(age_start__lt=12))
+		agegenderresults = MainDataEntry.objects.select_related().filter(Q(population_gender=genders) & Q(age_start__isnull=False) & Q(age_end__isnull=False) & Q(age_start__gte=minage) & Q(age_end__lte=maxage)).order_by('id')
+
 	else:
 		genders = []
 		agegenderresults = []
