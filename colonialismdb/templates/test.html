@@ -20,11 +20,30 @@
 	</style>
 	<script type="text/javascript">
 		$(document).ready(function(){
-			$('#locations').keyup(function(){
+			/*$('#locations').keyup(function(){
 				$(this).parent().append("<div id='input'></div>");
 				$('#input').html("Searching for:"+$(this).val());
+			});*/
 		});
-		});
+		function searchOpen() {
+				var search = $('#txtSearch').val()
+				var data = {
+					search: search
+				};
+				$.ajax({
+					url: '/search.json',
+					data: data,
+					dataType: 'jsonp',
+					jsonp: 'callback',
+					jsonpCallback: 'searchResult'
+				});
+			}
+
+			function searchResult(data) {
+				$( "#txtSearch" ).autocomplete ({
+					source: data
+				});
+			}
 	</script>
 </head>
 <body>

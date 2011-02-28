@@ -403,11 +403,12 @@ a {
 	left: 29%;
 	right: 29%;
 }
+
 #results {
 	position: fixed;
 	position: absolute;
-	left: 0px;
-	right: 0px;
+	top: 80%;
+	left: 0%;
 }
 
 #browseresults {
@@ -501,6 +502,14 @@ tr>input:hover {
 	color: #000;
 }
 
+#toggler {
+	position: fixed;
+	position: absolute;
+	top: 7%;
+	left: 45%;
+	right: 45%;
+}
+
 .pagination {
 	text-align: center;
 }
@@ -527,15 +536,16 @@ tr>input:hover {
 	</script>
 	</script>
 	<div id="links"><span id="tag">Search: </span>| <a href="../government">Government Data</a> | <a href="../education">Education Data</a> | <a href="../population">Population Data</a> | <a href="../economics">Economics Data</a> ||<a href="../logoutuser">Logout</a> ||</div>
+	<a href="javascript://" id="toggler">Toggle form</a>
 	<div id="form" align="center">
 		<form action='population' method="GET">
 			<div>
 			Start date:  <input type="text" id="startdate" name="startdate" value="{{ startdate|escape }}" />
 			End date:  <input type="text" id="enddate" name="enddate" value="{{ enddate|escape }}" />
-			<input type="submit" name="datesearch" value="Search dates" /><br /><br /><br />
+			<br /><br /><br />
 			</div>
 			<script type="text/javascript">
-				loc_list = new Array();
+				/*loc_list = new Array();
 				loc_list = {{ locations_list|safe }};
 				$().ready(function(){
 					$("#locations").autocomplete(loc_list, {
@@ -543,108 +553,53 @@ tr>input:hover {
 						mustMatch: true,
 						autoFill: true
 						});
+				});*/
+				$(document).ready(function(){
+					$('#toggler').click(function(){
+						$('#form').fadeToggle(1000);
+					});
 				});
 			</script>
 			Location:  <input type="text" id="locations" name="locations" value = "{{ searchlocations|safe }}" /><br />
-			<input type="submit" name="locationsearch" value="Search locations" />
 			<br /><br /><br />
-			Source:  <input type="text" id="sourceinput" name="sourceinput" value = "{{ sourceinput|escape }}" /><br />
-			<input type="submit" name="sourcesearch" value="Search sources" /><br /><br />
+			Source:  <input type="text" id="sourceinput" name="sourceinput" value = "{{ sourceinput|escape }}" /><br /><br /><br />
 			Age/Gender filter:<br /><br />
-			Gender: <input type="radio" name="genders" value="m" /> Male
+			Gender: <input type="radio" name="genders" value="m" checked="yes" /> Male
 			<input type="radio" name="genders" value="f" /> Female<br /><br />
 			Minumum age: <input type="text" name="minage" value="{{ minage }}" /><br />
 			Maximum age: <input type="text" name="maxage" value="{{ maxage }}" /><br /><br />
-			<input type="submit" name="agegendersearch" value="Age/Gender Search" />
+			<input type="submit" name="search" value="Search" />
+			<br /><br /><br />
 		</form>
-		<div id="results">
-			{% if locresults %}
-				<table>
-					<tr><td>ID</td><td>Active</td><td>Submitted By</td><td>Created</td><td>Page No</td><td>Source</td><td>Begin Date</td><td>End Date</td><td>Circa</td><td>Location</td><td>Original Location Name</td><td>Alternate Location Name</td><td>Is Total ?</td><td>Value Units</td><td>Remarks</td><td>Religion</td><td>Race</td><td>Ethicity</td><td>Ethic origin</td><td>Age Start</td><td>Age End</td><td>Individual Family</td><td>Population Gender</td><td>Population Value</td><td>Value Precision</td><td>Population Condition</td><td>Occupation</td><td>Old Source</td><td>Primary Source Text</td><td>Primary Source Object</td></tr>
-				{% for data in locresults.object_list %}
-					<tr><td>{{ data.id }}</td><td>{{ data.active }}</td><td>{{ data.submitted_by }}</td><td>{{ data.datetime_created }}</td><td>{{ data.page_num }}</td><td>{{ data.source }}</td><td>{{ data.begin_date }}</td><td>{{ data.end_date }}</td><td>{{ data.circa }}</td><td>{{ data.location }}</td><td>{{ data.original_location_name }}</td><td>{{ data.alternate_location_name }}</td><td>{{ data.is_total }}</td><td>{{ data.value_unit }}</td><td>{{ data.remarks }}</td><td>{{ data.religion }}</td><td>{{ data.race }}</td><td>{{ data.ethnicity }}</td><td>{{ data.ethnic_origin }}</td><td>{{ data.age_start }}</td><td>{{ data.age_end }}</td><td>{{ data.individ_fam }}</td><td>{{ data.population_gender }}</td><td>{{ data.population_value }}</td><td>{{ data.value_precision }}</td><td>{{ data.population_condition }}</td><td>{{ data.occupation }}</td><td>{{ data.old_source }}</td><td>{{ data.primary_source_text }}</td><td>{{ data.primary_source_obj }}</td></tr>
-				{% endfor %}
-				</table>
-			<div class="pagination">
-				<span class="step-links">
-					{% if locresults.has_previous %}
-						<a href="?locations={{ searchlocations }}&page={{ locresults.previous_page_number }}&locationsearch={{ locationsearch }}"><span class="pagination-text-right">previous</span></a>
-					{% endif %}
-				<span class="current">
-					Page {{ locresults.number }} of {{ locresults.paginator.num_pages }}.
-				</span>
-				{% if locresults.has_next %}
-					<a href="?locations={{ searchlocations }}&page={{ locresults.next_page_number }}&locationsearch={{ locationsearch }}"><span class="pagination-text-left">next</span></a>
+	</div>
+	<div id="results" align="center">
+		{% if results %}
+			<script>
+				$('#form').fadeToggle(1000);
+			</script>
+			<table>
+				<!--<tr><td>ID</td><td>Active</td><td>Submitted By</td><td>Created</td><td>Page No</td><td>Source</td><td>Begin Date</td><td>End Date</td><td>Circa</td><td>Location</td><td>Original Location Name</td><td>Alternate Location Name</td><td>Is Total ?</td><td>Value Units</td><td>Remarks</td><td>Religion</td><td>Race</td><td>Ethicity</td><td>Ethic origin</td><td>Age Start</td><td>Age End</td><td>Individual Family</td><td>Population Gender</td><td>Population Value</td><td>Value Precision</td><td>Population Condition</td><td>Occupation</td><td>Old Source</td><td>Primary Source Text</td><td>Primary Source Object</td></tr>-->
+				<tr><td>Source</td><td>Begin Date</td><td>End Date</td><td>Circa</td><td>Location</td><td>Is Total ?</td><td>Value Units</td><td>Remarks</td><td>Age Start</td><td>Age End</td><td>Population Gender</td></tr>
+			{% for data in results.object_list %}
+				<!--<tr><td>{{ data.id }}</td><td>{{ data.active }}</td><td>{{ data.submitted_by }}</td><td>{{ data.datetime_created }}</td><td>{{ data.page_num }}</td><td>{{ data.source }}</td><td>{{ data.begin_date }}</td><td>{{ data.end_date }}</td><td>{{ data.circa }}</td><td>{{ data.location }}</td><td>{{ data.original_location_name }}</td><td>{{ data.alternate_location_name }}</td><td>{{ data.is_total }}</td><td>{{ data.value_unit }}</td><td>{{ data.remarks }}</td><td>{{ data.religion }}</td><td>{{ data.race }}</td><td>{{ data.ethnicity }}</td><td>{{ data.ethnic_origin }}</td><td>{{ data.age_start }}</td><td>{{ data.age_end }}</td><td>{{ data.individ_fam }}</td><td>{{ data.population_gender }}</td><td>{{ data.population_value }}</td><td>{{ data.value_precision }}</td><td>{{ data.population_condition }}</td><td>{{ data.occupation }}</td><td>{{ data.old_source }}</td><td>{{ data.primary_source_text }}</td><td>{{ data.primary_source_obj }}</td></tr>-->
+				<tr><td>{{ data.source }}</td><td>{{ data.begin_date }}</td><td>{{ data.end_date }}</td><td>{{ data.circa }}</td><td>{{ data.location }}</td><td>{{ data.is_total }}</td><td>{{ data.value_unit }}</td><td>{{ data.remarks }}</td><td>{{ data.age_start }}</td><td>{{ data.age_end }}</td><td>{{ data.population_gender }}</td></tr>
+			{% endfor %}
+			</table>
+		<div class="pagination">
+			<span class="step-links">
+				<span><a href="?locations={{ searchlocations }}&page=1&search={{ search }}&startdate={{ startdate }}&enddate={{ enddate }}&sourceinput={{ sourceinput }}&minage={{ minage }}&maxage={{ maxage }}&genders={{ genders }}">first&nbsp;&nbsp;</a></span>
+				{% if results.has_previous %}			
+					<a href="?locations={{ searchlocations }}&page={{ results.previous_page_number }}&search={{ search }}&startdate={{ startdate }}&enddate={{ enddate }}&sourceinput={{ sourceinput }}&minage={{ minage }}&maxage={{ maxage }}&genders={{ genders }}"><span class="pagination-text-right">previous</span></a>
 				{% endif %}
+			<span class="current">
+				Page {{ results.number }} of {{ results.paginator.num_pages }}.
 			</span>
-		</div>
+			{% if results.has_next %}
+				<a href="?locations={{ searchlocations }}&page={{ results.next_page_number }}&search={{ search }}&startdate={{ startdate }}&enddate={{ enddate }}&sourceinput={{ sourceinput }}&minage={{ minage }}&maxage={{ maxage }}&genders={{ genders }}"><span class="pagination-text-left">next</span></a>
 			{% endif %}
-			{% if dateresults %}
-				<table>
-					<tr><td>ID</td><td>Active</td><td>Submitted By</td><td>Created</td><td>Page No</td><td>Source</td><td>Begin Date</td><td>End Date</td><td>Circa</td><td>Location</td><td>Original Location Name</td><td>Alternate Location Name</td><td>Is Total ?</td><td>Value Units</td><td>Remarks</td><td>Religion</td><td>Race</td><td>Ethicity</td><td>Ethic origin</td><td>Age Start</td><td>Age End</td><td>Individual Family</td><td>Population Gender</td><td>Population Value</td><td>Value Precision</td><td>Population Condition</td><td>Occupation</td><td>Old Source</td><td>Primary Source Text</td><td>Primary Source Object</td></tr>
-				{% for data in dateresults.object_list %}
-					<tr><td>{{ data.id }}</td><td>{{ data.active }}</td><td>{{ data.submitted_by }}</td><td>{{ data.datetime_created }}</td><td>{{ data.page_num }}</td><td>{{ data.source }}</td><td>{{ data.begin_date }}</td><td>{{ data.end_date }}</td><td>{{ data.circa }}</td><td>{{ data.location }}</td><td>{{ data.original_location_name }}</td><td>{{ data.alternate_location_name }}</td><td>{{ data.is_total }}</td><td>{{ data.value_unit }}</td><td>{{ data.remarks }}</td><td>{{ data.religion }}</td><td>{{ data.race }}</td><td>{{ data.ethnicity }}</td><td>{{ data.ethnic_origin }}</td><td>{{ data.age_start }}</td><td>{{ data.age_end }}</td><td>{{ data.individ_fam }}</td><td>{{ data.population_gender }}</td><td>{{ data.population_value }}</td><td>{{ data.value_precision }}</td><td>{{ data.population_condition }}</td><td>{{ data.occupation }}</td><td>{{ data.old_source }}</td><td>{{ data.primary_source_text }}</td><td>{{ data.primary_source_obj }}</td></tr>
-				{% endfor %}
-				</table>
-			<div class="pagination">
-				<span class="step-links">
-					{% if dateresults.has_previous %}
-						<a href="?startdate={{ startdate }}&enddate={{ enddate }}page={{ dateresults.previous_page_number }}&datesearch={{ datesearch }}"><span class="pagination-text-right">previous</span></a>
-					{% endif %}
-				<span class="current">
-					Page {{ dateresults.number }} of {{ dateresults.paginator.num_pages }}.
-				</span>
-				{% if dateresults.has_next %}
-					<a href="?startdate={{ startdate }}&enddate={{ enddate }}&page={{ dateresults.next_page_number }}&datesearch={{ datesearch }}"><span class="pagination-text-left">next</span></a>
-				{% endif %}
-			</span>
-		</div>
-			{% endif %}
-			{% if sourceresults %}
-				<table>
-					<tr><td>ID</td><td>Active</td><td>Submitted By</td><td>Created</td><td>Page No</td><td>Source</td><td>Begin Date</td><td>End Date</td><td>Circa</td><td>Location</td><td>Original Location Name</td><td>Alternate Location Name</td><td>Is Total ?</td><td>Value Units</td><td>Remarks</td><td>Religion</td><td>Race</td><td>Ethicity</td><td>Ethic origin</td><td>Age Start</td><td>Age End</td><td>Individual Family</td><td>Population Gender</td><td>Population Value</td><td>Value Precision</td><td>Population Condition</td><td>Occupation</td><td>Old Source</td><td>Primary Source Text</td><td>Primary Source Object</td></tr>
-				{% for data in sourceresults.object_list %}
-					<tr><td>{{ data.id }}</td><td>{{ data.active }}</td><td>{{ data.submitted_by }}</td><td>{{ data.datetime_created }}</td><td>{{ data.page_num }}</td><td>{{ data.source }}</td><td>{{ data.begin_date }}</td><td>{{ data.end_date }}</td><td>{{ data.circa }}</td><td>{{ data.location }}</td><td>{{ data.original_location_name }}</td><td>{{ data.alternate_location_name }}</td><td>{{ data.is_total }}</td><td>{{ data.value_unit }}</td><td>{{ data.remarks }}</td><td>{{ data.religion }}</td><td>{{ data.race }}</td><td>{{ data.ethnicity }}</td><td>{{ data.ethnic_origin }}</td><td>{{ data.age_start }}</td><td>{{ data.age_end }}</td><td>{{ data.individ_fam }}</td><td>{{ data.population_gender }}</td><td>{{ data.population_value }}</td><td>{{ data.value_precision }}</td><td>{{ data.population_condition }}</td><td>{{ data.occupation }}</td><td>{{ data.old_source }}</td><td>{{ data.primary_source_text }}</td><td>{{ data.primary_source_obj }}</td></tr>
-				{% endfor %}
-				</table>
-			<div class="pagination">
-				<span class="step-links">
-					{% if sourceresults.has_previous %}
-						<a href="?sourceinput={{ sourceinput }}&page={{ sourceresults.previous_page_number }}&sourcesearch={{ sourcesearch }}"><span class="pagination-text-right">previous</span></a>
-					{% endif %}
-				<span class="current">
-					Page {{ sourceresults.number }} of {{ sourceresults.paginator.num_pages }}.
-				</span>
-				{% if sourceresults.has_next %}
-					<a href="?sourceinput={{ sourceinput }}&page={{ sourceresults.next_page_number }}&sourcesearch={{ sourcesearch }}"><span class="pagination-text-left">next</span></a>
-				{% endif %}
-			</span>
-		</div>
-			{% endif %}
-
-
-
-			{% if agegenderresults %}
-				<table>
-					<tr><td>ID</td><td>Active</td><td>Submitted By</td><td>Created</td><td>Page No</td><td>Source</td><td>Begin Date</td><td>End Date</td><td>Circa</td><td>Location</td><td>Original Location Name</td><td>Alternate Location Name</td><td>Is Total ?</td><td>Value Units</td><td>Remarks</td><td>Religion</td><td>Race</td><td>Ethicity</td><td>Ethic origin</td><td>Age Start</td><td>Age End</td><td>Individual Family</td><td>Population Gender</td><td>Population Value</td><td>Value Precision</td><td>Population Condition</td><td>Occupation</td><td>Old Source</td><td>Primary Source Text</td><td>Primary Source Object</td></tr>
-				{% for data in agegenderresults %}
-					<tr><td>{{ data.id }}</td><td>{{ data.active }}</td><td>{{ data.submitted_by }}</td><td>{{ data.datetime_created }}</td><td>{{ data.page_num }}</td><td>{{ data.source }}</td><td>{{ data.begin_date }}</td><td>{{ data.end_date }}</td><td>{{ data.circa }}</td><td>{{ data.location }}</td><td>{{ data.original_location_name }}</td><td>{{ data.alternate_location_name }}</td><td>{{ data.is_total }}</td><td>{{ data.value_unit }}</td><td>{{ data.remarks }}</td><td>{{ data.religion }}</td><td>{{ data.race }}</td><td>{{ data.ethnicity }}</td><td>{{ data.ethnic_origin }}</td><td>{{ data.age_start }}</td><td>{{ data.age_end }}</td><td>{{ data.individ_fam }}</td><td>{{ data.population_gender }}</td><td>{{ data.population_value }}</td><td>{{ data.value_precision }}</td><td>{{ data.population_condition }}</td><td>{{ data.occupation }}</td><td>{{ data.old_source }}</td><td>{{ data.primary_source_text }}</td><td>{{ data.primary_source_obj }}</td></tr>
-				{% endfor %}
-				</table>
-				<div class="pagination">
-					<span class="step-links">
-					{% if agegenderresults.has_previous %}
-					<a href="?minage={{ minage }}&maxage={{ maxage}}&genders={{ genders }}&page={{ sourceresults.previous_page_number }}&agegendersearch={{ agegendersearch }}"><span class="pagination-text-right">previous</span></a>
-				{% endif %}
-					<span class="current">
-						Page {{ agegenderresults.number }} of {{ agegenderresults.paginator.num_pages }}.
-					</span>
-				{% if agegenderresults.has_next %}
-					<a href="?minage={{ minage }}&maxage={{ maxage}}&genders={{ genders }}&page={{ sourceresults.next_page_number }}&agegendersearch={{ agegendersearch }}"><span class="pagination-text-left">next</span></a>
-				{% endif %}
-					</span>
-				</div>
-			{% endif %}
-<!--		</div>-->
+			<span><a href="?locations={{ searchlocations }}&page={{ results.paginator.num_pages }}&search={{ search }}&startdate={{ startdate }}&enddate={{ enddate }}&sourceinput={{ sourceinput }}&minage={{ minage }}&maxage={{ maxage }}&genders={{ genders }}">&nbsp;&nbsp;last</a></span>
+		</span>
+	</div>
+		{% endif %}
 </body>
 </html>
