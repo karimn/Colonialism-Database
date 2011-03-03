@@ -46,7 +46,6 @@ def	econsearch(request):
 			results = paginator.page(page)
 		except (EmptyPage, InvalidPage):
 			results = paginator.page(paginator.num_pages)
-	
 			
 	else:
 		results = []

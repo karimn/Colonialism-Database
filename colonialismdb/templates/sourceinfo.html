@@ -10,10 +10,15 @@
 	<script src="http://jquery.bassistance.de/autocomplete/jquery.autocomplete.js" type="text/javascript"></script>
 </head>
 <body>
-	{% if sourceresults %}
-		{% for data in sourceresults.object_list %}
-			{{ data.author }}<br />
-		{% endfor %}
+	<div id="title" align="center"><b>Source information for {{ title }}</b></div>
+	<!--<b>Results: {{ results }}</b>-->
+		{% if results %}
+		<table>
+			<tr><td>Title</td><td>Author</td><td>Year</td></tr>
+			{% for data in results.object_list %}
+				<tr><td>{{ data.name }}</td><td>{{ data.author }}</td><td>{{ data.year }}</td></tr>
+			{% endfor %}
+		</table>
 	{% endif %}
 </body>
 </html>

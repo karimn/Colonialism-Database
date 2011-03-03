@@ -23,7 +23,12 @@ def popsearch(request):
 		else:
 			maxage = 100
 		if request.GET.get('genders'):
-			genders = request.GET.get('genders')
+			if request.GET.get('genders') == 'e':
+				genders = "e"
+				genderfilter = ~Q(population_gender='None')
+			else:
+				genders = request.GET.get('genders')
+				genderfilter = Q(population_gender=genders)
 		else:
 			genders = ""
 		if request.GET.get('enddate'):
@@ -42,7 +47,14 @@ def popsearch(request):
 		locations_list = searchlocations.split(", ")
 		results = []
 		
-		datesourceresults = MainDataEntry.objects.filter(Q(begin_date__range=(startdate,enddate)) | Q(end_date__range=(startdate,enddate))).filter(Q(source__name__icontains=sourceinput)).filter(Q(population_gender=genders) & Q(age_start__isnull=False) & Q(age_end__isnull=False) & Q(age_start__gte=minage) & Q(age_end__lte=maxage)).select_related().order_by('id')
+		
+		datefilter = Q(begin_date__range=(startdate,enddate)) | Q(end_date__range=(startdate,enddate))
+		sourcefilter = Q(source__name__icontains=sourceinput)
+		agefilter = Q(age_start__isnull=False) & Q(age_end__isnull=False) & Q(age_start__gte=minage) & Q(age_end__lte=maxage)
+		
+		#datesourceresults = MainDataEntry.objects.filter(Q(begin_date__range=(tartdate,enddate)) | Q(end_date__range=(startdate,enddate))).filter(Q(source__name__icontains=sourceinput)).filter(Q(population_gender=genders) & Q(age_start__isnull=False) & Q(age_end__isnull=False) & Q(age_start__gte=minage) & Q(age_end__lte=maxage)).select_related().order_by('id')
+		
+		datesourceresults = MainDataEntry.objects.filter(datefilter).filter(sourcefilter).filter(agefilter).filter(genderfilter).select_related().order_by('id')
 		
 		for x in locations_list:
 			for y in datesourceresults.filter(location__name="%s"%x).select_related().order_by('id'):

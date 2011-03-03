@@ -32,6 +32,7 @@ urlpatterns = patterns('',
     (r'^population$','population.views.popsearch'),
     #(r'^npop$','population.views.npop'),
     (r'^test$','economics.views.test'),
+    (r'^sourceinfo$','sources.views.sourceinfo'),
 
     #(r'^population/', include('colonialismdb.population.urls')),
 
