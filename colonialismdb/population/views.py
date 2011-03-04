@@ -35,31 +35,29 @@ def popsearch(request):
 			enddate = request.GET.get('enddate')
 		else:
 			enddate = "2006-12-31"
-		if request.GET.get('locations'):
-			searchlocations = request.GET.get('locations')
-		else:
-			searchlocations = ""
 		if request.GET.get('sourceinput'):
 			sourceinput = request.GET.get('sourceinput')
 		else:
 			sourceinput = ""
 		locations_list = []
-		locations_list = searchlocations.split(", ")
 		results = []
-		
 		
 		datefilter = Q(begin_date__range=(startdate,enddate)) | Q(end_date__range=(startdate,enddate))
 		sourcefilter = Q(source__name__icontains=sourceinput)
 		agefilter = Q(age_start__isnull=False) & Q(age_end__isnull=False) & Q(age_start__gte=minage) & Q(age_end__lte=maxage)
 		
-		#datesourceresults = MainDataEntry.objects.filter(Q(begin_date__range=(tartdate,enddate)) | Q(end_date__range=(startdate,enddate))).filter(Q(source__name__icontains=sourceinput)).filter(Q(population_gender=genders) & Q(age_start__isnull=False) & Q(age_end__isnull=False) & Q(age_start__gte=minage) & Q(age_end__lte=maxage)).select_related().order_by('id')
-		
 		datesourceresults = MainDataEntry.objects.filter(datefilter).filter(sourcefilter).filter(agefilter).filter(genderfilter).select_related().order_by('id')
-		
-		for x in locations_list:
-			for y in datesourceresults.filter(location__name="%s"%x).select_related().order_by('id'):
-				results.append(y)
-		
+
+		if request.GET.get('locations'):
+			searchlocations = request.GET.get('locations')
+			locations_list = searchlocations.split(", ")
+			for x in locations_list:
+				for y in datesourceresults.filter(location__name="%s"%x).select_related().order_by('id'):
+					results.append(y)
+		else:
+					searchlocations=""
+					results = datesourceresults
+			
 		paginator = Paginator(results,1)
 		try:
 			page = request.GET.get('page','1')

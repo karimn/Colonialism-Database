@@ -83,4 +83,6 @@ INSTALLED_APPS = (
     'colonialismdb.common',
     
     'south',
+    
+    'ajax_select',
 )

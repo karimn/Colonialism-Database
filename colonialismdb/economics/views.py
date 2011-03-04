@@ -6,6 +6,15 @@ from django.http import *
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from sources.models import *
 
+from django.utils import simplejson
+from django.shortcuts import get_object_or_404, get_list_or_404
+
+
+def test(request):
+	resp = []
+	return HttpResponse(resp)
+
+	
 
 def	econsearch(request):
 	if request.GET.get('search'):
@@ -18,24 +27,26 @@ def	econsearch(request):
 			enddate = request.GET.get('enddate')
 		else:
 			enddate = "2006-12-31"
-		if request.GET.get('locations'):
-			searchlocations = request.GET.get('locations')
-		else:
-			searchlocations = ""
 		if request.GET.get('sourceinput'):
 			sourceinput = request.GET.get('sourceinput')
 		else:
 			sourceinput = ""
 		locations_list = []
-		locations_list = searchlocations.split(", ")
 		results = []
 		souceresults = Source.objects.filter(name__icontains='%s'%sourceinput).select_related()
 
 		datesourceresults = AggregateTradeDataEntry.objects.filter(Q(begin_date__range=(startdate,enddate)) | Q(end_date__range=(startdate,enddate))).filter(Q(source__name__icontains=sourceinput)).select_related().order_by('id')
 		
-		for x in locations_list:
-			for y in datesourceresults.filter(location__name="%s"%x).select_related().order_by('id'):
-				results.append(y)
+		if request.GET.get('locations'):
+			searchlocations = request.GET.get('locations')
+			locations_list = searchlocations.split(", ")
+			for x in locations_list:
+				for y in datesourceresults.filter(location__name="%s"%x).select_related().order_by('id'):
+					results.append(y)
+		else:
+					searchlocations=""
+					results = datesourceresults
+		
 		
 		paginator = Paginator(results,1)
 		try:

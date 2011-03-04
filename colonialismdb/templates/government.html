@@ -533,6 +533,31 @@ tr>input:hover {
 			End date:  <input type="text" id="enddate" name="enddate" value="{{ enddate|escape }}" />
 			<br /><br /><br />
 			Location:  <input type="text" id="locations" name="locations" value = "{{ searchlocations|escape }}" />
+			<input type="text" id="testloc" />
+			<script>
+				$(function() {
+					$('#locations').autocomplete('{% url government.views.locationlookup %}', {
+						multiple: true,
+						mustMatch: true,
+						autoFill: true,						
+						dataType: 'json',
+						width: 500,
+						parse: function(data) {
+							return $.map(data, function(row) {
+								//return { data:row, value:row[1], result:row[0] };
+								//return { data:row, value:row };
+							});
+						}
+            }).result(
+                function(e, data, value) {
+                    //$("#testloc").val(value);
+                    $("#locations").val += value+", ";
+                }
+            );
+        }
+    );
+</script>
+
 			<br /><br /><br />
 			Source:  <input type="text" id="sourceinput" name="sourceinput" value = "{{ sourceinput|escape }}" />
 			<br /><br /><br />
@@ -543,9 +568,10 @@ tr>input:hover {
 			<br />
 			{% if results %}
 				<table>
-					<tr><td>ID</td><td>Active</td><td>Submitted By (ID)</td><td>Created</td><td>Page No</td><td>Source</td><td>Begin Date</td><td>End Date</td><td>Circa</td><td>Location</td><td>Original Location Name</td><td>Alternate Location Name</td><td>Is Total ?</td><td> Value Units</td><td>Remarks</td><td>Spatial Area</td><td>Spatial Area Unit</td><td>Currency</td><td>Currency Exchange Rate</td><td>Revenue</td><td>Revenue Type</td><td>Expenditure</td><td>Expenditure Type</td><td>Public Debt</td><td>Military</td><td>Military Type</td><td>Officials</td><td>Officials Type</td><td>Location</td><td>Spatial Page No</td><td>Military Page No</td><td>Primary Source Text</td><td>Primary Source Object</td></tr>
+					<tr><td>ID</td><td>Source</td><td>Begin Date</td><td>End Date</td><td>Circa</td><td>Location</td><td> Value Units</td><td>Spatial Area</td><td>Spatial Area Unit</td><td>Currency</td><td>Currency Exchange Rate</td><td>Revenue</td><td>Revenue Type</td><td>Expenditure</td><td>Expenditure Type</td><td>Public Debt</td><td>Military</td><td>Military Type</td><td>Officials</td><td>Officials Type</td><td>Spatial Page No</td><td>Military Page No</td><td>Primary Source Text</td><td>Primary Source Object</td></tr>
 				{% for data in results.object_list %}
-					<tr><td>{{ data.id }}</td><td>{{ data.active }}</td><td>{{ data.submitted_by }}</td><td>{{ data.datetime_created }}</td><td>{{ data.page_num }}</td><td>{{ data.source }}</td><td>{{ data.begin_date }}</td><td>{{ data.end_date }}</td><td>{{ data.circa }}</td><td>{{ data.location }}</td><td>{{ data.original_location_name }}</td><td>{{ data.alternate_location_name }}</td><td>{{ data.is_total }}</td><td>{{ data.value_unit }}</td><td>{{ data.remarks }}</td><td>{{ data.spatial_area }}</td><td>{{ data.spatial_area_unit }}</td><td>{{ data.currency }}</td><td>{{ data.currency_exchange_rate }}</td><td>{{ data.revenue }}</td><td>{{ data.revenue_type }}</td><td>{{ data.expenditure }}</td><td>{{ data.expenditure_type }}</td><td>{{ data.public_debt }}</td><td>{{ data.military }}</td><td>{{ data.military_type }}</td><td>{{ data.officials }}</td><td>{{ data.officials_type }}</td><td>{{ data.location }}</td><td>{{ data.spatial_page_num }}</td><td>{{ data.military_page_num }}</td><td>{{ data.primary_source_text }}</td><td>{{ data.primary_source_obj }}</td></tr>
+					<tr><td>{{ data.id }}</td><td><a href="../sourceinfo?source='{{ data.source }}'">{{ data.source }}</a></td><td>{{ data.begin_date }}</td><td>{{ data.end_date }}</td><td>{{ data.circa }}</td><td>{{ data.location }}</td><td>{{ data.value_unit }}</td><td>{{ data.spatial_area }}</td><td>{{ data.spatial_area_unit }}</td><td>{{ data.currency }}</td><td>{{ data.currency_exchange_rate }}</td><td>{{ data.revenue }}</td><td>{{ data.revenue_type }}</td><td>{{ data.expenditure }}</td><td>{{ data.expenditure_type }}</td><td>{{ data.public_debt }}</td><td>{{ data.military }}</td><td>{{ data.military_type }}</td><td>{{ data.officials }}</td><td>{{ data.officials_type }}</td><td>{{ data.spatial_page_num }}</td><td>{{ data.military_page_num }}</td><td>{{ data.primary_source_text }}</td><td>{{ data.primary_source_obj }}</td></tr>
+					<!--<tr><td>{{ data.id }}</td><td>{{ data.active }}</td><td>{{ data.submitted_by }}</td><td>{{ data.datetime_created }}</td><td>{{ data.page_num }}</td><td>{{ data.source }}</td><td>{{ data.begin_date }}</td><td>{{ data.end_date }}</td><td>{{ data.circa }}</td><td>{{ data.location }}</td><td>{{ data.original_location_name }}</td><td>{{ data.alternate_location_name }}</td><td>{{ data.is_total }}</td><td>{{ data.value_unit }}</td><td>{{ data.remarks }}</td><td>{{ data.spatial_area }}</td><td>{{ data.spatial_area_unit }}</td><td>{{ data.currency }}</td><td>{{ data.currency_exchange_rate }}</td><td>{{ data.revenue }}</td><td>{{ data.revenue_type }}</td><td>{{ data.expenditure }}</td><td>{{ data.expenditure_type }}</td><td>{{ data.public_debt }}</td><td>{{ data.military }}</td><td>{{ data.military_type }}</td><td>{{ data.officials }}</td><td>{{ data.officials_type }}</td><td>{{ data.location }}</td><td>{{ data.spatial_page_num }}</td><td>{{ data.military_page_num }}</td><td>{{ data.primary_source_text }}</td><td>{{ data.primary_source_obj }}</td></tr>-->
 				{% endfor %}
 				</table>
 			<br />

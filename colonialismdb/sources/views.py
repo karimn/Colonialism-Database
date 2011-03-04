@@ -13,11 +13,12 @@ def open_src_file(request, path, ext):
   #else:
     
 def sourceinfo(request):
-	title = request.GET.get('source').replace("%20"," ").split(" ")
+	source = str(request.GET.get('source').replace("%20"," ").replace("'",""))	
+	s1 = source.split(" (")
 	results = []
-	for x in 
 	
-	results = Source.objects.filter(name__icontains=title).select_related()
-	#for x in title.split(" "):
-	#	results.append(rs.filter(name__icontains=x).select_related())
-	return render_to_response("sourceinfo.html",{"results":results,"title":title})
+	for x in Source.objects.select_related().filter(name__icontains=s1[0]):
+		if cmp(str(x.source),source) == 0:
+			results.append(x)
+
+	return render_to_response("sourceinfo.html",{"results":results,"title":source})
