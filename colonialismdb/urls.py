@@ -29,16 +29,16 @@ urlpatterns = patterns('',
     (r'^education$','education.views.edusearch'),
     (r'^government$','government.views.govtsearch'),
     (r'^population$','population.views.popsearch'),
-    (r'^test$','economics.views.test'),
     (r'^search.json$','economics.views.test'),
     (r'^sourceinfo$','sources.views.sourceinfo'),
 
     #(r'^population/', include('colonialismdb.population.urls')),
-
-    (r'^/test/$', 'government.views.test'),
     
     #(r'^location_lookup/$', view=government.location_lookup, name='government.location_lookup'),
-    (r'^locationlookup/$', 'government.views.locationlookup'),
+    (r'^government/locationlookup/$', 'government.views.locationlookup'),
+    (r'^economics/locationlookup/$', 'economics.views.locationlookup'),
+    (r'^education/locationlookup/$', 'education.views.locationlookup'), 
+    (r'^population/locationlookup/$', 'population.views.locationlookup'), 
     #(r'^locationlookup/$', 'government.locationlookup'),
     
     (r'^test/(?P<from_applabel>[^/]+)/(?P<from_model>[^/]+)/((add)|(\d+))/autocomplete/(?P<to_applabel>[^/]+)/(?P<to_model>[^/]+)/$', 'colonialismdb.common.views.autocomplete'),

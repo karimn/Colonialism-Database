@@ -533,7 +533,6 @@ tr>input:hover {
 			End date:  <input type="text" id="enddate" name="enddate" value="{{ enddate|escape }}" />
 			<br /><br /><br />
 			Location:  <input type="text" id="locations" name="locations" value = "{{ searchlocations|escape }}" />
-			<input type="text" id="testloc" />
 			<script>
 				$(function() {
 					$('#locations').autocomplete('{% url government.views.locationlookup %}', {
@@ -544,7 +543,7 @@ tr>input:hover {
 						width: 500,
 						parse: function(data) {
 							return $.map(data, function(row) {
-								//return { data:row, value:row[1], result:row[0] };
+								return { data:row, value:row, result:row };
 								//return { data:row, value:row };
 							});
 						}

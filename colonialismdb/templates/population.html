@@ -562,6 +562,29 @@ tr>input:hover {
 				});
 			</script>
 			Location:  <input type="text" id="locations" name="locations" value = "{{ searchlocations|safe }}" /><br />
+			<script>
+				$(function() {
+					$('#locations').autocomplete('{% url population.views.locationlookup %}', {
+						multiple: true,
+						mustMatch: true,
+						autoFill: true,						
+						dataType: 'json',
+						width: 500,
+						parse: function(data) {
+							return $.map(data, function(row) {
+								return { data:row, value:row, result:row };
+								//return { data:row, value:row };
+							});
+						}
+            }).result(
+                function(e, data, value) {
+                    //$("#testloc").val(value);
+                    $("#locations").val += value+", ";
+                }
+            );
+        }
+    );
+</script>
 			<br /><br /><br />
 			Source:  <input type="text" id="sourceinput" name="sourceinput" value = "{{ sourceinput|escape }}" /><br /><br /><br />
 			Age/Gender filter:<br /><br />

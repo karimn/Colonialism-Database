@@ -6,15 +6,31 @@ from django.http import *
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from sources.models import *
 
+from django.http import HttpResponse
 from django.utils import simplejson
-from django.shortcuts import get_object_or_404, get_list_or_404
+from django.utils.encoding import smart_str, smart_unicode
 
 
 def test(request):
 	resp = []
 	return HttpResponse(resp)
 
-	
+def locationlookup(request):
+	lresults = []
+	temp = []
+	if request.method == "GET":
+		if request.GET.has_key(u'q'):
+			value = request.GET[u'q']
+			# Ignore queries shorter than length 3
+			#if len(value) > 2:
+			model_results = AggregateTradeDataEntry.objects.filter(location__name__istartswith="%s" % value).select_related().distinct()
+			#results = [ (x.__unicode__(), smart_str(x.location.location.name)) for x in model_results ]
+			#results = [ x.location.location.name for x in model_results ]
+			for x in AggregateTradeDataEntry.objects.filter(location__name__istartswith=value).distinct()[:20]:
+				if smart_str(x.location.location.name) not in lresults:
+					lresults.append(smart_str(x.location.location.name))
+	json = simplejson.dumps(lresults)
+	return HttpResponse(json, mimetype='application/json')
 
 def	econsearch(request):
 	if request.GET.get('search'):
