@@ -18,14 +18,28 @@
 			font: 12px Ubuntu;
 		}
 	</style>
-</head>
-<body>
-	<script type="text/javascript" >
-		$(function(){
-			setAutoComplete("bookSearchField", "bookResults", "/lookup/?query=");
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$('#locations').keyup(function(){
+				$(this).parent().append("<div id='input'></div>");
+				$('#input').html("Searching for:"+$(this).val());
+		});
 		});
 	</script>
-	<label for="locationSearchField">Location: </label>
-	<input type="text" id="locationSearchField" name="locationSearchField">
+</head>
+<body>
+	<form action="test">
+		<input type="text" id="locations" name="locations" value = "{{ slocations }}" />
+		<input type="submit" name="lsearch" value="Search locations" />
+	</form>
+	<div>
+		{% if results %}
+		<table>
+		{% for data in results %}
+			<tr><td>{{ data.id }}</td><td>{{ data.location }}</td></tr>
+		{% endfor %}
+		</table>
+		{% endif %}
+	</div>
 </body>
 </html>

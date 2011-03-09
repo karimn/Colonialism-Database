@@ -8,11 +8,6 @@ from django.db.models import Q
 
 import types
 
-<<<<<<< HEAD
-=======
-from django.utils import simplejson
-
-
 def index(request):
   return render_to_response("mainindex.html")
 
