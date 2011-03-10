@@ -26,14 +26,23 @@ urlpatterns = patterns('',
     (r'^admin/doc/', include('django.contrib.admindocs.urls')),
     (r'^$','common.views.index'),
     (r'^economics$','economics.views.econsearch'),
-    (r'^necon$','economics.views.necon'),
     (r'^education$','education.views.edusearch'),
     (r'^government$','government.views.govtsearch'),
     (r'^population$','population.views.popsearch'),
-    (r'^npop$','population.views.npop'),
-    (r'^test$','common.views.test'),
+    (r'^search.json$','economics.views.test'),
+    (r'^sourceinfo$','sources.views.sourceinfo'),
 
     #(r'^population/', include('colonialismdb.population.urls')),
+    
+    #(r'^location_lookup/$', view=government.location_lookup, name='government.location_lookup'),
+    (r'^government/locationlookup/$', 'government.views.locationlookup'),
+    (r'^economics/locationlookup/$', 'economics.views.locationlookup'),
+    (r'^education/locationlookup/$', 'education.views.locationlookup'), 
+    (r'^population/locationlookup/$', 'population.views.locationlookup'), 
+    #(r'^locationlookup/$', 'government.locationlookup'),
+    
+    (r'^test/(?P<from_applabel>[^/]+)/(?P<from_model>[^/]+)/((add)|(\d+))/autocomplete/(?P<to_applabel>[^/]+)/(?P<to_model>[^/]+)/$', 'colonialismdb.common.views.autocomplete'),
+    (r'^test/(?P<from_applabel>[^/]+)/(?P<from_model>[^/]+)/(?P<from_id>\d+)/get_label/(?P<to_applabel>[^/]+)/(?P<to_model>[^/]+)/$', 'colonialismdb.common.views.get_label'),
 
     (r'^admin/merge_selected/', 'colonialismdb.common.admin.merge_selected'),
     (r'^admin/(?P<from_applabel>[^/]+)/(?P<from_model>[^/]+)/((add)|(\d+))/autocomplete/(?P<to_applabel>[^/]+)/(?P<to_model>[^/]+)/$', 'colonialismdb.common.views.autocomplete'),
@@ -46,6 +55,7 @@ urlpatterns = patterns('',
     (r'^accounts/login/$', 'django.contrib.auth.views.login'),
     (r'^databrowse/(.*)', login_required(databrowse.site.root)),
 )
+
 
 if settings.DEBUG:
   urlpatterns += patterns('',
