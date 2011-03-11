@@ -8,10 +8,7 @@ from django.db.models import Q
 
 import types
 
-<<<<<<< HEAD
-=======
 from django.utils import simplejson
-
 
 def index(request):
   return render_to_response("mainindex.html")
@@ -39,18 +36,3 @@ def get_label(request, from_applabel, from_model, from_id, to_applabel, to_model
   model = models.get_model(to_applabel, to_model)
 
   return get_object_or_404(model, pk = obj_id)
-
-def test(request):
-	lsearch = request.GET.get('lsearch')
-	
-	if lsearch:
-		linput = request.GET.get('locations')
-		l1 = linput.split(", ")
-		qs = ""	
-		res = []
-		for x in l1:
-			res += Economics.MainDataEntry.objects.filter(Q(location__name="%s" % x)).select_related()
-	else:
-		res = []
-		linput = ""
-	return render_to_response("test.html",{"locations":linput,"res":res})
