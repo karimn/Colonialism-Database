@@ -543,28 +543,31 @@ tr>input:hover {
 			<br /><br /><br />
 			Location:  <input type="text" id="locations" name="locations" value = "{{ searchlocations|escape }}" />
 			<script>
+				function formatItem(row) {
+					return row[0] + " (id: " + row[1] + ")";
+				}
+
 				$(function() {
-					$('#locations').autocomplete('{% url economics.views.locationlookup %}', {
-						multiple: true,
-						mustMatch: true,
-						autoFill: true,						
-						dataType: 'json',
-						width: 500,
-						parse: function(data) {
-							return $.map(data, function(row) {
-								return { data:row, value:row, result:row };
-								//return { data:row, value:row };
-							});
-						}
-            }).result(
-                function(e, data, value) {
-                    //$("#testloc").val(value);
-                    $("#locations").val += value+", ";
-                }
-            );
-        }
-    );
-</script>
+						$('#locations').autocomplete('{% url economics.views.locationlookup %}', {
+							multiple: true,
+							mustMatch: true,
+							matchContains: true,
+							autoFill: true,					
+							dataType: 'json',
+							width: 500,
+							minChars: 100,
+							parse: function(data) {
+								return $.map(data, function(row) {
+									//return { data:data, value:row, result:row };
+									//return { data:row, value:data, result: row};
+									return { data:row, value:row, result:row };
+								});
+							}}).result(
+								function(e, data, value) {
+									$("#locations").val += value+", ";
+								});
+				});
+			</script>
 			<br /><br /><br />
 			Source:  <input type="text" id="sourceinput" name="sourceinput" value = "{{ sourceinput|escape }}" />
 			<br /><br /><br />
@@ -597,6 +600,11 @@ tr>input:hover {
 				<span><a href="?search={{ search }}&page={{ results.paginator.num_pages }}&startdate={{ startdate }}&enddate={{ enddate }}&locations={{ searchlocations }}&sourceinput={{ sourceinput }}">&nbsp;&nbsp;last</a></span>
 			</span>
 		{% endif %}
+	</div>
+	<div>
+		<a href="../export?rset={{ rset }}">Export</a><br />
+		<a href="../export?rset={{ results.object_list }}">Export</a><br />
+		<a href="../export?rset={{ results }}">Export</a><br />		
 	</div>
 </body>
 </html>

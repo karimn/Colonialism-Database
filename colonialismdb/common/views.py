@@ -5,13 +5,26 @@ from django.shortcuts import get_object_or_404, get_list_or_404
 from django.shortcuts import render_to_response
 from economics.models import *
 from django.db.models import Q
-
+import csv
 import types
 
 from django.utils import simplejson
 
 def index(request):
   return render_to_response("mainindex.html")
+
+def exportcsv(request):
+	rset = request.GET['rset']
+	response = HttpResponse(mimetype='text/csv')
+	response['Content-Disposition'] = 'attachment; filename=export.csv'
+	writer = csv.writer(response)
+	rrow = []
+	for x in rset[:1]:
+		#rrow.append(x)
+		#rrow.append(x.submitted_by)
+		writer.writerow(x)
+	t = type(rset)
+	return HttpResponse(t)
 
 def autocomplete(request, from_applabel, from_model, to_applabel, to_model):
   query = request.GET['term']

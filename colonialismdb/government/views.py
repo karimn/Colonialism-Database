@@ -8,6 +8,8 @@ from django.http import HttpResponse
 from django.utils import simplejson
 from django.utils.encoding import smart_str, smart_unicode
 
+#results = [ (x.__unicode__(), smart_str(x.location.location.name)) for x in model_results ]  -- lines 20
+#results = [ x.location.location.name for x in model_results ]
 
 def locationlookup(request):
 	lresults = []
@@ -15,21 +17,12 @@ def locationlookup(request):
 	if request.method == "GET":
 		if request.GET.has_key(u'q'):
 			value = request.GET[u'q']
-			# Ignore queries shorter than length 3
-			#if len(value) > 2:
 			model_results = MainDataEntry.objects.filter(location__name__istartswith="%s" % value).select_related().distinct()
-			#results = [ (x.__unicode__(), smart_str(x.location.location.name)) for x in model_results ]
-			#results = [ x.location.location.name for x in model_results ]
 			for x in MainDataEntry.objects.filter(location__name__istartswith=value).distinct()[:20]:
 				if smart_str(x.location.location.name) not in lresults:
 					lresults.append(smart_str(x.location.location.name))
 	json = simplejson.dumps(lresults)
 	return HttpResponse(json, mimetype='application/json')
-
-
-def test(request):
-	return render_to_response("test.html",{})
-
 
 def	govtsearch(request):
 	if request.GET.get('search'):
