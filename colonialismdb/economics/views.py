@@ -9,11 +9,20 @@ from sources.models import *
 from django.http import HttpResponse
 from django.utils import simplejson
 from django.utils.encoding import smart_str, smart_unicode
+import csv
+from django.core import serializers
 
 
 def test(request):
 	resp = []
 	return HttpResponse(resp)
+
+def testing(request):
+	locations_list = []
+	for x in AggregateTradeDataEntry.objects.select_related():
+		if not x.location.location.name in locations_list:
+			locations_list.append(str(x.location.location.name))
+	return render_to_response("test.html",{"locations_list":locations_list})
 
 def locationlookup(request):
 	lresults = []
@@ -21,16 +30,17 @@ def locationlookup(request):
 	if request.method == "GET":
 		if request.GET.has_key(u'q'):
 			value = request.GET[u'q']
-			# Ignore queries shorter than length 3
-			#if len(value) > 2:
-			model_results = AggregateTradeDataEntry.objects.filter(location__name__istartswith="%s" % value).select_related().distinct()
+			model_results = AggregateTradeDataEntry.objects.filter(location__name__istartswith="%s" % value).select_related().distinct().order_by('location__name')[:20]
 			#results = [ (x.__unicode__(), smart_str(x.location.location.name)) for x in model_results ]
 			#results = [ x.location.location.name for x in model_results ]
-			for x in AggregateTradeDataEntry.objects.filter(location__name__istartswith=value).distinct()[:20]:
+			for x in AggregateTradeDataEntry.objects.filter(location__name__istartswith=value).distinct():
 				if smart_str(x.location.location.name) not in lresults:
 					lresults.append(smart_str(x.location.location.name))
 	json = simplejson.dumps(lresults)
 	return HttpResponse(json, mimetype='application/json')
+
+	
+	
 
 def	econsearch(request):
 	if request.GET.get('search'):
@@ -62,8 +72,7 @@ def	econsearch(request):
 		else:
 					searchlocations=""
 					results = datesourceresults
-		
-		
+		rset =  results
 		paginator = Paginator(results,1)
 		try:
 			page = request.GET.get('page','1')
@@ -83,8 +92,9 @@ def	econsearch(request):
 		sourceinput = ""
 		search = ""
 		sourceresults = []
+		rset = []
 	#return render_to_response("sourceinfo.html",{"sourceresults":sourceresults})
-	return render_to_response("economics.html",{"locations_list":locations_list,"searchlocations":searchlocations,"startdate":startdate,"enddate":enddate,"sourceinput":sourceinput,"results":results,"search":search})
+	return render_to_response("economics.html",{"locations_list":locations_list,"searchlocations":searchlocations,"startdate":startdate,"enddate":enddate,"sourceinput":sourceinput,"results":results,"search":search,"rset":rset})
 
 
 

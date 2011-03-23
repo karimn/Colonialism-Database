@@ -29,8 +29,11 @@ urlpatterns = patterns('',
     (r'^education$','education.views.edusearch'),
     (r'^government$','government.views.govtsearch'),
     (r'^population$','population.views.popsearch'),
-    (r'^search.json$','economics.views.test'),
+    #(r'^search.json$','economics.views.test'),
     (r'^sourceinfo$','sources.views.sourceinfo'),
+    (r'^export$','common.views.exportcsv'),
+    
+    (r'^testing$','economics.views.testing'),  
 
     #(r'^population/', include('colonialismdb.population.urls')),
     

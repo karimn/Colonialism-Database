@@ -21,9 +21,18 @@
 </head>
 <body>
 	<script type="text/javascript" >
-		$(function(){
+		/*$(function(){
 			setAutoComplete("bookSearchField", "bookResults", "/lookup/?query=");
-		});
+		});*/
+			loc_list = new Array();
+				loc_list = {{ locations_list|safe }};
+				$().ready(function(){
+					$("#locations").autocomplete(loc_list, {
+						multiple: true,
+						mustMatch: true,
+						autoFill: true
+						});
+				});
 	</script>
 	<label for="locationSearchField">Location: </label>
 	<input type="text" id="locationSearchField" name="locationSearchField">

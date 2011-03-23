@@ -535,12 +535,12 @@ tr>input:hover {
 			Location:  <input type="text" id="locations" name="locations" value = "{{ searchlocations|escape }}" />
 			<script>
 				$(function() {
-					$('#locations').autocomplete('{% url government.views.locationlookup %}', {
+					$('#locations').autocomplete({% url government.views.locationlookup %}, {
 						multiple: true,
 						mustMatch: true,
 						autoFill: true,						
 						dataType: 'json',
-						width: 500,
+						width: 5000,
 						parse: function(data) {
 							return $.map(data, function(row) {
 								return { data:row, value:row, result:row };
@@ -551,10 +551,8 @@ tr>input:hover {
                 function(e, data, value) {
                     //$("#testloc").val(value);
                     $("#locations").val += value+", ";
-                }
-            );
-        }
-    );
+                });
+        });
 </script>
 
 			<br /><br /><br />
