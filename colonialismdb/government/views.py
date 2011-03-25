@@ -21,6 +21,7 @@ def locationlookup(request):
 			for x in MainDataEntry.objects.filter(location__name__istartswith=value).distinct()[:20]:
 				if smart_str(x.location.location.name) not in lresults:
 					lresults.append(smart_str(x.location.location.name))
+
 	json = simplejson.dumps(lresults)
 	return HttpResponse(json, mimetype='application/json')
 

@@ -7,6 +7,7 @@
 	<link rel="stylesheet" media="screen" type="text/css" href="/jquery-ui-1.8.9.custom.css" />
 	<script src="http://code.jquery.com/jquery-1.5.min.js" type="text/javascript"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.js" type="text/javascript"></script>
+	<!--<script type="text/javascript" src="http://dev.jquery.com/view/trunk/plugins/autocomplete/jquery.autocomplete.js"></script>-->
 	<script src="http://jquery.bassistance.de/autocomplete/jquery.autocomplete.js" type="text/javascript"></script>
 	<style>
 		/*
@@ -543,30 +544,37 @@ tr>input:hover {
 			<br /><br /><br />
 			Location:  <input type="text" id="locations" name="locations" value = "{{ searchlocations|escape }}" />
 			<script>
-				function formatItem(row) {
-					return row[0] + " (id: " + row[1] + ")";
-				}
-
-				$(function() {
-						$('#locations').autocomplete('{% url economics.views.locationlookup %}', {
-							multiple: true,
-							mustMatch: true,
-							matchContains: true,
-							autoFill: true,					
-							dataType: 'json',
-							width: 500,
-							minChars: 100,
-							parse: function(data) {
+		   		$(function(){
+		   			function formatItem(row) {
+						return row;
+					}
+					function formatResult(row) {
+						//return row.replace(/(<.+?>)/gi, '');
+						return row
+					}  			
+		   			
+		   			$("#locations").autocomplete('{% url economics.views.locationlookup %}', {		   			
+						width: 320,
+						max: 10,
+						cacheLength: 10,
+						highlight: false,
+						multiple: true,
+						multipleSeparator: ", ",
+						scroll: true,
+						scrollHeight: 300,
+						dataType: 'json',
+						formatItem: formatItem,
+						formatResult: formatResult,
+						parse: function(data) {
 								return $.map(data, function(row) {
-									//return { data:data, value:row, result:row };
-									//return { data:row, value:data, result: row};
 									return { data:row, value:row, result:row };
 								});
 							}}).result(
-								function(e, data, value) {
-									$("#locations").val += value+", ";
-								});
-				});
+								function(e, row, data) {
+		               				$("#locations").val = row;
+		           				});	
+		           
+		   		});
 			</script>
 			<br /><br /><br />
 			Source:  <input type="text" id="sourceinput" name="sourceinput" value = "{{ sourceinput|escape }}" />
