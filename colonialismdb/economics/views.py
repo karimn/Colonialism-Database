@@ -30,12 +30,11 @@ def locationlookup(request):
 	if request.method == "GET":
 		if request.GET.has_key(u'q'):
 			value = request.GET[u'q']
-			model_results = AggregateTradeDataEntry.objects.filter(location__name__istartswith="%s" % value).select_related().distinct().order_by('location__name')[:20]
-			#results = [ (x.__unicode__(), smart_str(x.location.location.name)) for x in model_results ]
-			#results = [ x.location.location.name for x in model_results ]
+			model_results = AggregateTradeDataEntry.objects.filter(location__name__istartswith="%s" % value).select_related().distinct()
 			for x in AggregateTradeDataEntry.objects.filter(location__name__istartswith=value).distinct():
 				if smart_str(x.location.location.name) not in lresults:
 					lresults.append(smart_str(x.location.location.name))
+
 	json = simplejson.dumps(lresults)
 	return HttpResponse(json, mimetype='application/json')
 

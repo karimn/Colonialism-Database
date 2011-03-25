@@ -534,27 +534,37 @@ tr>input:hover {
 			<br /><br /><br />
 			Location:  <input type="text" id="locations" name="locations" value = "{{ searchlocations|escape }}" />
 			<script>
-				$(function() {
-					$('#locations').autocomplete({% url government.views.locationlookup %}, {
+		   		$(function(){
+		   			function formatItem(row) {
+						return row;
+					}
+					function formatResult(row) {
+						//return row.replace(/(<.+?>)/gi, '');
+						return row
+					}  			
+		   			
+		   			$("#locations").autocomplete('{% url government.views.locationlookup %}', {		   			
+						width: 320,
+						max: 10,
+						cacheLength: 10,
+						highlight: false,
 						multiple: true,
-						mustMatch: true,
-						autoFill: true,						
+						multipleSeparator: ", ",
+						scroll: true,
+						scrollHeight: 300,
 						dataType: 'json',
-						width: 5000,
+						formatItem: formatItem,
+						formatResult: formatResult,
 						parse: function(data) {
-							return $.map(data, function(row) {
-								return { data:row, value:row, result:row };
-								//return { data:row, value:row };
-							});
-						}
-            }).result(
-                function(e, data, value) {
-                    //$("#testloc").val(value);
-                    $("#locations").val += value+", ";
-                });
-        });
-</script>
-
+								return $.map(data, function(row) {
+									return { data:row, value:row, result:row };
+								});
+							}}).result(
+								function(e, row, data) {
+		               				$("#locations").val = row;
+		           				});	      
+			   		});		
+			</script>
 			<br /><br /><br />
 			Source:  <input type="text" id="sourceinput" name="sourceinput" value = "{{ sourceinput|escape }}" />
 			<br /><br /><br />
