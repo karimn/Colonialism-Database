@@ -12,13 +12,13 @@
 	<script src="http://jquery.bassistance.de/autocomplete/jquery.autocomplete.js" type="text/javascript"></script>
 </head>
 <body>
-	<div id="links"><span id="tag">Search: </span>| <a href="../government">Government Data</a> | <a href="../education">Education Data</a> | <a href="../population">Population Data</a> | <a href="../economics">Economics Data</a> ||</div>
+	<div id="links"><span id="tag">Search: </span>| <a href="../government">Politics</a> | <a href="../education">Education</a> | <a href="../population">Demography/Health</a> | <a href="../economics">Economics</a> | <a href="../infrastructure">Infrastructure</a>||</div>
 	<div id="form" align="center">
 		<script>
 		$(function() {
 			//$( "#startdate" ).datepicker({ minDate: -20, maxDate: "+1M +10D" });
-			$( "#startdate" ).datepicker({dateFormat: 'yy-mm-dd'});
-			$( "#enddate" ).datepicker({dateFormat: 'yy-mm-dd'});
+			$( "#startdate" ).datepicker({dateFormat: 'yyyy'});
+			$( "#enddate" ).datepicker({dateFormat: 'yyyy'});
 			//$( "#enddate" ).datepicker({ minDate: -20, maxDate: "+1M +10D" });
 		});
 		</script>
@@ -71,10 +71,13 @@
 			<br />
 			{% if results %}
 				<table>
-					<tr><td>ID</td><td>Source</td><td>Begin Date</td><td>End Date</td><td>Circa</td><td>Location</td><td> Value Units</td><td>Spatial Area</td><td>Spatial Area Unit</td><td>Currency</td><td>Currency Exchange Rate</td><td>Revenue</td><td>Revenue Type</td><td>Expenditure</td><td>Expenditure Type</td><td>Public Debt</td><td>Military</td><td>Military Type</td><td>Officials</td><td>Officials Type</td><td>Spatial Page No</td><td>Military Page No</td><td>Primary Source Text</td><td>Primary Source Object</td></tr>
+					<tr><td>ID</td><td>Source</td><td>Begin Date</td><td>End Date</td><td>Date Precision</td><td>Location</td><td> Value Units</td><td>Spatial Area</td><td>Spatial Area Unit</td><td>Currency</td><td>Currency Exchange Rate</td><td>Revenue</td><td>Revenue Type</td><td>Expenditure</td><td>Expenditure Type</td><td>Public Debt</td><td>Military</td><td>Military Type</td><td>Officials</td><td>Officials Type</td><td>Spatial Page No</td><td>Military Page No</td><td>Primary Source Text</td><td>Primary Source Object</td></tr>
 				{% for data in results.object_list %}
-					<tr><td>{{ data.id }}</td><td><a href="../sourceinfo?source='{{ data.source }}'">{{ data.source }}</a></td><td>{{ data.begin_date }}</td><td>{{ data.end_date }}</td><td>{{ data.circa }}</td><td>{{ data.location }}</td><td>{{ data.value_unit }}</td><td>{{ data.spatial_area }}</td><td>{{ data.spatial_area_unit }}</td><td>{{ data.currency }}</td><td>{{ data.currency_exchange_rate }}</td><td>{{ data.revenue }}</td><td>{{ data.revenue_type }}</td><td>{{ data.expenditure }}</td><td>{{ data.expenditure_type }}</td><td>{{ data.public_debt }}</td><td>{{ data.military }}</td><td>{{ data.military_type }}</td><td>{{ data.officials }}</td><td>{{ data.officials_type }}</td><td>{{ data.spatial_page_num }}</td><td>{{ data.military_page_num }}</td><td>{{ data.primary_source_text }}</td><td>{{ data.primary_source_obj }}</td></tr>
-					<!--<tr><td>{{ data.id }}</td><td>{{ data.active }}</td><td>{{ data.submitted_by }}</td><td>{{ data.datetime_created }}</td><td>{{ data.page_num }}</td><td>{{ data.source }}</td><td>{{ data.begin_date }}</td><td>{{ data.end_date }}</td><td>{{ data.circa }}</td><td>{{ data.location }}</td><td>{{ data.original_location_name }}</td><td>{{ data.alternate_location_name }}</td><td>{{ data.is_total }}</td><td>{{ data.value_unit }}</td><td>{{ data.remarks }}</td><td>{{ data.spatial_area }}</td><td>{{ data.spatial_area_unit }}</td><td>{{ data.currency }}</td><td>{{ data.currency_exchange_rate }}</td><td>{{ data.revenue }}</td><td>{{ data.revenue_type }}</td><td>{{ data.expenditure }}</td><td>{{ data.expenditure_type }}</td><td>{{ data.public_debt }}</td><td>{{ data.military }}</td><td>{{ data.military_type }}</td><td>{{ data.officials }}</td><td>{{ data.officials_type }}</td><td>{{ data.location }}</td><td>{{ data.spatial_page_num }}</td><td>{{ data.military_page_num }}</td><td>{{ data.primary_source_text }}</td><td>{{ data.primary_source_obj }}</td></tr>-->
+					<tr><td>{{ data.id }}</td><td><a href="../sourceinfo?source='{{ data.source }}'">{{ data.source }}</a></td><td>{{ data.begin_date }}</td><td>{{ data.end_date }}</td>
+					{% if not data.circa %}<td></td>
+						{% else %}<td>{{ data.circa }}</td>
+					{% endif %}
+					<td>{{ data.location }}</td><td>{{ data.value_unit }}</td><td>{{ data.spatial_area }}</td><td>{{ data.spatial_area_unit }}</td><td>{{ data.currency }}</td><td>{{ data.currency_exchange_rate }}</td><td>{{ data.revenue|floatformat:3 }}</td><td>{{ data.revenue_type }}</td><td>{{ data.expenditure }}</td><td>{{ data.expenditure_type }}</td><td>{{ data.public_debt }}</td><td>{{ data.military }}</td><td>{{ data.military_type }}</td><td>{{ data.officials }}</td><td>{{ data.officials_type }}</td><td>{{ data.spatial_page_num }}</td><td>{{ data.military_page_num }}</td><td>{{ data.primary_source_text }}</td><td>{{ data.primary_source_obj }}</td></tr>
 				{% endfor %}
 				</table>
 			<br />

@@ -18,7 +18,7 @@
 		});
 	</script>
 	</script>
-	<div id="links"><span id="tag">Search: </span>| <a href="../government">Government Data</a> | <a href="../education">Education Data</a> | <a href="../population">Population Data</a> | <a href="../economics">Economics Data</a> ||</div>
+	<div id="links"><span id="tag">Search: </span>| <a href="../government">Politics</a> | <a href="../education">Education</a> | <a href="../population">Demography/Health</a> | <a href="../economics">Economics</a> | <a href="../infrastructure">Infrastructure</a>||</div>
 	<div id="form" align="center">
 		<form action='population' method="GET">
 			<div>
@@ -71,17 +71,16 @@
 			<br /><br /><br />
 		</form>
 	</div>
-	<div id="pop_results" align="center">
+	<div id="pop_results">
 		{% if results %}
-			<script>
-				//$('#form').fadeToggle(1000);
-			</script>
 			<table>
-				<!--<tr><td>ID</td><td>Active</td><td>Submitted By</td><td>Created</td><td>Page No</td><td>Source</td><td>Begin Date</td><td>End Date</td><td>Circa</td><td>Location</td><td>Original Location Name</td><td>Alternate Location Name</td><td>Is Total ?</td><td>Value Units</td><td>Remarks</td><td>Religion</td><td>Race</td><td>Ethicity</td><td>Ethic origin</td><td>Age Start</td><td>Age End</td><td>Individual Family</td><td>Population Gender</td><td>Population Value</td><td>Value Precision</td><td>Population Condition</td><td>Occupation</td><td>Old Source</td><td>Primary Source Text</td><td>Primary Source Object</td></tr>-->
-				<tr><td>Source</td><td>Begin Date</td><td>End Date</td><td>Circa</td><td>Location</td><td>Is Total ?</td><td>Value Units</td><td>Age Start</td><td>Age End</td><td>Population Gender</td></tr>
+				<tr><td>Source</td><td>Begin Date</td><td>End Date</td><td>Date Precision</td><td>Location</td><td>Is Total ?</td><td>Value Units</td><td>Age Start</td><td>Age End</td><td>Population Gender</td></tr>
 			{% for data in results.object_list %}
-				<!--<tr><td>{{ data.id }}</td><td>{{ data.active }}</td><td>{{ data.submitted_by }}</td><td>{{ data.datetime_created }}</td><td>{{ data.page_num }}</td><td>{{ data.source }}</td><td>{{ data.begin_date }}</td><td>{{ data.end_date }}</td><td>{{ data.circa }}</td><td>{{ data.location }}</td><td>{{ data.original_location_name }}</td><td>{{ data.alternate_location_name }}</td><td>{{ data.is_total }}</td><td>{{ data.value_unit }}</td><td>{{ data.remarks }}</td><td>{{ data.religion }}</td><td>{{ data.race }}</td><td>{{ data.ethnicity }}</td><td>{{ data.ethnic_origin }}</td><td>{{ data.age_start }}</td><td>{{ data.age_end }}</td><td>{{ data.individ_fam }}</td><td>{{ data.population_gender }}</td><td>{{ data.population_value }}</td><td>{{ data.value_precision }}</td><td>{{ data.population_condition }}</td><td>{{ data.occupation }}</td><td>{{ data.old_source }}</td><td>{{ data.primary_source_text }}</td><td>{{ data.primary_source_obj }}</td></tr>-->
-				<tr><td>{{ data.source }}</td><td>{{ data.begin_date }}</td><td>{{ data.end_date }}</td><td>{{ data.circa }}</td><td>{{ data.location }}</td><td>{{ data.is_total }}</td><td>{{ data.value_unit }}</td><td>{{ data.age_start }}</td><td>{{ data.age_end }}</td><td>{{ data.population_gender }}</td></tr>
+				<tr><td>{{ data.source }}</td><td>{{ data.begin_date }}</td><td>{{ data.end_date }}</td>
+				{% if not data.circa %}<td></td>
+					{% else %}<td>{{ data.circa }}</td>
+				{% endif %}
+				<td>{{ data.location }}</td><td>{{ data.is_total }}</td><td>{{ data.value_unit }}</td><td>{{ data.age_start }}</td><td>{{ data.age_end }}</td><td>{{ data.population_gender }}</td></tr>
 			{% endfor %}
 			</table>
 		<div class="pagination">

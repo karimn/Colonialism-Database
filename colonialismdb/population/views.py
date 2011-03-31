@@ -6,10 +6,15 @@ from django.http import *
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.utils.encoding import smart_str, smart_unicode
 
+# Imports for the Ajax calls and the Jquery autocomplete plugin
 from django.http import HttpResponse
 from django.utils import simplejson
+
+# Imports to aid in unicode string handling
 from django.utils.encoding import smart_str, smart_unicode
 
+
+# Ajax call from template picks up matching locations with this function
 def locationlookup(request):
 	lresults = []
 	temp = []
@@ -17,14 +22,14 @@ def locationlookup(request):
 		if request.GET.has_key(u'q'):
 			value = request.GET[u'q']
 			model_results = MainDataEntry.objects.filter(location__name__istartswith="%s" % value).select_related().distinct()
-			#results = [ (x.__unicode__(), smart_str(x.location.location.name)) for x in model_results ]
-			#results = [ x.location.location.name for x in model_results ]
-			for x in MainDataEntry.objects.filter(location__name__istartswith=value).distinct()[:20]:
+			for x in MainDataEntry.objects.filter(location__name__istartswith=value).distinct():
 				if smart_str(x.location.location.name) not in lresults:
 					lresults.append(smart_str(x.location.location.name))
 	json = simplejson.dumps(lresults)
 	return HttpResponse(json, mimetype='application/json')
 
+
+# Search function for Population data
 def popsearch(request):
 
 	if request.GET.get('search'):
@@ -77,7 +82,7 @@ def popsearch(request):
 					searchlocations=""
 					results = datesourceresults
 			
-		paginator = Paginator(results,1)
+		paginator = Paginator(results,20)
 		try:
 			page = request.GET.get('page','1')
 		except ValueError:
@@ -98,6 +103,9 @@ def popsearch(request):
 		minage =""
 		maxage = ""
 	return render_to_response("population.html",{"locations_list":locations_list,"searchlocations":searchlocations,"startdate":startdate,"enddate":enddate,"sourceinput":sourceinput,"genders":genders,"minage":minage,"maxage":maxage,"results":results,"search":search})
+
+
+
 
 """
 	locations_list = []

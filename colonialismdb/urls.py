@@ -29,10 +29,10 @@ urlpatterns = patterns('',
     (r'^education$','education.views.edusearch'),
     (r'^government$','government.views.govtsearch'),
     (r'^population$','population.views.popsearch'),
+   (r'^infrastructure$','infrastructure.views.infrasearch'),
     (r'^sourceinfo$','sources.views.sourceinfo'),
-    (r'^export$','common.views.exportcsv'),
     
-    (r'^testing$','economics.views.testing'),  
+    #(r'^testing$','economics.views.testing'), 
 
     #(r'^population/', include('colonialismdb.population.urls')),
     
@@ -41,7 +41,7 @@ urlpatterns = patterns('',
     (r'^economics/locationlookup/$', 'economics.views.locationlookup'),
     (r'^education/locationlookup/$', 'education.views.locationlookup'), 
     (r'^population/locationlookup/$', 'population.views.locationlookup'), 
-    #(r'^locationlookup/$', 'government.locationlookup'),
+    (r'^infrastructure/locationlookup/$', 'infrastructure.views.locationlookup'),
     
     (r'^test/(?P<from_applabel>[^/]+)/(?P<from_model>[^/]+)/((add)|(\d+))/autocomplete/(?P<to_applabel>[^/]+)/(?P<to_model>[^/]+)/$', 'colonialismdb.common.views.autocomplete'),
     (r'^test/(?P<from_applabel>[^/]+)/(?P<from_model>[^/]+)/(?P<from_id>\d+)/get_label/(?P<to_applabel>[^/]+)/(?P<to_model>[^/]+)/$', 'colonialismdb.common.views.get_label'),

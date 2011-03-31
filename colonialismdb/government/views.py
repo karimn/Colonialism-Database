@@ -4,14 +4,16 @@ from django.db.models import Q
 from django.contrib import auth
 from django.http import *
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
+
+# Imports for the Ajax calls and the Jquery autocomplete plugin
 from django.http import HttpResponse
 from django.utils import simplejson
+
+# Imports to aid in unicode string handling
 from django.utils.encoding import smart_str, smart_unicode
 
-#results = [ (x.__unicode__(), smart_str(x.location.location.name)) for x in model_results ]  -- lines 20
-#results = [ x.location.location.name for x in model_results ]
 
-
+# Ajax call from template picks up matching locations with this function
 def locationlookup(request):
 	lresults = []
 	temp = []
@@ -26,7 +28,7 @@ def locationlookup(request):
 	json = simplejson.dumps(lresults)
 	return HttpResponse(json, mimetype='application/json')
 
-
+# Search function for Government/Politics data
 def	govtsearch(request):
 	if request.GET.get('search'):
 		search = request.GET.get('search')
@@ -56,7 +58,7 @@ def	govtsearch(request):
 		else:
 					searchlocations=""
 					results = datesourceresults
-		paginator = Paginator(results,1)
+		paginator = Paginator(results,20)
 		try:
 			page = request.GET.get('page','1')
 		except ValueError:

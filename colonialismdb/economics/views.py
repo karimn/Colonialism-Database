@@ -6,24 +6,14 @@ from django.http import *
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from sources.models import *
 
+# Imports for the Ajax calls and the Jquery autocomplete plugin
 from django.http import HttpResponse
 from django.utils import simplejson
+
+# Imports to aid in unicode string handling
 from django.utils.encoding import smart_str, smart_unicode
-import csv
-from django.core import serializers
 
-
-def test(request):
-	resp = []
-	return HttpResponse(resp)
-
-def testing(request):
-	locations_list = []
-	for x in AggregateTradeDataEntry.objects.select_related():
-		if not x.location.location.name in locations_list:
-			locations_list.append(str(x.location.location.name))
-	return render_to_response("test.html",{"locations_list":locations_list})
-
+# Ajax call from template picks up matching locations with this function
 def locationlookup(request):
 	lresults = []
 	temp = []
@@ -38,9 +28,8 @@ def locationlookup(request):
 	json = simplejson.dumps(lresults)
 	return HttpResponse(json, mimetype='application/json')
 
-	
-	
 
+# Search function for Economics data
 def	econsearch(request):
 	if request.GET.get('search'):
 		search = request.GET.get('search')
@@ -62,6 +51,7 @@ def	econsearch(request):
 
 		datesourceresults = AggregateTradeDataEntry.objects.filter(Q(begin_date__range=(startdate,enddate)) | Q(end_date__range=(startdate,enddate))).filter(Q(source__name__icontains=sourceinput)).select_related().order_by('id')
 		
+		
 		if request.GET.get('locations'):
 			searchlocations = request.GET.get('locations')
 			locations_list = searchlocations.split(", ")
@@ -72,7 +62,7 @@ def	econsearch(request):
 					searchlocations=""
 					results = datesourceresults
 		rset =  results
-		paginator = Paginator(results,1)
+		paginator = Paginator(results,20)
 		try:
 			page = request.GET.get('page','1')
 		except ValueError:
@@ -173,4 +163,17 @@ def	econsearch(request):
 		
 	return render_to_response("economics.html",{"locations_list":locations_list,"searchlocations":searchlocations,"locresults":locresults,"locationsearch":locationsearch,"datesearch":datesearch,"startdate":startdate,"enddate":enddate,"dateresults":dateresults,"sourcesearch":sourcesearch,"sourceinput":sourceinput,"sourceresults":sourceresults})
 	
+"""
+
+"""
+def test(request):
+	resp = []
+	return HttpResponse(resp)
+
+def testing(request):
+	locations_list = []
+	for x in AggregateTradeDataEntry.objects.select_related():
+		if not x.location.location.name in locations_list:
+			locations_list.append(str(x.location.location.name))
+	return render_to_response("test.html",{"locations_list":locations_list})
 """
