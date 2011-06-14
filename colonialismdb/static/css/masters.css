@@ -1,0 +1,115 @@
+/* reset --------------------------- */
+
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-style:inherit;font-size:100%;font-family:inherit;vertical-align:baseline}:focus{outline:0}body{line-height:1;font:62.5%/120% arial,verdana,helvetica,sans-serif}ol,ul{list-style:none}table{border-collapse:collapse;border-spacing:0}caption,th,td{text-align:left;font-weight:normal}blockquote:before,blockquote:after,q:before,q:after{content:""}blockquote,q{quotes:"" ""}input.input-text,textarea,select{font-family:inherit}
+
+/* global --------------------------- */
+
+html {overflow-y:scroll;background:#ebebeb;}
+body {background:#ebebeb url(../images/bg.gif) repeat-x;font-family:helvetica,arial,sans-serif;}
+a {text-decoration:none;color:#4c9bc3;}
+a:link:hover, a:visited:hover {text-decoration:underline;}
+p {font-size:1.2em;line-height:1.5em;margin-bottom:1.2em;}
+#wrapper {width:942px;position:relative;margin:0 auto;}
+#content {position:relative;padding:0 21px;}
+
+/* header --------------------------- */
+
+#header {text-align:right;background:transparent url(../images/sprite-hp-boxes.png) no-repeat 21px 100%;padding-bottom:9px;}
+#header #masthead {float:left;text-align:left;padding:30px 0 18px 30px;}
+#header #masthead a {
+display:block;color:#fff;width:225px;height:30px;text-indent:-9000px;overflow:hidden;background:transparent url(../images/sprite.png) no-repeat -198px 0;}
+#audience {padding:35px 22px 0 0;float:right;height:31px;}
+#audience li {list-style:none;display:inline;}
+#audience li a {display:block;width:auto;font-size:1.1em;color:#969b9f;padding:2px 8px 2px 7px;float:left;text-align:center;background:transparent url(../images/sprite.png) 100% -600px;}
+#audience li a:hover {color:#555f6a;}
+#audience li.last a {background-image:none;}
+#audience li a.links {padding-left:21px;background:transparent url(../images/sprite.png) no-repeat -94px -199px;}
+#audience li a.links:hover {background-position:-94px -299px;}
+
+/* nav --------------------------- */
+
+#nav-bar {clear:both;text-align:left;padding:9px 30px 0 30px;background:transparent url(../images/sprite-hp-boxes.png) no-repeat 21px 0;height:35px;overflow:hidden;display:block;}
+#nav {float:left;width:660px;}
+#nav li {float:left;width:auto;display:inline;position:relative;}
+#nav li a {float:left;display:block;width:90px;color:#fff;font-size:1.1em;padding:9px 6px 9px 14px;background:transparent url(../images/sprite.png) no-repeat;text-indent:-9000px;overflow:hidden;word-wrap:break-word;}
+/* background images */
+#nav li#admissions a {background-position:-487px 13px;}
+#nav li#academics a {background-position:-487px -87px;}
+#nav li#research a {background-position:-487px -187px;}
+#nav li#campuslife a {background-position:-487px -287px;}
+#nav li#offices a {background-position:-487px -387px;}
+#nav li#alumni a {background-position:-487px -487px; padding-right:6px;}
+#nav li#admissions a:hover {background-position:-598px 13px;}
+#nav li#academics a:hover {background-position:-598px -87px;}
+#nav li#research a:hover {background-position:-598px -187px;}
+#nav li#campuslife a:hover {background-position:-598px -287px;}
+#nav li#offices a:hover {background-position:-598px -387px;}
+#nav li#alumni a:hover {background-position:-598px -487px;}
+/* sub items */
+#nav li ul {position:absolute;top:42px;left:0;z-index:2;width:111px;}
+#nav li li {display:block;}
+#nav li li a,
+#nav li#admissions li a,
+#nav li#academics li a,
+#nav li#research li a,
+#nav li#campuslife li a,
+#nav li#offices li a,
+#nav li#alumni li a {float:none;padding:4px 6px 4px 13px;color:#ebeff2;background-color:transparent;background-image:none;text-indent:0;overflow:visible;}
+
+
+
+/* feature --------------------------- */
+
+#feature {position:relative;height:360px;overflow:hidden;text-align:left;background:transparent url(../images/sprite-hp-boxes.png) no-repeat 21px 50%;}
+#feature img, #motion {position:absolute;left:30px;}
+/* headline styles */
+.headline {position:absolute;width:207px;left:705px;}
+.headline h1 {height:354px;display:table;}
+.headline h1 a {display:table-cell;vertical-align:middle;color:#fff;font-size:12px;line-height:12px;font-weight:normal;margin:0;}
+.headline h1 a:hover {text-decoration:none;}
+.headline h1 a span {display:inline-block;height:12px;padding:4px 5px;background:transparent url(../images/sprite.png) 0 -1200px;}
+.headline h1 a strong {font-size:26px;line-height:26px;font-weight:bold;}
+.headline h1 a strong span {height:27px;}
+/* optional attributes */
+#feature .semiwide {left:635px;width:266px;}
+#feature .wide {left:583px;width:318px;}
+#feature .extrawide {left:479px;width:422px;}
+#feature .left {left:60px;}
+#feature .center {left:30px;width:882px;text-align:center;}
+#feature .center h1 {width:882px;text-align:center;}
+#feature .huge h1 a strong {font-size:50px;line-height:50px;}
+#feature .huge h1 a strong span {height:50px;}
+#feature .nobg h1 a span {background-image:none;}
+#feature .black-90 h1 a span {background-position:0 -1000px;}
+#feature .inverse h1 a, #feature .inverse-90 h1 a  {color:#333;}
+#feature .inverse h1 a span {background-position:0 -1600px;}
+#feature .inverse-90 h1 a span {background-position:0 -1400px;}
+
+#feature-content{
+    font-size: 14px;
+    margin: 20px 40px;
+    line-height: 18px;
+}
+#feature-content h1{
+    font-size: 20px;
+}
+
+#extra-content{
+    margin-top: 0px;
+    border: solid 1px #DDD;
+    margin-left: 28px;
+    background: #FFF;
+    width: 877px;
+    font-size: 12px;
+    padding: 5px;
+}
+
+#footer {position:relative;padding:30px 34px 34px 30px;text-align:left;}
+#footer #logo {float:left;display:block;width:146px;height:50px;margin:0;}
+#footer #logo a {display:block;width:112px;height:50px;text-decoration:none;text-indent:-9000px;overflow:hidden;background:transparent url(../images/sprite.png) 0 0;}
+#footer li {list-style:none;display:inline;}
+#footer li a {font-size:1.1em;color:#8a8f94;padding:2px 8px 2px 7px;float:left;text-align:center;display:block;width:auto;background:transparent url(../images/sprite.png) 100% -700px;}
+#footer li a:hover, #footer li a.rss:hover {color:#555f6a;}
+#footer li.last a {background-image:none;}
+/* clearer */
+#nav-bar:after, #content:after, #main:after, #pagination div:after, .sub-feature:after, #browse:after, #browse .bu-today h2:after, #footer:after {display:block;clear:both;content:" ";height:0;overflow:hidden;}

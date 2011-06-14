@@ -1,17 +1,40 @@
-from django.http import HttpResponse, HttpResponseRedirect, Http404, HttpResponseServerError
-from django.db import models
-from django.utils import simplejson
-from django.shortcuts import get_object_or_404, get_list_or_404
-from django.shortcuts import render_to_response
-from economics.models import *
-from django.db.models import Q
 import csv
 import types
 
+from django.http import HttpResponse, HttpResponseRedirect, Http404, HttpResponseServerError
+from django.db import models
+from django.db.models import Q
+from django.shortcuts import get_object_or_404, get_list_or_404
+from django.shortcuts import render_to_response
+from django.template import RequestContext
 from django.utils import simplejson
 
+from economics.models import *
+
+
+
+from django.utils import simplejson
+
+def about(request):
+    return render_to_response('about.html',
+        {
+        },context_instance=RequestContext(request))
+
+
+def search(request):
+
+    return render_to_response('search.html',
+        {
+        },context_instance=RequestContext(request))
+
+
+
 def index(request):
-  return render_to_response("mainindex.html")
+    return render_to_response('index.html',
+        {
+        },context_instance=RequestContext(request))
+  #return render_to_response("mainindex.html")
+
 
 def exportcsv(request):
 	rset = request.GET['rset']

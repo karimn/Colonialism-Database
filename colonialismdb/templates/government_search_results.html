@@ -1,0 +1,57 @@
+<html>
+<head>
+<body>
+<table style="border: solid 1px #DDD;">
+    <tr style="border: solid 1px #DDD;">
+        <td nowwrap style="border: solid 1px #DDD;">ID</td>
+        <td nowwrap style="border: solid 1px #DDD;">Source</td>
+        <td nowwrap style="border: solid 1px #DDD;">Begin Date</td>
+        <td nowwrap style="border: solid 1px #DDD;">End Date</td>
+        <td nowwrap style="border: solid 1px #DDD;">Date Precision</td>
+        <td nowwrap style="border: solid 1px #DDD;">Location</td>
+        <td nowwrap style="border: solid 1px #DDD;"> Value Units</td>
+        <td nowwrap style="border: solid 1px #DDD;">Spatial Area</td>
+        <td nowwrap style="border: solid 1px #DDD;">Spatial Area Unit</td>
+        <td nowwrap style="border: solid 1px #DDD;">Currency</td>
+        <td nowwrap style="border: solid 1px #DDD;">Currency Exchange Rate</td>
+        <td nowwrap style="border: solid 1px #DDD;">Revenue</td>
+        <td nowwrap style="border: solid 1px #DDD;">Revenue Type</td>
+        <td nowwrap style="border: solid 1px #DDD;">Expenditure</td>
+        <td nowwrap style="border: solid 1px #DDD;">Expenditure Type</td>
+        <td nowwrap style="border: solid 1px #DDD;">Public Debt</td>
+        <td nowwrap style="border: solid 1px #DDD;">Military</td>
+        <td nowwrap style="border: solid 1px #DDD;">Military Type</td>
+        <td nowwrap style="border: solid 1px #DDD;">Officials</td>
+        <td nowwrap style="border: solid 1px #DDD;">Officials Type</td>
+        <td nowwrap style="border: solid 1px #DDD;">Spatial Page No</td>
+        <td nowwrap style="border: solid 1px #DDD;">Military Page No</td>
+        <td nowwrap style="border: solid 1px #DDD;">Primary Source Text</td>
+        <td nowwrap style="border: solid 1px #DDD;">Primary Source Object</td>
+    </tr>
+{% for data in results.object_list %}
+    <tr style="border: solid 1px #DDD;"><td style="border: solid 1px #DDD;">{{ data.id }}</td><td style="border: solid 1px #DDD;"><a href="../sourceinfo?source='{{ data.source }}'">{{ data.source }}</a></td><td style="border: solid 1px #DDD;">{{ data.begin_date }}</td><td style="border: solid 1px #DDD;">{{ data.end_date }}</td>
+    {% if not data.circa %}<td style="border: solid 1px #DDD;"></td>
+        {% else %}<td style="border: solid 1px #DDD;">{{ data.circa }}</td>
+    {% endif %}
+    <td style="border: solid 1px #DDD;">{{ data.location }}</td><td style="border: solid 1px #DDD;">{{ data.value_unit }}</td><td style="border: solid 1px #DDD;">{{ data.spatial_area }}</td><td style="border: solid 1px #DDD;">{{ data.spatial_area_unit }}</td><td style="border: solid 1px #DDD;">{{ data.currency }}</td><td style="border: solid 1px #DDD;">{{ data.currency_exchange_rate }}</td><td style="border: solid 1px #DDD;">{{ data.revenue|floatformat:3 }}</td><td style="border: solid 1px #DDD;">{{ data.revenue_type }}</td><td style="border: solid 1px #DDD;">{{ data.expenditure }}</td><td style="border: solid 1px #DDD;">{{ data.expenditure_type }}</td><td style="border: solid 1px #DDD;">{{ data.public_debt }}</td><td style="border: solid 1px #DDD;">{{ data.military }}</td><td style="border: solid 1px #DDD;">{{ data.military_type }}</td><td style="border: solid 1px #DDD;">{{ data.officials }}</td><td style="border: solid 1px #DDD;">{{ data.officials_type }}</td><td style="border: solid 1px #DDD;">{{ data.spatial_page_num }}</td><td style="border: solid 1px #DDD;">{{ data.military_page_num }}</td><td style="border: solid 1px #DDD;">{{ data.primary_source_text }}</td><td style="border: solid 1px #DDD;">{{ data.primary_source_obj }}</td></tr>
+{% endfor %}
+</table>
+<br />
+</div>
+<div class="pagination">
+    <span class="step-links">
+        <span><a href="?search={{ search }}&page=1&startdate={{ startdate }}&enddate={{ enddate }}&locations={{ searchlocations }}&sourceinput={{ sourceinput }}">first&nbsp;&nbsp;</a></span>
+        {% if results.has_previous %}
+            <a href="?search={{ search }}&page={{ results.previous_page_number }}&startdate={{ startdate }}&enddate={{ enddate }}&locations={{ searchlocations }}&sourceinput={{ sourceinput }}"><span class="pagination-text-right">previous</span></a>
+        {% endif %}
+    <span class="current">
+            Page {{ results.number }} of {{ results.paginator.num_pages }}.
+    </span>
+        {% if results.has_next %}
+                <a href="?search={{ search }}&page={{ results.next_page_number }}&startdate={{ startdate }}&enddate={{ enddate }}&locations={{ searchlocations }}&sourceinput={{ sourceinput }}"><span class="pagination-text-left">next</span></a>
+        {% endif %}
+        <span><a href="?search={{ search }}&page={{ results.paginator.num_pages }}&startdate={{ startdate }}&enddate={{ enddate }}&locations={{ searchlocations }}&sourceinput={{ sourceinput }}">&nbsp;&nbsp;last</a></span>
+    </span>
+</div>
+</body>
+</html>

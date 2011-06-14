@@ -8,9 +8,12 @@ from django.core.paginator import Paginator, InvalidPage, EmptyPage
 # Imports for the Ajax calls and the Jquery autocomplete plugin
 from django.http import HttpResponse
 from django.utils import simplejson
+from django.template import RequestContext
 
 # Imports to aid in unicode string handling
 from django.utils.encoding import smart_str, smart_unicode
+
+from government.forms import GovernmentSearchForm
 
 
 # Ajax call from template picks up matching locations with this function
@@ -30,52 +33,81 @@ def locationlookup(request):
 
 # Search function for Government/Politics data
 def	govtsearch(request):
-	if request.GET.get('search'):
-		search = request.GET.get('search')
-		if request.GET.get('startdate'):
-			startdate = request.GET.get('startdate')
-		else:
-			startdate = "1870-01-01"
-		if request.GET.get('enddate'):
-			enddate = request.GET.get('enddate')
-		else:
-			enddate = "2006-12-31"
-		if request.GET.get('sourceinput'):
-			sourceinput = request.GET.get('sourceinput')
-		else:
-			sourceinput = ""
-		locations_list = []
-		results = []
-		
-		datesourceresults = MainDataEntry.objects.filter(Q(begin_date__range=(startdate,enddate)) | Q(end_date__range=(startdate,enddate))).filter(Q(source__name__icontains=sourceinput)).select_related().order_by('id')
-		
-		if request.GET.get('locations'):
-			searchlocations = request.GET.get('locations')
-			locations_list = searchlocations.split(", ")
-			for x in locations_list:
-				for y in datesourceresults.filter(location__name="%s"%x).select_related().order_by('id'):
-					results.append(y)
-		else:
-					searchlocations=""
-					results = datesourceresults
-		paginator = Paginator(results,20)
-		try:
-			page = request.GET.get('page','1')
-		except ValueError:
-			page = 1
-		try:
-			results = paginator.page(page)
-		except (EmptyPage, InvalidPage):
-			results = paginator.page(paginator.num_pages)
-	else:
-		results = []
-		locations_list = []
-		searchlocations = ""
-		startdate = ""
-		enddate = ""
-		sourceinput = ""
-		search = ""
-	return render_to_response("government.html",{"locations_list":locations_list,"searchlocations":searchlocations,"startdate":startdate,"enddate":enddate,"sourceinput":sourceinput,"results":results,"search":search})
+    form = GovernmentSearchForm()
+
+    if request.GET.get('search'):
+        search = request.GET.get('search')
+        if request.GET.get('startdate'):
+            startdate = request.GET.get('startdate')
+        else:
+            startdate = "1870-01-01"
+        if request.GET.get('enddate'):
+            enddate = request.GET.get('enddate')
+        else:
+            enddate = "2006-12-31"
+        if request.GET.get('sourceinput'):
+            sourceinput = request.GET.get('sourceinput')
+        else:
+            sourceinput = ""
+        locations_list = []
+        results = []
+
+        datesourceresults = MainDataEntry.objects.filter(Q(begin_date__range=(startdate,enddate)) | Q(end_date__range=(startdate,enddate))).filter(Q(source__name__icontains=sourceinput)).select_related().order_by('id')
+
+        if request.GET.get('locations'):
+            searchlocations = request.GET.get('locations')
+            locations_list = searchlocations.split(", ")
+            for x in locations_list:
+                for y in datesourceresults.filter(location__name="%s"%x).select_related().order_by('id'):
+                    results.append(y)
+        else:
+                    searchlocations=""
+                    results = datesourceresults
+        paginator = Paginator(results,20)
+        try:
+            page = request.GET.get('page','1')
+        except ValueError:
+            page = 1
+        try:
+            results = paginator.page(page)
+        except (EmptyPage, InvalidPage):
+            results = paginator.page(paginator.num_pages)
+
+        return render_to_response("government_search_results.html",
+            {
+                "locations_list":locations_list,
+                "searchlocations":searchlocations,
+                "startdate":startdate,
+                "enddate":enddate,
+                "sourceinput":sourceinput,
+                "results":results,
+                "search":search,
+                "form": form,
+            },context_instance=RequestContext(request))
+
+
+
+    else:
+        results = []
+        locations_list = []
+        searchlocations = ""
+        startdate = ""
+        enddate = ""
+        sourceinput = ""
+        search = ""
+
+
+    return render_to_response("government.html",
+        {
+            "locations_list":locations_list,
+            "searchlocations":searchlocations,
+            "startdate":startdate,
+            "enddate":enddate,
+            "sourceinput":sourceinput,
+            "results":results,
+            "search":search,
+            "form": form,
+        },context_instance=RequestContext(request))
 
 
 
@@ -171,6 +203,6 @@ def	govtsearch(request):
 		sourcesearch = ""
 		sourceinput = ""
 		sourceresults = []
-		
+
 	return render_to_response("government.html",{"locations_list":locations_list,"searchlocations":searchlocations,"locresults":locresults,"locationsearch":locationsearch,"datesearch":datesearch,"startdate":startdate,"enddate":enddate,"dateresults":dateresults,"sourcesearch":sourcesearch,"sourceinput":sourceinput,"sourceresults":sourceresults})
 """

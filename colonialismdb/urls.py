@@ -21,28 +21,28 @@ urlpatterns = patterns('',
     # Example:
     # (r'^colonialismdb/', include('colonialismdb.foo.urls')),
 
-    # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
-    # to INSTALLED_APPS to enable admin documentation:
     (r'^admin/doc/', include('django.contrib.admindocs.urls')),
-    (r'^$','common.views.index'),
-    (r'^economics$','economics.views.econsearch'),
-    (r'^education$','education.views.edusearch'),
-    (r'^government$','government.views.govtsearch'),
-    (r'^population$','population.views.popsearch'),
-   (r'^infrastructure$','infrastructure.views.infrasearch'),
-    (r'^sourceinfo$','sources.views.sourceinfo'),
-    
-    #(r'^testing$','economics.views.testing'), 
+    url(r'^about/$','common.views.about', name='about'),
+    url(r'^$','common.views.index', name='index'),
+    url(r'^search/$','common.views.search', name='search'),
+    url(r'^economics/$','economics.views.econsearch', name='economics'),
+    url(r'^education/$','education.views.edusearch', name='education'),
+    url(r'^politics/$','government.views.govtsearch', name='government'),
+    url(r'^population/$','population.views.popsearch', name='population'),
+    url(r'^infrastructure/$','infrastructure.views.infrasearch', name='infrastructure'),
+    url(r'^sourceinfo/$','sources.views.sourceinfo', name='sourceinfo'),
+
+    #(r'^testing$','economics.views.testing'),
 
     #(r'^population/', include('colonialismdb.population.urls')),
-    
+
 
     (r'^government/locationlookup/$', 'government.views.locationlookup'),
     (r'^economics/locationlookup/$', 'economics.views.locationlookup'),
-    (r'^education/locationlookup/$', 'education.views.locationlookup'), 
-    (r'^population/locationlookup/$', 'population.views.locationlookup'), 
+    (r'^education/locationlookup/$', 'education.views.locationlookup'),
+    (r'^population/locationlookup/$', 'population.views.locationlookup'),
     (r'^infrastructure/locationlookup/$', 'infrastructure.views.locationlookup'),
-    
+
     (r'^test/(?P<from_applabel>[^/]+)/(?P<from_model>[^/]+)/((add)|(\d+))/autocomplete/(?P<to_applabel>[^/]+)/(?P<to_model>[^/]+)/$', 'colonialismdb.common.views.autocomplete'),
     (r'^test/(?P<from_applabel>[^/]+)/(?P<from_model>[^/]+)/(?P<from_id>\d+)/get_label/(?P<to_applabel>[^/]+)/(?P<to_model>[^/]+)/$', 'colonialismdb.common.views.get_label'),
 
@@ -60,7 +60,7 @@ urlpatterns = patterns('',
 
 if settings.DEBUG:
   urlpatterns += patterns('',
-      (r'^static/(?P<path>sources/.+)$', 'django.views.static.serve', { 'document_root' : settings.MEDIA_ROOT }),  
+      (r'^static/(?P<path>sources/.+)$', 'django.views.static.serve', { 'document_root' : settings.MEDIA_ROOT }),
   )
 
 if settings.DEBUG:
