@@ -2,14 +2,58 @@
 {% block extra_head %}
 
 <style>
-#id_start_year, #id_end_year{
-    width: 40px;
-}
 .info{
     padding-top: 0px;padding-bottom: 0px;
     margin-top: 0px;
 }
 </style>
+
+    <script>
+$(document).ready(function(){
+    $('#id_all_time_frames').change(function () {
+        if ($(this).attr("checked")) {
+            // set all the date inputs to disabled
+            $("#id_start_date_day").attr("disabled", "disabled");
+            $("#id_start_date_month").attr("disabled", "disabled");
+            $("#id_start_date_year").attr("disabled", "disabled");
+            $("#id_end_date_day").attr("disabled", "disabled");
+            $("#id_end_date_month").attr("disabled", "disabled");
+            $("#id_end_date_year").attr("disabled", "disabled");
+            $("#id_start_date_day").val("");
+            $("#id_start_date_month").val("");
+            $("#id_start_date_year").val("");
+            $("#id_end_date_day").val("");
+            $("#id_end_date_month").val("");
+            $("#id_end_date_year").val("");
+            return;
+        }
+        $("#id_start_date_day").removeAttr("disabled");
+        $("#id_start_date_month").removeAttr("disabled");
+        $("#id_start_date_year").removeAttr("disabled");
+        $("#id_end_date_day").removeAttr("disabled");
+        $("#id_end_date_month").removeAttr("disabled");
+        $("#id_end_date_year").removeAttr("disabled");
+        $("#id_start_date_day").val("1");
+        $("#id_start_date_month").val("1");
+        $("#id_start_date_year").val("");
+        $("#id_end_date_day").val("1");
+        $("#id_end_date_month").val("1");
+        $("#id_end_date_year").val("");
+    });
+
+    $('#id_all_locations').change(function () {
+        if ($(this).attr("checked")) {
+            $("#id_locations").attr("disabled", "disabled");
+            $("#id_locations").val("");
+            return;
+        }
+        $("#id_locations").removeAttr("disabled");
+        $("#id_locations").val("");
+
+    });
+
+});
+</script>
 
 {% endblock %}
 
@@ -26,238 +70,209 @@
 
 {% block extra-content %}
 <div id="extra-content">
-		<script>
-		$(function() {
-			//$( "#startdate" ).datepicker({ minDate: -20, maxDate: "+1M +10D" });
-			$( "#startdate" ).datepicker({dateFormat: 'yyyy'});
-			$( "#enddate" ).datepicker({dateFormat: 'yyyy'});
-			//$( "#enddate" ).datepicker({ minDate: -20, maxDate: "+1M +10D" });
-		});
-		</script>
-
 		<form action='{% url government %}' method="GET">
-
-		    <table id='gov_search_table' style="border: solid 1px #FFF;">
-		        <tr>
-		            <th colspan='8' style='text-align: center;'>
-		                <h2>Date Parameters</h2>
-		                Selecting a start or end date is optional.  If you do not select a date or date range we will return results for all time periods.
-		            </th>
-                </tr>
+        <table id='gov_search_table' style="border: solid 1px #FFF;">
+            <tr>
+                <th colspan='8' style='text-align: center;'>
+                    <h2>Date Parameters</h2>
+                    Selecting a start or end date is optional.  If you do not select a date or date range we will return results for all time periods.
+                </th>
+            </tr>
+            <tr>
+                <th>Start Date</th>
+                <td>
+                    {{ form.start_date_day }}
+                </td>
+                <td>
+                    {{ form.start_date_month }}
+                </td>
+                <td>
+                    {{ form.start_date_year }}
+                </td>
+                <th>End Date</th>
+                <td>
+                    {{ form.end_date_day }}
+                </td>
+                <td>
+                    {{ form.end_date_month }}
+                </td>
+                <td>
+                    {{ form.end_date_year }}
+                    &nbsp;
+                    {{  form.all_time_frames }} Don't limit by time
+                </td>
+            </tr>
+            <tr>
+                <th>
+                </th>
+                <td class='info'>
+                    <span style='font-size: 8px; text-align:center;'>
+                        Day
+                    </span>
+                </td>
+                <td class='info'>
+                    <span style='font-size: 8px; text-align:center;'>
+                        Month
+                    </span>
+                </td>
+                <td class='info'>
+                    <span style='font-size: 8px; text-align:center;'>
+                        Year (yyyy)
+                    </span>
+                </td>
+                <th>
+                </th>
+                <td class='info'>
+                    <span style='font-size: 8px; text-align:center;'>
+                        Day
+                    </span>
+                </td>
+                <td class='info'>
+                    <span style='font-size: 8px; text-align:center;'>
+                        Month
+                    </span>
+                </td>
+                <td class='info'>
+                    <span style='font-size: 8px; text-align:center;'>
+                        Year (yyyy)
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <th>{{ form.source.label }}</th>
+                <td colspan='3'>
+                    {{ form.source }}
+                </td>
+                <th></th>
+                <td colspan='3'>
+                </td>
+            </tr>
+            <tr>
                 <tr>
-		            <th>Start Date</th>
-                    <td>
-                        <input type='text' name='start_day'  id='id_start_day' value='1' />
-                    </td>
-                    <td>
-                        <input type='text' name='start_month' id='id_start_month' value='1' />
-                    </td>
-                    <td>
-                        <input type='text' name='start_year'  id='id_start_year' />
-                    </td>
-		            <th>End Date</th>
-                    <td>
-                        <input type='text' name='end_day' id='id_end_day'  value='1'/>
-                    </td>
-                    <td>
-                        <input type='text' name='end_month' id='id_end_month'  value='1'/>
-                    </td>
-                    <td>
-                        <input type='text' name='end_year'  id='id_end_year'/>
-                    </td>
-                    <!--
-		            <th style='border-left: solid 1px #DDD;padding-left: 20px;width: 300px;' rowspan='6' >
-		                <table>
-		                    <tr>
-		                        <td>
-		                        </td>
-		                        <td>
-		                        </td>
-		                    </tr>
-		                </table>
-		            </th>
-		            -->
-                </tr>
-                <tr>
-                    <th>
+                    <th colspan='8' style='text-align: center;'>
+                        <h2>Political Units</h2>
+                        You can limit your search results by any or all of the below parameters.<br />
+                        Start typing in the loction entry box and matching locations will auto-appear for you to select from.
                     </th>
-                    <td class='info'>
-                        <span style='font-size: 8px; text-align:center;'>
-                            Day
-                        </span>
-                    </td>
-                    <td class='info'>
-                        <span style='font-size: 8px; text-align:center;'>
-                            Month
-                        </span>
-                    </td>
-                    <td class='info'>
-                        <span style='font-size: 8px; text-align:center;'>
-                            Year (yyyy)
-                        </span>
-                    </td>
-                    <th>
+                </tr>
+                <tr>
+                    <th colspan='1'>
+                        Location
                     </th>
-                    <td class='info'>
-                        <span style='font-size: 8px; text-align:center;'>
-                            Day
-                        </span>
-                    </td>
-                    <td class='info'>
-                        <span style='font-size: 8px; text-align:center;'>
-                            Month
-                        </span>
-                    </td>
-                    <td class='info'>
-                        <span style='font-size: 8px; text-align:center;'>
-                            Year (yyyy)
-                        </span>
-                    </td>
-                </tr>
-                <tr>
-                    <th>{{ form.location.label }}</th>
-                    <td colspan='3'>
-                        {{ form.location }}
-                    </td>
-                    <th>{{ form.currency.label }}</th>
-                    <td colspan='3'>
-                        {{ form.currency }}
-                    </td>
-                </tr>
-                <tr>
-                    <th>{{ form.source.label }}</th>
-                    <td colspan='3'>
-                        {{ form.source }}
-                    </td>
-                    <th></th>
-                    <td colspan='3'>
-                    </td>
-                </tr>
-		            <tr>
-                        <th colspan='8' style='text-align: center;'>
-                            <h2>Political Units</h2>
-                            You can limit your search results by any or all of the below parameters.<br />
-                            Start typing in the loction entry box and matching locations will auto-appear for you to select from.
-                        </th>
-		            </tr>
-		            <tr>
-                        <th colspan='1'>
-                            Location
-                        </th>
-                        <th colspan='7'>
-                            <input style='width: 400px;' type="text" id="locations" name="locations" value = "{{ searchlocations|escape }}" />
-                            &nbsp;
-                            <input type='checkbox' name='all_locations' /> All Locations
-                            <script>
-                                $(function(){
-                                    function formatItem(row) {
-                                        return row;
-                                    }
-                                    function formatResult(row) {
-                                        //return row.replace(/(<.+?>)/gi, '');
-                                        return row
-                                    }
+                    <th colspan='7'>
+                        {{  form.locations }}
+                        &nbsp;
+                        {{  form.all_locations }} All Locations
+                        <script>
+                            $(function(){
+                                function formatItem(row) {
+                                    return row;
+                                }
+                                function formatResult(row) {
+                                    //return row.replace(/(<.+?>)/gi, '');
+                                    return row
+                                }
 
-                                    $("#locations").autocomplete('{% url government.views.locationlookup %}', {
-                                        width: 320,
-                                        max: 100,
-                                        cacheLength: 10,
-                                        highlight: false,
-                                        multiple: true,
-                                        multipleSeparator: ", ",
-                                        scroll: true,
-                                        scrollHeight: 300,
-                                        dataType: 'json',
-                                        formatItem: formatItem,
-                                        formatResult: formatResult,
-                                        parse: function(data) {
-                                                return $.map(data, function(row) {
-                                                    return { data:row, value:row, result:row };
-                                                });
-                                            }}).result(
-                                                function(e, row, data) {
-                                                    $("#locations").val = row;
-                                                });
-                                            $("#sourceentry").css("left","-20%");
-                                    });
-                            </script>
-                        </th>
-                    </tr>
-                    <tr>
-                        <th colspan='1'>
-                            Continent
-                        </th>
-                        <th colspan='3'>
-                            <select multiple='multiple' size='8' style='width:150px;'>
-                                <option value='' selected>All</option>
-                                <option value=''>Asia</option>
-                                <option value=''>Europe</option>
-                            </select>
-                        </th>
-                        <th colspan='1'>
-                            Sovereign States
-                        </th>
-                        <th colspan='3'>
-                            <select multiple='multiple' size='8' style='width:150px;'>
-                                <option value='' selected>All</option>
-                                <option value=''>Empire</option>
-                                <option value=''>Nation-State</option>
-                            </select>
-                        </th>
-                    </tr>
-		            <tr>
-                        <th colspan='1'>
-                            Sources
-                        </th>
-                        <th colspan='7'>
-                            <select multiple='multiple' size='8' style='width:150px;'>
-                                <option value='' selected>All</option>
-                                <option value=''>AdG</option>
-                                <option value=''>BCOL</option>
-                                <option value=''>BCOR</option>
-                                <option value=''>CHAT</option>
-                                <option value=''>HIS</option>
-                                <option value=''>SY</option>
-                                <option value=''>UPU</option>
-                            </select>
-                        </th>
-                    </tr>
-                    <tr>
-                        <td colspan='8' style='text-align: center;'>&nbsp;
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan='8' style='text-align: center;'>&nbsp;
-                            <h2>Show results from one of the following categories</h2>
-                        </td>
-                    </tr>
-		            <tr>
-                        <th colspan='1'>
-                            &nbsp;
-                        </th>
-                        <th colspan='3'>
-                            <input type='radio' name='dataset' value='e'> Military personnel, number of<br />
-                            <input type='radio' name='dataset' value='e'> European officials, number of <br />
-                            <input type='radio' name='dataset' value='e'> Leaders<br />
-                            <input type='radio' name='dataset' value='e'> State antiquity value, raw <br />
-                            <input type='radio' name='dataset' value='e'> State antiquity value, cumulative<br />
-                            <input type='radio' name='dataset' value='e'> Land area<br />
-                        </th>
-                        <th colspan='4'>
-                            <input type='radio' name='dataset' value='a'> Government Revenue<br />
-                            <input type='radio' name='dataset' value='b'> Government Expenditure<br />
-                            <input type='radio' name='dataset' value='c'> Public Debt<br />
-                            <input type='radio' name='dataset' value='d'> Public debt, interest service on<br />
-                            <input type='radio' name='dataset' value='e'> Public debt, virtual service on<br />
-                            <input type='radio' name='dataset' value='e'> Public debt, serviced in gold<br />
-                        </th>
-                    </tr>
-                    <tr>
-                        <td colspan='8' style='text-align: right;'>
-                            <input type='submit' name='search' value='Search' />
-                        </td>
-                    </tr>
-		    </table>
+                                $("#id_locations").autocomplete('{% url government.views.locationlookup %}', {
+                                    width: 320,
+                                    max: 100,
+                                    cacheLength: 10,
+                                    highlight: false,
+                                    multiple: true,
+                                    multipleSeparator: ", ",
+                                    scroll: true,
+                                    scrollHeight: 300,
+                                    dataType: 'json',
+                                    formatItem: formatItem,
+                                    formatResult: formatResult,
+                                    parse: function(data) {
+                                            return $.map(data, function(row) {
+                                                return { data:row, value:row, result:row };
+                                            });
+                                        }}).result(
+                                            function(e, row, data) {
+                                                $("#locations").val = row;
+                                            });
+                                        $("#sourceentry").css("left","-20%");
+                                });
+                        </script>
+                    </th>
+                </tr>
+            <tr>
+                <td colspan='4' style='text-align: center;'><h2>Sovereign States</h2></td>
+                <td colspan='4' style='text-align: center;'><h2>Sub-State Units</h2></td>
+            </tr>
+            <tr>
+                <td colspan='2' style='text-align: center;'>Empires</td>
+                <td colspan='2' style='text-align: center;'>Nation-States</td>
+                <td colspan='2' style='text-align: center;'>Semi-Sovereign</td>
+                <td colspan='2' style='text-align: center;'>Non-Sovereign</td>
+            </tr>
+            <tr>
+                <td colspan='2' style='text-align: center;'>
+                    {{  form.empire }}
+                </td>
+                <td colspan='2' style='text-align: center;'>
+                    {{  form.nation_state }}
+                </td>
+                <td colspan='2' style='text-align: center;'>
+                    {{  form.semi_sovereign }}
+                </td>
+                <td colspan='2' style='text-align: center;'>
+                    {{  form.non_sovereign }}
+                </td>
+            </tr>
+            <tr>
+                <td colspan='2' style='text-align: center;'>Confederation</td>
+                <td colspan='2' style='text-align: center;'>Continent</td>
+                <td colspan='2' style='text-align: center;'>Source Type</td>
+                <td colspan='2' style='text-align: center;'></td>
+            </tr>
+            <tr>
+                <td colspan='2' style='text-align: center;'>
+                    {{  form.confederation }}
+                </td>
+                <td colspan='2' style='text-align: center;'>
+                    {{  form.continent }}
+                </td>
+                <td colspan='2' style='text-align: center;'>
+                    {{  form.source_type }}
+                </td>
+                <td colspan='2' style='text-align: center;'>
+                </td>
+            </tr>
+            <tr>
+                <td colspan='8' style='text-align: center;'>&nbsp;
+                    <h2>Show results from one of the following categories</h2>
+                </td>
+            </tr>
+            <tr>
+                <th colspan='1'>
+                    &nbsp;
+                </th>
+                <th colspan='3'>
+                    <input type='radio' name='dataset' value='military_personal'> Military personnel, number of<br />
+                    <input type='radio' name='dataset' value='eurpean_officials'> European officials, number of <br />
+                    <input type='radio' name='dataset' value='leaders'> Leaders<br />
+                    <input type='radio' name='dataset' value='raw_state_antiquity'> State antiquity value, raw <br />
+                    <input type='radio' name='dataset' value='cumulative_state_antiquity'> State antiquity value, cumulative<br />
+                    <input type='radio' name='dataset' value='land_area'> Land area<br />
+                </th>
+                <th colspan='4'>
+                    <input type='radio' name='dataset' value='government_revenue'> Government Revenue<br />
+                    <input type='radio' name='dataset' value='government_expenditure'> Government Expenditure<br />
+                    <input type='radio' name='dataset' value='public_debt'> Public Debt<br />
+                    <input type='radio' name='dataset' value='public_debt_interest'> Public debt, interest service on<br />
+                    <input type='radio' name='dataset' value='public_debt_virtual'> Public debt, virtual service on<br />
+                    <input type='radio' name='dataset' value='public_debt_gold'> Public debt, serviced in gold<br />
+                </th>
+            </tr>
+            <tr>
+                <td colspan='8' style='text-align: right;'>
+                    <input type='submit' name='search' value='Search' />
+                </td>
+            </tr>
+        </table>
 		</form>
 		</div>
 	{% endblock %}

@@ -26,6 +26,12 @@
 		    CLIO World Tables
 		</h1>
 		<ul id="audience">
+        {% if user.is_authenticated %}
+            <li><a href="/accounts/logout/">Logout</a></li>
+        {% else %}
+            <li><a href="/accounts/login/">Sign In</a></li>
+            <li><a href="/accounts/register/">Register</a></li>
+        {% endif %}
 		<li><a href="{% url about %}">About</a></li>
 		<li><a href="{% url about %}">Team</a></li>
 		</ul>

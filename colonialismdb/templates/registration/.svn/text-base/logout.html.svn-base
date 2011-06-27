@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block main_box_container %}
+
+<div id="inner_body_container">
+    <div class="inner_top_container">
+        <p>You have been successfully logged out</p>
+    </div>
+</div>
+
+{% endblock %}

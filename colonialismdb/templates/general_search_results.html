@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block extra_head %}
+
+<style>
+.info{
+    padding-top: 0px;padding-bottom: 0px;
+    margin-top: 0px;
+}
+</style>
+
+{% endblock %}
+
+{% block feature %}
+<div id="feature" style='height:50px;'>
+    <div id="feature-content">
+        <h1>Search Results - General Search</h1>
+        <p>
+        </p>
+    </div>
+</div><!-- /#feature -->
+{% endblock %}
+
+
+{% block extra-content %}
+<div id="extra-content">
+    <p>
+        The following data is available in the CLIO Database based upon your search criteria.  To see detailed
+        search results, click on one of the categories to perform an in-depth search.
+    </p>
+    <h2>Total Records Found: {{  paginator.count }}</h2>
+</div>
+{% endblock %}
+

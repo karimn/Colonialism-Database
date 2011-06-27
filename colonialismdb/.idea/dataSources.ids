@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?><component name="dataSourceStorage">
+  <data-source source="LOCAL" name="Django default" product="" version="" jdbc-version="" driver-version="" uuid="176f4450-8e90-4b73-b1b6-df631389cded">
+    <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+    <jdbc-url>jdbc:postgresql:geo_bu_dev</jdbc-url>
+    <user-name>mrtrosen</user-name>
+    <user-password>dfd8dfcbdfdedf92dfc7dfcf</user-password>
+    <libraries>
+      <library>
+        <url>jar://$USER_HOME$/Library/Preferences/PyCharm10/jdbc-drivers/postgresql-9.0-801.jdbc4.jar!/</url>
+      </library>
+    </libraries>
+  </data-source>
+</component>

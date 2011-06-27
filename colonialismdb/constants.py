@@ -1,3 +1,5 @@
+from common.models import Location
+from sources.models import SourceType
 
 DAY_CHOICES = (
     ('--', '--'),
@@ -50,3 +52,22 @@ MONTH_CHOICES = (
     ('11', 'Nov'),
     ('12', 'Dec'),
 )
+
+CONTINENT_CHOICES = (
+    ('', 'All'),
+    ('Antartica', 'Antartica'),
+    ('Asia', 'Asia'),
+    ('Africa', 'Africa'),
+    ('Australia', 'Australia'),
+    ('Europe', 'Europe'),
+    ('North America', 'North America'),
+    ('South America', 'South America'),
+)
+
+EMPIRE_CHOICES = [('', 'All')] + [(l.id, ("%s" % l.name)) for l in Location.objects.filter(unit_type__name='Empire').distinct().order_by('name')]
+NATION_STATE_CHOICES = [('', 'All')] + [(l.id, ("%s" % l.name)) for l in Location.objects.filter(unit_type__name='Nation-state').distinct().order_by('name')]
+CONFEDERATION_CHOICES = [('', 'All')] + [(l.id, ("%s" % l.full_name)) for l in Location.objects.filter(unit_type__name='Confederation').distinct().order_by('name')]
+SEMI_SOVEREIGN_CHOICES = [('', 'All')] + [(l.id, ("%s" % l.full_name)) for l in Location.objects.filter(unit_type__name='Semi-Sovereign').distinct().order_by('name')]
+NON_SOVEREIGN_CHOICES = [('', 'All')] + [(l.id, ("%s" % l.full_name)) for l in Location.objects.filter(unit_type__name='Empire').distinct().order_by('name')]
+
+SOURCE_TYPE_CHOICES = [('', 'All')] + [(l.id, ("%s" % l.name)) for l in SourceType.objects.all().order_by('name')]

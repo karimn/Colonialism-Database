@@ -1,0 +1,11 @@
+{% load i18n %}
+
+Welcome to CLIO.
+
+Below is your username for your records:
+
+Username: {{ user.username }}
+
+
+The CLIO Team
+

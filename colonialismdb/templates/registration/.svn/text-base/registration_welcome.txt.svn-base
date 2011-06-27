@@ -1,0 +1,13 @@
+{% load i18n %}
+
+Welcome to DishTheRock.
+
+Below is your username for your records:
+
+Username: {{ user.username }}
+
+
+The DishTheRock Team 
+---- 
+Please do not reply to this message. To contact us, visit: http://dishtherock.com/contact
+

@@ -35,6 +35,8 @@ urlpatterns = patterns('',
     #(r'^testing$','economics.views.testing'),
 
     #(r'^population/', include('colonialismdb.population.urls')),
+    # registration
+    (r'^accounts/', include('registration.backends.default.urls')),
 
 
     (r'^government/locationlookup/$', 'government.views.locationlookup'),
@@ -54,7 +56,6 @@ urlpatterns = patterns('',
 
     (r'^static/sources/(?P<path>.+)\.(?P<ext>.+)', 'colonialismdb.sources.views.open_src_file'),
 
-    (r'^accounts/login/$', 'django.contrib.auth.views.login'),
     (r'^databrowse/(.*)', login_required(databrowse.site.root)),
 )
 

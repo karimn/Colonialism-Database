@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block main_box_container %}
+
+<div id="inner_body_container">
+    <div class="inner_top_container">
+        <p>Your account has been successfully created.</p>
+    </div>
+</div>
+{% endblock %}

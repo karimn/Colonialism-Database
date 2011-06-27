@@ -1,0 +1,107 @@
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/lab305/DishTheRock/!svn/ver/26/templates/registration
+END
+password_change_done.html
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/lab305/DishTheRock/!svn/ver/9/templates/registration/password_change_done.html
+END
+password_reset_confirm.html
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/lab305/DishTheRock/!svn/ver/9/templates/registration/password_reset_confirm.html
+END
+activation_email.txt
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/lab305/DishTheRock/!svn/ver/9/templates/registration/activation_email.txt
+END
+password_reset_form.html
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/lab305/DishTheRock/!svn/ver/9/templates/registration/password_reset_form.html
+END
+activation_complete.html
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/lab305/DishTheRock/!svn/ver/9/templates/registration/activation_complete.html
+END
+password_change_form.html
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/lab305/DishTheRock/!svn/ver/9/templates/registration/password_change_form.html
+END
+password_reset_complete.html
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/lab305/DishTheRock/!svn/ver/9/templates/registration/password_reset_complete.html
+END
+registration_form.html
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/lab305/DishTheRock/!svn/ver/26/templates/registration/registration_form.html
+END
+registration_welcome.txt
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/lab305/DishTheRock/!svn/ver/20/templates/registration/registration_welcome.txt
+END
+activate.html
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/lab305/DishTheRock/!svn/ver/9/templates/registration/activate.html
+END
+registration_complete.html
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/lab305/DishTheRock/!svn/ver/9/templates/registration/registration_complete.html
+END
+activation_email_subject.txt
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/lab305/DishTheRock/!svn/ver/9/templates/registration/activation_email_subject.txt
+END
+password_reset.html
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/lab305/DishTheRock/!svn/ver/9/templates/registration/password_reset.html
+END
+login.html
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/lab305/DishTheRock/!svn/ver/24/templates/registration/login.html
+END
+logout.html
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/lab305/DishTheRock/!svn/ver/9/templates/registration/logout.html
+END
+password_reset_done.html
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/lab305/DishTheRock/!svn/ver/9/templates/registration/password_reset_done.html
+END
+password_reset_email.html
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/lab305/DishTheRock/!svn/ver/9/templates/registration/password_reset_email.html
+END

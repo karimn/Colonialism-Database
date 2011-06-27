@@ -1,0 +1,39 @@
+To get the PoliticalUnitTypes:
+PoliticalUnitType.objects.all().order_by('name')
+
+State
+City
+Protectorate
+Island
+Semi-Sovereign
+Village
+District
+County
+Prefecture
+Provinces
+Province
+Confederation
+Empire
+Nation-state
+Colony
+Region
+Territory
+Municipality
+Land
+
+
+To filter Political Units by type:
+PoliticalUnit.objects.filter(unit_type=PoliticalUnitType.objects.get(name='Colony')).order_by('name')
+
+To get multiple political unit types with in:
+empire = PoliticalUnitType.objects.get(name='Empire')
+c = PoliticalUnitType.objects.all(name='Colony')
+PoliticalUnit.objects.filter(unit_type__in=[empire, c]).order_by('name')
+
+
+To determine which Continent a location is in, us geographically_in:
+
+Location.objects.filter(geographically_in__name__in=['North America', 'South America'])
+
+Location.objects.filter(geographically_in__name='South America')
+Location.objects.filter(geographically_in__name='North America')

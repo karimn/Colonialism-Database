@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+
+{% block main_box_container %}
+
+<div id="inner_body_container">
+    <div class="inner_top_container">
+        <h3>Registration</h3>
+        <p>
+            Please fill out the information below to complete your FREE registration.
+        </p>
+        <form method="post" action="." enctype="multipart/form-data">
+            {% csrf_token %}
+            <table width="600" border="0" cellspacing="5" cellpadding="5">
+                <tr>
+                    <td width="170"></td>
+                    <td width="430">{{ form.first_name.errors }}</td>
+                </tr>
+                <tr>
+                    <td width="170"> <label for="id_username">First Name: *</label></td>
+                    <td width="430">
+                        {{ form.first_name }}
+                    </td>
+                </tr>
+                <tr>
+                    <td width="170"></td>
+                    <td width="430">{{ form.last_name.errors }}</td>
+                </tr>
+                <tr>
+                    <td width="170"> <label for="id_username">Last Name: *</label></td>
+                    <td width="430">
+                        {{ form.last_name }}
+                    </td>
+                </tr>
+                <tr>
+                    <td width="170"></td>
+                    <td width="430">{{ form.username.errors }}</td>
+                </tr>
+                <tr>
+                    <td width="170"> <label for="id_username">Username: *</label></td>
+                    <td width="430">
+                        {{ form.username }}
+                    </td>
+                </tr>
+                <tr>
+                    <td width="170"></td>
+                    <td width="430">{{ form.email.errors }}</td>
+                </tr>
+                <tr>
+                    <td><label for="id_email">Email address: *</label></td>
+                    <td>{{ form.email }}</td>
+                </tr>
+                <tr>
+                    <td width="170"></td>
+                    <td width="430">{{ form.password1.errors }}</td>
+                </tr>
+                <tr>
+                    <td><label for="id_password1">Password: *</label></td>
+                    <td>{{ form.password1 }}</td>
+                </tr>
+                <tr>
+                    <td width="170"></td>
+                    <td width="430">{{ form.password2.errors }}</td>
+                </tr>
+                <tr>
+                    <td><label for="id_password2">Password (again): *</label></td>
+                    <td>{{ form.password2 }}</td>
+                </tr>
+                <tr>
+                    <td colspan="2"><strong>&nbsp;</strong></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><strong>Player Profile Information:</strong></td>
+                </tr>
+                <tr>
+                    <td colspan="2">Please fill out the following profile information
+                    </td>
+                </tr>
+                <tr>
+                    <td width="170"></td>
+                    <td width="430">{{ form.experience_level.errors }}</td>
+                </tr>
+                <tr>
+                    <td>Experience Level</td>
+                    <td>
+                        {{ form.experience_level }}
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td width="170"></td>
+                    <td width="430">{{ form.position.errors }}</td>
+                </tr>
+                <tr>
+                    <td>Position</td>
+                    <td>
+                        {{ form.position }}
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td width="170"></td>
+                    <td width="430">{{ form.zipcode.errors }}</td>
+                </tr>
+                <tr>
+                    <td>Zip Code</td>
+                    <td>
+                        {{ form.zipcode }}
+                    </td>
+                </tr>
+                
+                
+                <tr>
+                    <td colspan="2"><strong>Photo:</strong></td>
+                </tr>
+                <tr>
+                    <td colspan="2">While it's not required, it is highly recommended that you upload a photo to help put a face to your account.
+                    </td>
+                </tr>
+                <tr>
+                    <td>Upload Photo:</td>
+                    <td>
+                        {{ form.image }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2"><strong>&nbsp;</strong></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><strong>&nbsp;</strong></td>
+                </tr>
+                
+                <tr>
+                    <td></td>
+                    <td>{{ form.tos.errors }}</td>
+                </tr>
+                <tr>
+                    <td><label for="id_tos">Agree to <a href="#" target="_blank">terms</a>: *</label></td>
+                    <td>{{ form.tos }} I agree</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>{{ form.optin.errors }}</td>
+                </tr>
+                <tr>
+                    <td colspan="2"><strong>&nbsp;</strong></td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td><input type="submit" value="Sign Up" /></td>
+                </tr>
+            </table>
+
+        </form>
+    </div>
+</div>
+{% endblock %}

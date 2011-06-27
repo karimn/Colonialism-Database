@@ -1,17 +1,16 @@
 import csv
-import types
 
-from django.http import HttpResponse, HttpResponseRedirect, Http404, HttpResponseServerError
-from django.db import models
+from django.http import HttpResponse
+from government.models import *
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, get_list_or_404
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from django.utils import simplejson
+from django.core.paginator import Paginator, InvalidPage, EmptyPage
+from django.contrib.auth.decorators import login_required
 
 from economics.models import *
-
-
+from common.forms import GeneralSearchForm
 
 from django.utils import simplejson
 
@@ -21,10 +20,60 @@ def about(request):
         },context_instance=RequestContext(request))
 
 
+@login_required
 def search(request):
+    if request.GET:
+        form = GeneralSearchForm(request.GET)
+        if form.is_valid():
+            if request.GET.get('startdate'):
+                startdate = request.GET.get('startdate')
+            else:
+                startdate = "1870-01-01"
+            if request.GET.get('enddate'):
+                enddate = request.GET.get('enddate')
+            else:
+                enddate = "2006-12-31"
+            if request.GET.get('sourceinput'):
+                sourceinput = request.GET.get('sourceinput')
+            else:
+                sourceinput = ""
+            locations_list = []
+            results = []
+
+            # they want to limit the timeframe search
+            if not form.cleaned_data['all_time_frames']:
+                # find the start date
+                startdate = "%s-%s-%s" % (form.cleaned_data['start_date_year'], form.cleaned_data['start_date_month'],
+                                          form.cleaned_data['start_date_day'])
+                enddate = "%s-%s-%s" % (form.cleaned_data['end_date_year'], form.cleaned_data['end_date_month'],
+                                          form.cleaned_data['end_date_day'])
+
+
+            datesourceresults = MainDataEntry.objects.filter(Q(begin_date__range=(startdate,enddate)) | Q(end_date__range=(startdate,enddate))).filter(Q(source__name__icontains=sourceinput)).select_related().order_by('id')
+
+            if request.GET.get('locations'):
+                searchlocations = request.GET.get('locations')
+                locations_list = searchlocations.split(", ")
+                for x in locations_list:
+                    for y in datesourceresults.filter(location__name="%s"%x).select_related().order_by('id'):
+                        results.append(y)
+            else:
+                results = datesourceresults
+
+            return render_to_response("general_search_results.html",
+                {
+                    "locations_list":locations_list,
+                    "results":results,
+                    "paginator": paginator,
+                    "search":search,
+                    "form": form,
+                },context_instance=RequestContext(request))
+    else:
+        form = GeneralSearchForm()
 
     return render_to_response('search.html',
         {
+            'form': form,
         },context_instance=RequestContext(request))
 
 
