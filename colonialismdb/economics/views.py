@@ -40,25 +40,30 @@ def econsearch(request):
     if request.GET.get('search'):
         form = GovernmentSearchForm(request.GET)
         search = request.GET.get('search')
-        if request.GET.get('startdate'):
-            startdate = request.GET.get('startdate')
-        else:
-            startdate = "1870-01-01"
-        if request.GET.get('enddate'):
-            enddate = request.GET.get('enddate')
-        else:
-            enddate = "2006-12-31"
+
+        startdate = ''
+        enddate = ''
+
+        if 'all_time_frames' not in request.GET:
+            startdate = "%s-%s-%s" % (request.GET.get('start_date_year'),
+                                      request.GET.get('start_date_month'),
+                                      request.GET.get('start_date_day'))
+            enddate = "%s-%s-%s" % (request.GET.get('end_date_year'),
+                                      request.GET.get('end_date_month'),
+                                      request.GET.get('end_date_day'))
+
         if request.GET.get('sourceinput'):
             sourceinput = request.GET.get('sourceinput')
         else:
             sourceinput = ""
         locations_list = []
         results = []
-        souceresults = Source.objects.filter(name__icontains='%s'%sourceinput).select_related()
 
-        datesourceresults = AggregateTradeDataEntry.objects.filter(Q(begin_date__range=(startdate,enddate)) | Q(end_date__range=(startdate,enddate))).filter(Q(source__name__icontains=sourceinput)).select_related().order_by('id')
-        
-        
+        if startdate:
+            datesourceresults = AggregateTradeDataEntry.objects.filter(Q(begin_date__range=(startdate,enddate)) | Q(end_date__range=(startdate,enddate))).filter(Q(source__name__icontains=sourceinput)).select_related().order_by('id')
+        else:
+            datesourceresults = AggregateTradeDataEntry.objects.filter(Q(source__name__icontains=sourceinput)).select_related().order_by('id')
+
         if request.GET.get('locations'):
             searchlocations = request.GET.get('locations')
             locations_list = searchlocations.split(", ")
@@ -66,9 +71,9 @@ def econsearch(request):
                 for y in datesourceresults.filter(location__name="%s"%x).select_related().order_by('id'):
                     results.append(y)
         else:
-                    searchlocations=""
-                    results = datesourceresults
-        rset =  results
+            searchlocations=""
+            results = datesourceresults
+            
         paginator = Paginator(results,20)
         try:
             page = request.GET.get('page','1')
@@ -79,6 +84,19 @@ def econsearch(request):
         except (EmptyPage, InvalidPage):
             results = paginator.page(paginator.num_pages)
             
+        return render_to_response("economics_search_results.html",
+            {
+                "locations_list":locations_list,
+                "searchlocations":searchlocations,
+                "startdate":startdate,
+                "enddate":enddate,
+                "sourceinput":sourceinput,
+                "results":results,
+                "search":search,
+                "form": form,
+                "paginator": paginator,
+            },context_instance=RequestContext(request))
+    
     else:
         form = GovernmentSearchForm()
         results = []
@@ -88,9 +106,6 @@ def econsearch(request):
         enddate = ""
         sourceinput = ""
         search = ""
-        sourceresults = []
-        rset = []
-    #return render_to_response("sourceinfo.html",{"sourceresults":sourceresults})
     return render_to_response("economics.html",
             {
                 "locations_list":locations_list,
@@ -100,7 +115,6 @@ def econsearch(request):
                 "sourceinput":sourceinput,
                 "results":results,
                 "search":search,
-                "rset":rset,
                 "form": form,
         },context_instance=RequestContext(request))
 

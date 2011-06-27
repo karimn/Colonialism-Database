@@ -36,14 +36,23 @@ def locationlookup(request):
 # Search function for Population data
 @login_required
 def popsearch(request):
-
     if request.GET.get('search'):
         form = GovernmentSearchForm(request.GET)
         search = request.GET.get('search')
-        if request.GET.get('startdate'):
-            startdate = request.GET.get('startdate')
-        else:
-            startdate = "1870-01-01"
+
+
+        startdate = ''
+        enddate = ''
+
+        if 'all_time_frames' not in request.GET:
+            startdate = "%s-%s-%s" % (request.GET.get('start_date_year'),
+                                      request.GET.get('start_date_month'),
+                                      request.GET.get('start_date_day'))
+            enddate = "%s-%s-%s" % (request.GET.get('end_date_year'),
+                                      request.GET.get('end_date_month'),
+                                      request.GET.get('end_date_day'))
+
+
         if request.GET.get('minage'):
             minage = request.GET.get('minage')
         else:
@@ -71,12 +80,14 @@ def popsearch(request):
             sourceinput = ""
         locations_list = []
         results = []
-        
+
         datefilter = Q(begin_date__range=(startdate,enddate)) | Q(end_date__range=(startdate,enddate))
         sourcefilter = Q(source__name__icontains=sourceinput)
         agefilter = Q(age_start__isnull=False) & Q(age_end__isnull=False) & Q(age_start__gte=minage) & Q(age_end__lte=maxage)
-        
-        datesourceresults = MainDataEntry.objects.filter(datefilter).filter(sourcefilter).filter(agefilter).filter(genderfilter).select_related().order_by('id')
+        if startdate:
+            datesourceresults = MainDataEntry.objects.filter(datefilter).filter(sourcefilter).filter(agefilter).select_related().order_by('id')
+        else:
+            datesourceresults = MainDataEntry.objects.filter(sourcefilter).filter(agefilter).select_related().order_by('id')
 
         if request.GET.get('locations'):
             searchlocations = request.GET.get('locations')
@@ -85,8 +96,8 @@ def popsearch(request):
                 for y in datesourceresults.filter(location__name="%s"%x).select_related().order_by('id'):
                     results.append(y)
         else:
-                    searchlocations=""
-                    results = datesourceresults
+            searchlocations=""
+            results = datesourceresults
             
         paginator = Paginator(results,20)
         try:
@@ -97,8 +108,21 @@ def popsearch(request):
             results = paginator.page(page)
         except (EmptyPage, InvalidPage):
             results = paginator.page(paginator.num_pages)
+
+        return render_to_response("population_search_results.html",
+            {
+                "locations_list":locations_list,
+                "searchlocations":searchlocations,
+                "startdate":startdate,
+                "enddate":enddate,
+                "sourceinput":sourceinput,
+                "results":results,
+                "search":search,
+                "form": form,
+                "paginator": paginator,
+            },context_instance=RequestContext(request))
     else:
-        form = GovernmentSearchForm(request.GET)
+        form = GovernmentSearchForm()
         results = []
         locations_list = []
         searchlocations = ""
