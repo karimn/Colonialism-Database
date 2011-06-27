@@ -527,3 +527,12 @@ class BaseDataEntry(BaseSubmitModel):
     if self.source and not self.source.active:
       self.source.activate()
 
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User)
+    country_of_residence = models.CharField(max_length=40)
+    occupation = models.CharField(max_length=40)
+    reason_of_visit = models.CharField(max_length=40)
+
+    def __unicode__(self):
+        return "%s (%s)" % (self.user.username, self.user.email)

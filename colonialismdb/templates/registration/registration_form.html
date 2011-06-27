@@ -1,21 +1,9 @@
 {% extends "base.html" %}
 
 {% block feature %}
-<div id="feature" style='height: 300px;'>
+<div id="feature" style='height: 50px;'>
     <div id="feature-content">
-        {% if form.non_field_errors %}
-        <ul class="errorlist">
-            {{form.non_field_errors.as_ul}}
-        </ul>
-        {% endif %}
         <h1>Register <a href="{% url auth_login %}">or Sign In</a></h1>
-
-        <form action="." method="post">{% csrf_token %}
-            <table>
-                {{ form }}
-            </table>
-            <p class="submit"><button type="submit">Submit</button></p>
-        </form>
     </div>
     </div><!-- /#feature -->
 {% endblock %}
@@ -24,6 +12,20 @@
 {% block extra-content %}
 
 <div id='extra-content'>
+    {% if form.non_field_errors %}
+    <ul class="errorlist">
+        {{form.non_field_errors.as_ul}}
+    </ul>
+    {% endif %}
+    <p>
+        Please fill out the following informationto create an account on CLIO.
+    </p>
+    <form action="." method="post">{% csrf_token %}
+        <table>
+            {{ form }}
+        </table>
+        <p class="submit"><button type="submit">Submit</button></p>
+    </form>
 
 </div>
 

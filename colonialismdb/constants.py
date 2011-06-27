@@ -64,6 +64,25 @@ CONTINENT_CHOICES = (
     ('South America', 'South America'),
 )
 
+OCCUPATION_CHOICES = (
+    ('', '-- Select One --'),
+    ('Professor', 'Professor'),
+    ('Teacher', 'Teacher'),
+    ('Student', 'Student'),
+    ('Government', 'Government'),
+    ('Research Institute', 'Research Institute'),
+    ('Business', 'Business'),
+    ('Law', 'Law'),
+    ('Other', 'Other'),
+)
+
+PURPOSE_OF_VISIT_CHOICES = (
+    ('', '-- Select One --'),
+    ('Research', 'Research'),
+    ('Teaching', 'Teaching'),
+    ('Personal Interest', 'Personal Interest'),
+)
+
 EMPIRE_CHOICES = [('', 'All')] + [(l.id, ("%s" % l.name)) for l in Location.objects.filter(unit_type__name='Empire').distinct().order_by('name')]
 NATION_STATE_CHOICES = [('', 'All')] + [(l.id, ("%s" % l.name)) for l in Location.objects.filter(unit_type__name='Nation-state').distinct().order_by('name')]
 CONFEDERATION_CHOICES = [('', 'All')] + [(l.id, ("%s" % l.full_name)) for l in Location.objects.filter(unit_type__name='Confederation').distinct().order_by('name')]

@@ -1,6 +1,8 @@
 from colonialismdb.common import models
 from colonialismdb.common import widgets
 
+from common.models import UserProfile
+
 from django.contrib import admin, messages
 from django.contrib.gis import admin as geo_admin
 from reversion.admin import VersionAdmin
@@ -392,6 +394,13 @@ class GeoPointAdmin(BaseGeoAdmin):
 
 class GeoPolygonAdmin(BaseGeoAdmin):
   list_display = BaseGeoAdmin.list_display + ("shape_leng", "shape_area", )
+
+
+class UserProfileAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(UserProfile, UserProfileAdmin)
+
+
 
 admin.site.register(models.PoliticalUnit, PoliticalUnitAdmin)
 admin.site.register(models.Location, LocationAdmin)

@@ -173,6 +173,8 @@ LOGGING = {
 ACCOUNT_ACTIVATION_DAYS = 7
 REGISTRATION_SUCCESS_URL = '/search/'
 
+# this allows user.get_profile() to work properly
+AUTH_PROFILE_MODULE = 'common.UserProfile'
 
 
 # Load the local settings file
