@@ -1,6 +1,23 @@
 <html>
 <head>
+    <script type="text/javascript" src=" https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('#id_export_as_csv').click(function () {
+                $("#id_form_export_csv").submit();
+            });
+        });
+    </script>
+
+
+</head>
+
 <body>
+<h1>Politic Search Results</h1>
+<p>
+    <a href="{% url infrastructure %}">Back to Search</a> |
+    <a id='id_export_as_csv' href="#">Export As CSV</a> |
+</p>
 <table style="border: solid 1px #DDD;">
     <tr style="border: solid 1px #DDD;">
         <td nowwrap style="border: solid 1px #DDD;">ID</td>
@@ -52,6 +69,15 @@
         {% endif %}
         <span><a href="?search={{ search }}&page={{ results.paginator.num_pages }}&startdate={{ startdate }}&enddate={{ enddate }}&locations={{ searchlocations }}&sourceinput={{ sourceinput }}">&nbsp;&nbsp;last</a></span>
     </span>
+    There are a total of {{ paginator.count }} records matching your query.
+</div>
+<br />
+<div style='display:block'>
+    <form id="id_form_export_csv" action='{% url government %}' method="GET">
+        <input id="id_export" type="hidden" name="export" value="CSV" />
+        <input type="hidden" name="search" value="search" />
+        {{ form  }}
+    </form>
 </div>
 </body>
 </html>
