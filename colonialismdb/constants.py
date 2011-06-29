@@ -61,6 +61,7 @@ CONTINENT_CHOICES = (
     ('Australia', 'Australia'),
     ('Europe', 'Europe'),
     ('North America', 'North America'),
+    ('Oceania', 'Oceania'),
     ('South America', 'South America'),
 )
 
@@ -86,7 +87,7 @@ PURPOSE_OF_VISIT_CHOICES = (
 EMPIRE_CHOICES = [('', 'All')] + [(l.id, ("%s" % l.name)) for l in Location.objects.filter(unit_type__name='Empire').distinct().order_by('name')]
 NATION_STATE_CHOICES = [('', 'All')] + [(l.id, ("%s" % l.name)) for l in Location.objects.filter(unit_type__name='Nation-state').distinct().order_by('name')]
 CONFEDERATION_CHOICES = [('', 'All')] + [(l.id, ("%s" % l.full_name)) for l in Location.objects.filter(unit_type__name='Confederation').distinct().order_by('name')]
-SEMI_SOVEREIGN_CHOICES = [('', 'All')] + [(l.id, ("%s" % l.full_name)) for l in Location.objects.filter(unit_type__name='Semi-Sovereign').distinct().order_by('name')]
-NON_SOVEREIGN_CHOICES = [('', 'All')] + [(l.id, ("%s" % l.full_name)) for l in Location.objects.filter(unit_type__name='Empire').distinct().order_by('name')]
+SEMI_SOVEREIGN_CHOICES = [('', 'All')] + [(l.id, ("%s" % l.full_name)) for l in Location.objects.filter(unit_type__name__in=['Semi-Sovereign', 'Protectorate', 'Colony', 'Territory']).distinct().order_by('name')]
+NON_SOVEREIGN_CHOICES = [('', 'All')] + [(l.id, ("%s" % l.full_name)) for l in Location.objects.filter(unit_type__name__in=['City','State', 'Village', 'District', 'County', 'Prefecture','Provinces', 'Province', 'Region', 'Municipality']).distinct().order_by('name')]
 
 SOURCE_TYPE_CHOICES = [('', 'All')] + [(l.id, ("%s" % l.name)) for l in SourceType.objects.all().order_by('name')]

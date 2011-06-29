@@ -13,44 +13,185 @@
 </head>
 
 <body>
-<h1>Politic Search Results</h1>
+<h1>Politic Search Results - Dataset: {{ dataset }}</h1>
 <p>
-    <a href="{% url infrastructure %}">Back to Search</a> |
-    <a id='id_export_as_csv' href="#">Export As CSV</a> |
+    <a href="{% url government %}">Back to Search</a> |
+    {% ifnotequal paginator.count 0 %}
+        <a id='id_export_as_csv' href="#">Export As CSV</a> |
+    {% endifnotequal %}
 </p>
+{% ifnotequal paginator.count 0 %}
 <table style="border: solid 1px #DDD;">
     <tr style="border: solid 1px #DDD;">
-        <td nowwrap style="border: solid 1px #DDD;">ID</td>
         <td nowwrap style="border: solid 1px #DDD;">Source</td>
+        {% if show_remarks %}
+            <td nowwrap style="border: solid 1px #DDD;">Remark</td>
+        {% endif %}
         <td nowwrap style="border: solid 1px #DDD;">Begin Date</td>
         <td nowwrap style="border: solid 1px #DDD;">End Date</td>
-        <td nowwrap style="border: solid 1px #DDD;">Date Precision</td>
         <td nowwrap style="border: solid 1px #DDD;">Location</td>
-        <td nowwrap style="border: solid 1px #DDD;"> Value Units</td>
-        <td nowwrap style="border: solid 1px #DDD;">Spatial Area</td>
-        <td nowwrap style="border: solid 1px #DDD;">Spatial Area Unit</td>
-        <td nowwrap style="border: solid 1px #DDD;">Currency</td>
-        <td nowwrap style="border: solid 1px #DDD;">Currency Exchange Rate</td>
-        <td nowwrap style="border: solid 1px #DDD;">Revenue</td>
-        <td nowwrap style="border: solid 1px #DDD;">Revenue Type</td>
-        <td nowwrap style="border: solid 1px #DDD;">Expenditure</td>
-        <td nowwrap style="border: solid 1px #DDD;">Expenditure Type</td>
-        <td nowwrap style="border: solid 1px #DDD;">Public Debt</td>
-        <td nowwrap style="border: solid 1px #DDD;">Military</td>
-        <td nowwrap style="border: solid 1px #DDD;">Military Type</td>
-        <td nowwrap style="border: solid 1px #DDD;">Officials</td>
-        <td nowwrap style="border: solid 1px #DDD;">Officials Type</td>
-        <td nowwrap style="border: solid 1px #DDD;">Spatial Page No</td>
-        <td nowwrap style="border: solid 1px #DDD;">Military Page No</td>
+        {% if show_continent %}
+            <td nowwrap style="border: solid 1px #DDD;">Continent</td>
+        {% endif %}
+        {% if show_confederation %}
+            <td nowwrap style="border: solid 1px #DDD;">Confederation</td>
+        {% endif %}
+        {% if show_country_codes %}
+            <td nowwrap style="border: solid 1px #DDD;">Country Codes</td>
+        {% endif %}
+        {% if show_placename %}
+            <td nowwrap style="border: solid 1px #DDD;">Placename</td>
+        {% endif %}
+        {% if show_alternate_placenames %}
+            <td nowwrap style="border: solid 1px #DDD;">Alternate Placenames</td>
+        {% endif %}
+        {% if show_uncertainty %}
+            <td nowwrap style="border: solid 1px #DDD;">Uncertainty</td>
+        {% endif %}
+        <td nowwrap style="border: solid 1px #DDD;">Value Units</td>
         <td nowwrap style="border: solid 1px #DDD;">Primary Source Text</td>
         <td nowwrap style="border: solid 1px #DDD;">Primary Source Object</td>
+        {% ifequal dataset 'Government Revenue' %}
+            <td nowwrap style="border: solid 1px #DDD;">Currency</td>
+            <td nowwrap style="border: solid 1px #DDD;">Currency Exchange Rate</td>
+            <td nowwrap style="border: solid 1px #DDD;">Revenue</td>
+            <td nowwrap style="border: solid 1px #DDD;">Revenue Type</td>
+        {% endifequal %}
+        {% ifequal dataset 'Government Expenditure' %}
+            <td nowwrap style="border: solid 1px #DDD;">Currency</td>
+            <td nowwrap style="border: solid 1px #DDD;">Expenditure</td>
+            <td nowwrap style="border: solid 1px #DDD;">Expenditure Type</td>
+        {% endifequal %}
+        {% ifequal dataset 'Public Debt' %}
+            <td nowwrap style="border: solid 1px #DDD;">Currency</td>
+            <td nowwrap style="border: solid 1px #DDD;">Public Debt</td>
+            <td nowwrap style="border: solid 1px #DDD;">Public Debt Type</td>
+        {% endifequal %}
+        {% ifequal dataset 'Public Debt Interest Service' %}
+            <td nowwrap style="border: solid 1px #DDD;">Currency</td>
+            <td nowwrap style="border: solid 1px #DDD;">Public Debt</td>
+            <td nowwrap style="border: solid 1px #DDD;">Public Debt Type</td>
+        {% endifequal %}
+        {% ifequal dataset 'Public Debt Virtual Service' %}
+            <td nowwrap style="border: solid 1px #DDD;">Currency</td>
+            <td nowwrap style="border: solid 1px #DDD;">Public Debt</td>
+            <td nowwrap style="border: solid 1px #DDD;">Public Debt Type</td>
+        {% endifequal %}
+        {% ifequal dataset 'Public Debt Serviced In Gold' %}
+            <td nowwrap style="border: solid 1px #DDD;">Currency</td>
+            <td nowwrap style="border: solid 1px #DDD;">Public Debt</td>
+            <td nowwrap style="border: solid 1px #DDD;">Public Debt Type</td>
+        {% endifequal %}
+        {% ifequal dataset 'Military Personal' %}
+            <td nowwrap style="border: solid 1px #DDD;">Military</td>
+            <td nowwrap style="border: solid 1px #DDD;">Military Type</td>
+        {% endifequal %}
+        {% ifequal dataset 'European Officials' %}
+            <td nowwrap style="border: solid 1px #DDD;">Officials</td>
+            <td nowwrap style="border: solid 1px #DDD;">Officials Type</td>
+        {% endifequal %}
+        {% ifequal dataset 'Leaders' %}
+            <td nowwrap style="border: solid 1px #DDD;">Officials</td>
+            <td nowwrap style="border: solid 1px #DDD;">Officials Type</td>
+        {% endifequal %}
+        {% ifequal dataset 'Raw State Antiquity Value' %}
+        {% endifequal %}
+        {% ifequal dataset 'Cumulative State Value' %}
+        {% endifequal %}
+        {% ifequal dataset 'Land Area' %}
+        {% endifequal %}
+<!--
+            <td nowwrap style="border: solid 1px #DDD;">Spatial Page No</td>
+            <td nowwrap style="border: solid 1px #DDD;">Military Page No</td>
+            -->
     </tr>
 {% for data in results.object_list %}
-    <tr style="border: solid 1px #DDD;"><td style="border: solid 1px #DDD;">{{ data.id }}</td><td style="border: solid 1px #DDD;"><a href="../sourceinfo?source='{{ data.source }}'">{{ data.source }}</a></td><td style="border: solid 1px #DDD;">{{ data.begin_date }}</td><td style="border: solid 1px #DDD;">{{ data.end_date }}</td>
-    {% if not data.circa %}<td style="border: solid 1px #DDD;"></td>
-        {% else %}<td style="border: solid 1px #DDD;">{{ data.circa }}</td>
-    {% endif %}
-    <td style="border: solid 1px #DDD;">{{ data.location }}</td><td style="border: solid 1px #DDD;">{{ data.value_unit }}</td><td style="border: solid 1px #DDD;">{{ data.spatial_area }}</td><td style="border: solid 1px #DDD;">{{ data.spatial_area_unit }}</td><td style="border: solid 1px #DDD;">{{ data.currency }}</td><td style="border: solid 1px #DDD;">{{ data.currency_exchange_rate }}</td><td style="border: solid 1px #DDD;">{{ data.revenue|floatformat:3 }}</td><td style="border: solid 1px #DDD;">{{ data.revenue_type }}</td><td style="border: solid 1px #DDD;">{{ data.expenditure }}</td><td style="border: solid 1px #DDD;">{{ data.expenditure_type }}</td><td style="border: solid 1px #DDD;">{{ data.public_debt }}</td><td style="border: solid 1px #DDD;">{{ data.military }}</td><td style="border: solid 1px #DDD;">{{ data.military_type }}</td><td style="border: solid 1px #DDD;">{{ data.officials }}</td><td style="border: solid 1px #DDD;">{{ data.officials_type }}</td><td style="border: solid 1px #DDD;">{{ data.spatial_page_num }}</td><td style="border: solid 1px #DDD;">{{ data.military_page_num }}</td><td style="border: solid 1px #DDD;">{{ data.primary_source_text }}</td><td style="border: solid 1px #DDD;">{{ data.primary_source_obj }}</td></tr>
+    <tr style="border: solid 1px #DDD;">
+        <td style="border: solid 1px #DDD;"><a href="../sourceinfo?source='{{ data.source.name }}'">{{ data.source.name }}</a></td>
+        {% if show_remarks %}
+            <td style="border: solid 1px #DDD;">{{ data.remark }}</td>
+        {% endif %}
+        <td style="border: solid 1px #DDD;">{{ data.begin_date }}</td>
+        <td style="border: solid 1px #DDD;">{{ data.end_date }}</td>
+        <td style="border: solid 1px #DDD;">{{ data.location }}</td>
+        {% if show_continent %}
+            <td style="border: solid 1px #DDD;">{{ data.location.location.geographically_in }}</td>
+        {% endif %}
+        {% if show_confederation %}
+            <td style="border: solid 1px #DDD;"></td>
+        {% endif %}
+        {% if show_country_codes %}
+            <td style="border: solid 1px #DDD;"></td>
+        {% endif %}
+        {% if show_placename %}
+            <td style="border: solid 1px #DDD;"></td>
+        {% endif %}
+        {% if show_alternate_placenames %}
+            <td style="border: solid 1px #DDD;"></td>
+        {% endif %}
+        {% if show_uncertainty %}
+            <td style="border: solid 1px #DDD;"></td>
+        {% endif %}
+        <td style="border: solid 1px #DDD;">{{ data.value_unit }}</td>
+        <td style="border: solid 1px #DDD;">{{ data.primary_source_text }}</td>
+        <td style="border: solid 1px #DDD;">{{ data.primary_source_obj }}</td>
+        {% ifequal dataset 'Government Revenue' %}
+            <td style="border: solid 1px #DDD;">{{ data.currency }}</td>
+            <td style="border: solid 1px #DDD;">{% if data.currency_exchange_rate %}{{ data.currency_exchange_rate }}{%  endif %}</td>
+            <td style="border: solid 1px #DDD;">{{ data.revenue|floatformat:3 }}</td>
+            <td style="border: solid 1px #DDD;">{{ data.revenue_type }}</td>
+        {% endifequal %}
+        {% ifequal dataset 'Government Expenditure' %}
+            <td style="border: solid 1px #DDD;">{{ data.currency }}</td>
+            <td style="border: solid 1px #DDD;">{% if data.expenditure %}{{ data.expenditure }}{% endif %}</td>
+            <td style="border: solid 1px #DDD;">{% if data.expenditure_type %}{{ data.expenditure_type }}{% endif %}</td>
+        {% endifequal %}
+        {% ifequal dataset 'Public Debt' %}
+            <td style="border: solid 1px #DDD;">{{ data.currency }}</td>
+            <td style="border: solid 1px #DDD;">{% if data.public_debt %}{{ data.public_debt }}{%  endif %}</td>
+            <td style="border: solid 1px #DDD;">{% if data.public_debt_type %}{{ data.public_debt_type }}{%  endif %}</td>
+        {% endifequal %}
+        {% ifequal dataset 'Public Debt Interest Service' %}
+            <td style="border: solid 1px #DDD;">{{ data.currency }}</td>
+            <td style="border: solid 1px #DDD;">{% if data.public_debt %}{{ data.public_debt }}{%  endif %}</td>
+            <td style="border: solid 1px #DDD;">{% if data.public_debt_type %}{{ data.public_debt_type }}{%  endif %}</td>
+        {% endifequal %}
+        {% ifequal dataset 'Public Debt Virtual Service' %}
+            <td style="border: solid 1px #DDD;">{{ data.currency }}</td>
+            <td style="border: solid 1px #DDD;">{% if data.public_debt %}{{ data.public_debt }}{%  endif %}</td>
+            <td style="border: solid 1px #DDD;">{% if data.public_debt_type %}{{ data.public_debt_type }}{%  endif %}</td>
+        {% endifequal %}
+        {% ifequal dataset 'Public Debt Serviced In Gold' %}
+            <td style="border: solid 1px #DDD;">{{ data.currency }}</td>
+            <td style="border: solid 1px #DDD;">{% if data.public_debt %}{{ data.public_debt }}{%  endif %}</td>
+            <td style="border: solid 1px #DDD;">{% if data.public_debt_type %}{{ data.public_debt_type }}{%  endif %}</td>
+        {% endifequal %}
+        {% ifequal dataset 'Military Personal' %}
+            <td style="border: solid 1px #DDD;">{{ data.currency }}</td>
+            <td style="border: solid 1px #DDD;">{{ data.military }}</td>
+            <td style="border: solid 1px #DDD;">{{ data.military_type }}</td>
+        {% endifequal %}
+        {% ifequal dataset 'European Officials' %}
+            <td style="border: solid 1px #DDD;">{{ data.officials }}</td>
+            <td style="border: solid 1px #DDD;">{{ data.officials_type }}</td>
+        {% endifequal %}
+        {% ifequal dataset 'Leaders' %}
+            <td style="border: solid 1px #DDD;">{{ data.officials }}</td>
+            <td style="border: solid 1px #DDD;">{{ data.officials_type }}</td>
+        {% endifequal %}
+        {% ifequal dataset 'Raw State Antiquity Value' %}
+        {% endifequal %}
+        {% ifequal dataset 'Cumulative State Value' %}
+        {% endifequal %}
+        {% ifequal dataset 'Land Area' %}
+        {% endifequal %}
+<!--
+            <td style="border: solid 1px #DDD;">{{ data.spatial_area_unit }}</td>
+            <td style="border: solid 1px #DDD;">{{ data.spatial_page_num }}</td>
+            <td style="border: solid 1px #DDD;">{{ data.military_page_num }}</td>
+-->
+
+    </tr>
 {% endfor %}
 </table>
 <br />
@@ -71,8 +212,11 @@
     </span>
     There are a total of {{ paginator.count }} records matching your query.
 </div>
+{% else %}
+    <h3>There were no records that matched your query.</h3>
+{%  endifnotequal %}
 <br />
-<div style='display:block'>
+<div style='display:none'>
     <form id="id_form_export_csv" action='{% url government %}' method="GET">
         <input id="id_export" type="hidden" name="export" value="CSV" />
         <input type="hidden" name="search" value="search" />

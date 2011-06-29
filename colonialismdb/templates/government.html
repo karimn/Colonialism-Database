@@ -223,15 +223,12 @@ $(document).ready(function(){
                 </td>
             </tr>
             <tr>
-                <td colspan='2' style='text-align: center;'>Confederation</td>
                 <td colspan='2' style='text-align: center;'>Continent</td>
                 <td colspan='2' style='text-align: center;'>Source Type</td>
                 <td colspan='2' style='text-align: center;'></td>
+                <td colspan='2' style='text-align: center;'><!--Confederation--></td>
             </tr>
             <tr>
-                <td colspan='2' style='text-align: center;'>
-                    {{  form.confederation }}
-                </td>
                 <td colspan='2' style='text-align: center;'>
                     {{  form.continent }}
                 </td>
@@ -239,6 +236,9 @@ $(document).ready(function(){
                     {{  form.source_type }}
                 </td>
                 <td colspan='2' style='text-align: center;'>
+                </td>
+                <td colspan='2' style='text-align: center;'>
+                    <!--{{  form.confederation }}-->
                 </td>
             </tr>
             <tr>
@@ -250,21 +250,43 @@ $(document).ready(function(){
                 <th colspan='1'>
                     &nbsp;
                 </th>
+                <th colspan='4'>
+                    <input type='radio' name='dataset' checked value='Government Revenue'> Government Revenue<br />
+                    <input type='radio' name='dataset' value='Government Expenditure'> Government Expenditure<br />
+                    <input type='radio' name='dataset' value='Public Debt'> Public Debt<br />
+                    <input type='radio' name='dataset' value='Public Debt Interest Service'> Public debt, interest service on<br />
+                    <input type='radio' name='dataset' value='Public Debt Virtual Service'> Public debt, virtual service on<br />
+                    <input type='radio' name='dataset' value='Public Debt Serviced In Gold'> Public debt, serviced in gold<br />
+                </th>
                 <th colspan='3'>
-                    <input type='radio' name='dataset' value='military_personal'> Military personnel, number of<br />
-                    <input type='radio' name='dataset' value='european_officials'> European officials, number of <br />
-                    <input type='radio' name='dataset' value='leaders'> Leaders<br />
-                    <input type='radio' name='dataset' value='raw_state_antiquity'> State antiquity value, raw <br />
-                    <input type='radio' name='dataset' value='cumulative_state_antiquity'> State antiquity value, cumulative<br />
-                    <input type='radio' name='dataset' value='land_area'> Land area<br />
+                    <input type='radio' name='dataset' value='Military Personal'> Military personnel, number of<br />
+                    <input type='radio' name='dataset' value='European Officials'> European officials, number of <br />
+                    <input type='radio' name='dataset' value='Leaders'> Leaders<br />
+                    <input type='radio' name='dataset' value='Raw State Antiquity Value'> State antiquity value, raw <br />
+                    <input type='radio' name='dataset' value='Cumulative State Value'> State antiquity value, cumulative<br />
+                    <input type='radio' name='dataset' value='Land Area'> Land area<br />
+                </th>
+            </tr>
+            <tr>
+                <td colspan='8' style='text-align: center;'>&nbsp;
+                    <h2>Place a checkmark next to each additional data you wish to retrieve</h2>
+                </td>
+            </tr>
+            <tr>
+                <th colspan='1'>
+                    &nbsp;
                 </th>
                 <th colspan='4'>
-                    <input type='radio' name='dataset' value='government_revenue'> Government Revenue<br />
-                    <input type='radio' name='dataset' value='government_expenditure'> Government Expenditure<br />
-                    <input type='radio' name='dataset' value='public_debt'> Public Debt<br />
-                    <input type='radio' name='dataset' value='public_debt_interest'> Public debt, interest service on<br />
-                    <input type='radio' name='dataset' value='public_debt_virtual'> Public debt, virtual service on<br />
-                    <input type='radio' name='dataset' value='public_debt_gold'> Public debt, serviced in gold<br />
+                    <input type='checkbox' name='continent'> Continent<br />
+                    <input type='checkbox' name='confederation'> Confederation, Sovereign state, or Unclaimed/International territory<br />
+                    <input type='checkbox' name='substateunit'> Sub-state unit<br />
+                    <input type='checkbox' name='country_codes' > Country codes<br />
+                </th>
+                <th colspan='3'>
+                    <input type='checkbox' name='placename'> Placename<br />
+                    <input type='checkbox' name='alternate_placenames'> Alternate placenames<br />
+                    <input type='checkbox' name='uncertainty'> Uncertainty<br />
+                    <input type='checkbox' name='remarks'> Remarks<br />
                 </th>
             </tr>
             <tr>

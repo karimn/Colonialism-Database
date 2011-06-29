@@ -42,6 +42,7 @@ class GeneralSearchForm(forms.Form):
                                        widget=forms.SelectMultiple(attrs={'size':'8', 'style':'width:150px;'}),
                                        choices=SOURCE_TYPE_CHOICES, initial=('', 'All'))
 
+    
     confederation = forms.MultipleChoiceField(required=False,
                                        widget=forms.SelectMultiple(attrs={'size':'8', 'style':'width:150px;'}),
                                        choices=CONFEDERATION_CHOICES, initial=('', 'All'))

@@ -37,3 +37,25 @@ Location.objects.filter(geographically_in__name__in=['North America', 'South Ame
 
 Location.objects.filter(geographically_in__name='South America')
 Location.objects.filter(geographically_in__name='North America')
+
+Natalie is going to make the mapping for Source abbreviations to sources
+
+
+For each of the reports, show the summary information (which is the
+list of Total Observations, Total Unique observations, Date Range of ..,
+Sources (list), etc
+
+and then below that have the list of data that can be exported as a csv
+
+
+Non Soverign
+City, Village, District, County, Prefecture, Provinces, Province, Region, Municipaolity
+
+Semi Soveriegn
+Semi-Sovereign, Protectorate, colony, Territory
+
+
+from government.models import *
+from django.db.models import Q
+sourceinput=""
+MainDataEntry.objects.filter(Q(source__name__icontains=sourceinput)).select_related().order_by('id')

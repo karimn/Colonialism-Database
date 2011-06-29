@@ -34,6 +34,8 @@ def locationlookup(request):
 def govtsearch(request):
 
     if request.GET.get('search'):
+        print request.GET
+        print request.GET.getlist('empire')
         form = GovernmentSearchForm(request.GET)
         search = request.GET.get('search')
 
@@ -53,6 +55,8 @@ def govtsearch(request):
             sourceinput = request.GET.get('sourceinput')
         else:
             sourceinput = ""
+
+
         locations_list = []
         results = []
 
@@ -71,8 +75,29 @@ def govtsearch(request):
             searchlocations=""
             results = datesourceresults
 
+        # check if they want to limit by any of the other fields:
+        if request.GET.getlist('continent')[0] != '':
+            print "Limiting by continent"
+            results = results.filter(location__location__geographically_in__name__in=request.GET.getlist('continent'))
 
-        print request.GET
+        if request.GET.getlist('empire')[0] != '':
+            print "Limiting by empire"
+            results = results.filter(location__location__pk__in=request.GET.getlist('empire'))
+
+        if request.GET.getlist('nation_state')[0] != '':
+            print "Limiting by nation_state"
+            print request.GET.getlist('nation_state')
+            results = results.filter(location__location__pk__in=request.GET.getlist('nation_state'))
+
+        if request.GET.getlist('semi_sovereign')[0] != '':
+            print "Limiting by semi_sveriegn"
+            results = results.filter(location__location__pk__in=request.GET.getlist('semi_sovereign'))
+
+        if request.GET.getlist('non_sovereign')[0] != '':
+            print "Limiting by non_sveriegn"
+            results = results.filter(location__location__pk__in=request.GET.getlist('non_sovereign'))
+
+
         if 'export' in request.GET:
             if request.GET.get('export') == 'CSV':
                 # Create the HttpResponse object with the appropriate CSV header.
@@ -98,6 +123,7 @@ def govtsearch(request):
         except (EmptyPage, InvalidPage):
             results = paginator.page(paginator.num_pages)
 
+
         return render_to_response("government_search_results.html",
             {
                 "locations_list":locations_list,
@@ -109,6 +135,14 @@ def govtsearch(request):
                 "search":search,
                 "form": form,
                 "paginator": paginator,
+                "dataset": request.GET.get('dataset'),
+                "show_continent": 'continent' in request.GET,
+                "show_remarks": 'remarks' in request.GET,
+                "show_confederation": 'confederation' in request.GET,
+                "show_country_codes": 'country_codes' in request.GET,
+                "show_placename": 'placename' in request.GET,
+                "show_alternate_placenames": 'alternate_placenames' in request.GET,
+                "show_uncertainty": 'uncertainty' in request.GET,
             },context_instance=RequestContext(request))
 
     else:
