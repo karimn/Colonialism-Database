@@ -19,32 +19,32 @@ class GeneralSearchForm(forms.Form):
     all_locations = forms.BooleanField(initial=True)
 
     continent = forms.MultipleChoiceField(required=False,
-                                       widget=forms.SelectMultiple(attrs={'size':'8', 'style':'width:150px;'}),
+                                       widget=forms.SelectMultiple(attrs={'size':'8', 'style':'width:200px;'}),
                                        choices=CONTINENT_CHOICES, initial=('', 'All'))
 
     empire = forms.MultipleChoiceField(required=False,
-                                       widget=forms.SelectMultiple(attrs={'size':'8', 'style':'width:150px;'}),
+                                       widget=forms.SelectMultiple(attrs={'size':'8', 'style':'width:200px;'}),
                                        choices=EMPIRE_CHOICES, initial=('', 'All'))
 
     nation_state = forms.MultipleChoiceField(required=False,
-                                       widget=forms.SelectMultiple(attrs={'size':'8', 'style':'width:150px;'}),
+                                       widget=forms.SelectMultiple(attrs={'size':'8', 'style':'width:200px;'}),
                                        choices=NATION_STATE_CHOICES, initial=('', 'All'))
 
     semi_sovereign = forms.MultipleChoiceField(required=False,
-                                       widget=forms.SelectMultiple(attrs={'size':'8', 'style':'width:150px;'}),
+                                       widget=forms.SelectMultiple(attrs={'size':'8', 'style':'width:200px;'}),
                                        choices=SEMI_SOVEREIGN_CHOICES, initial=('', 'All'))
 
     non_sovereign = forms.MultipleChoiceField(required=False,
-                                       widget=forms.SelectMultiple(attrs={'size':'8', 'style':'width:150px;'}),
+                                       widget=forms.SelectMultiple(attrs={'size':'8', 'style':'width:200px;'}),
                                        choices=NON_SOVEREIGN_CHOICES, initial=('', 'All'))
 
     source_type = forms.MultipleChoiceField(required=False,
-                                       widget=forms.SelectMultiple(attrs={'size':'8', 'style':'width:150px;'}),
+                                       widget=forms.SelectMultiple(attrs={'size':'8', 'style':'width:200px;'}),
                                        choices=SOURCE_TYPE_CHOICES, initial=('', 'All'))
 
     
     confederation = forms.MultipleChoiceField(required=False,
-                                       widget=forms.SelectMultiple(attrs={'size':'8', 'style':'width:150px;'}),
+                                       widget=forms.SelectMultiple(attrs={'size':'8', 'style':'width:200px;'}),
                                        choices=CONFEDERATION_CHOICES, initial=('', 'All'))
 
 

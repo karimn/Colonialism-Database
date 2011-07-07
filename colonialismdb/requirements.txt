@@ -1,1 +1,5 @@
+psycopg2
+Django
+South
 hg+http://bitbucket.org/ubernostrum/django-registration/@c5f776ca03d14aab768ff68bcd86d78774dd78fe#egg=django_registration-tip
+django-reversion

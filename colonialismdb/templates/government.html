@@ -75,7 +75,6 @@ $(document).ready(function(){
             <tr>
                 <th colspan='8' style='text-align: center;'>
                     <h2>Date Parameters</h2>
-                    Selecting a start or end date is optional.  If you do not select a date or date range we will return results for all time periods.
                 </th>
             </tr>
             <tr>
@@ -151,8 +150,7 @@ $(document).ready(function(){
                 <tr>
                     <th colspan='8' style='text-align: center;'>
                         <h2>Political Units</h2>
-                        You can limit your search results by any or all of the below parameters.<br />
-                        Start typing in the loction entry box and matching locations will auto-appear for you to select from.
+                        Start typing in the location entry box and matching locations will auto-appear for you to select from.
                     </th>
                 </tr>
                 <tr>
@@ -205,8 +203,8 @@ $(document).ready(function(){
             <tr>
                 <td colspan='2' style='text-align: center;'>Empires</td>
                 <td colspan='2' style='text-align: center;'>Nation-States</td>
-                <td colspan='2' style='text-align: center;'>Semi-Sovereign</td>
-                <td colspan='2' style='text-align: center;'>Non-Sovereign</td>
+                <td colspan='2' style='text-align: center;'>Semi-Sovereign Units</td>
+                <td colspan='2' style='text-align: center;'>Non-Sovereign Units</td>
             </tr>
             <tr>
                 <td colspan='2' style='text-align: center;'>
@@ -278,13 +276,13 @@ $(document).ready(function(){
                 </th>
                 <th colspan='4'>
                     <input type='checkbox' name='continent'> Continent<br />
-                    <input type='checkbox' name='confederation'> Confederation, Sovereign state, or Unclaimed/International territory<br />
+                    <input type='checkbox' name='confederation'> Sovereign state, or Unclaimed/International territory<br />
                     <input type='checkbox' name='substateunit'> Sub-state unit<br />
-                    <input type='checkbox' name='country_codes' > Country codes<br />
+                    <input type='checkbox' name='codes' > Codes<br />
                 </th>
                 <th colspan='3'>
-                    <input type='checkbox' name='placename'> Placename<br />
-                    <input type='checkbox' name='alternate_placenames'> Alternate placenames<br />
+                    <input type='checkbox' name='alternate_locations'> Alternate locations<br />
+                    <input type='checkbox' name='attributes'> Attributes<br />
                     <input type='checkbox' name='uncertainty'> Uncertainty<br />
                     <input type='checkbox' name='remarks'> Remarks<br />
                 </th>

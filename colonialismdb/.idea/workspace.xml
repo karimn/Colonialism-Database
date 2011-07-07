@@ -26,7 +26,61 @@
     <favorites_list name="colonialismdb" />
   </component>
   <component name="FileEditorManager">
-    <leaf />
+    <splitter split-orientation="horizontal" split-proportion="0.4392157">
+      <split-first>
+        <leaf>
+          <file leaf-file-name="views.py" pinned="false" current="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/government/views.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state line="137" column="51" selection-start="5541" selection-end="5541" vertical-scroll-proportion="0.7416174">
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="government.html" pinned="false" current="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/templates/government.html">
+              <provider selected="true" editor-type-id="text-editor">
+                <state line="269" column="40" selection-start="11106" selection-end="11106" vertical-scroll-proportion="-7.901961">
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="forms.py" pinned="false" current="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/common/forms.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state line="46" column="103" selection-start="3098" selection-end="3098" vertical-scroll-proportion="0.0">
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-first>
+      <split-second>
+        <leaf>
+          <file leaf-file-name="government_search_results.html" pinned="false" current="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/templates/government_search_results.html">
+              <provider selected="true" editor-type-id="text-editor">
+                <state line="40" column="20" selection-start="1089" selection-end="1089" vertical-scroll-proportion="21.76">
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="QueryNotes.txt" pinned="false" current="true" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/QueryNotes.txt">
+              <provider selected="true" editor-type-id="text-editor">
+                <state line="58" column="0" selection-start="1389" selection-end="1421" vertical-scroll-proportion="0.87536514">
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-second>
+    </splitter>
   </component>
   <component name="FindManager">
     <FindUsagesManager>
@@ -40,19 +94,19 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/templates/infrastructure_search_results.html" />
         <option value="$PROJECT_DIR$/templates/economics_search_results.html" />
         <option value="$PROJECT_DIR$/templates/education_search_results.html" />
         <option value="$PROJECT_DIR$/templates/population_search_results.html" />
         <option value="$PROJECT_DIR$/government/forms.py" />
         <option value="$PROJECT_DIR$/constants.py" />
-        <option value="$PROJECT_DIR$/common/forms.py" />
         <option value="$PROJECT_DIR$/templates/search.html" />
         <option value="$PROJECT_DIR$/templates/infrastructure.html" />
         <option value="$PROJECT_DIR$/templates/education.html" />
         <option value="$PROJECT_DIR$/templates/economics.html" />
         <option value="$PROJECT_DIR$/templates/population.html" />
         <option value="$PROJECT_DIR$/QueryNotes.txt" />
+        <option value="$PROJECT_DIR$/requirements.txt" />
+        <option value="$PROJECT_DIR$/common/forms.py" />
         <option value="$PROJECT_DIR$/templates/government.html" />
         <option value="$PROJECT_DIR$/government/views.py" />
         <option value="$PROJECT_DIR$/templates/government_search_results.html" />
@@ -156,34 +210,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="infrastructure" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="colonialismdb" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="colonialismdb" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="government" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="colonialismdb" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="colonialismdb" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="common" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -196,7 +222,7 @@
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="recentsLimit" value="5" />
-    <property name="options.lastSelected" value="preferences.sourceCode.General" />
+    <property name="options.lastSelected" value="com.jetbrains.python.configuration.PythonSdkConfigurable" />
     <property name="DefaultHtmlFileTemplate" value="Html" />
     <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
@@ -344,14 +370,14 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="22" width="1920" height="1174" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Data Sources" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32954547" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.17370391" sideWeight="0.67045456" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18225548" sideWeight="0.67045456" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32954547" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
@@ -407,108 +433,100 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/templates/infrastructure_search_results.html">
+    <entry file="file://$PROJECT_DIR$/templates/population.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="4" column="56" selection-start="116" selection-end="116" vertical-scroll-proportion="0.06471183" />
+        <state line="245" column="73" selection-start="9592" selection-end="9592" vertical-scroll-proportion="0.37724552" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/infrastructure/views.py">
+    <entry file="file://$PROJECT_DIR$/education/models.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="78" column="0" selection-start="3278" selection-end="3278" vertical-scroll-proportion="0.28994083" />
+        <state line="20" column="45" selection-start="871" selection-end="871" vertical-scroll-proportion="0.09639727" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="513" column="12" selection-start="19379" selection-end="19389" vertical-scroll-proportion="0.5170399" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/government/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="74" column="42" selection-start="3496" selection-end="3503" vertical-scroll-proportion="0.2677702" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/population/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="15" column="33" selection-start="706" selection-end="719" vertical-scroll-proportion="0.11197663" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/economics/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="38" column="19" selection-start="1933" selection-end="1950" vertical-scroll-proportion="0.563778" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/economics/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="52" column="70" selection-start="2126" selection-end="2126" vertical-scroll-proportion="0.015779093" />
+        <state line="73" column="30" selection-start="3116" selection-end="3116" vertical-scroll-proportion="0.015779093" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/education/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="157" column="31" selection-start="6020" selection-end="6029" vertical-scroll-proportion="2.382643">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/local_settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="8" column="31" selection-start="135" selection-end="148" vertical-scroll-proportion="0.12463486">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/requirements.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="4" column="0" selection-start="148" selection-end="148" vertical-scroll-proportion="0.06231743">
+          <folding />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/government/forms.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="4" column="46" selection-start="116" selection-end="116" vertical-scroll-proportion="0.0">
+        <state line="4" column="18" selection-start="88" selection-end="88" vertical-scroll-proportion="0.06231743">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/common/forms.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="44" column="4" selection-start="2932" selection-end="2932" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/search.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="243" column="0" selection-start="10005" selection-end="10005" vertical-scroll-proportion="-31.36">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/education.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="243" column="0" selection-start="9410" selection-end="9410" vertical-scroll-proportion="-18.96">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/economics.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="243" column="0" selection-start="9409" selection-end="9409" vertical-scroll-proportion="-21.52">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/infrastructure.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="229" column="17" selection-start="8913" selection-end="8913" vertical-scroll-proportion="-22.16">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/population.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="245" column="73" selection-start="9592" selection-end="9592" vertical-scroll-proportion="0.37724552">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/government/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="145" column="39" selection-start="6114" selection-end="6114" vertical-scroll-proportion="0.75739646">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/government/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="3" column="16" selection-start="147" selection-end="147" vertical-scroll-proportion="0.04733728">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/common/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="502" column="40" selection-start="18796" selection-end="18796" vertical-scroll-proportion="0.7216599">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/government_search_results.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="121" column="0" selection-start="5836" selection-end="5836" vertical-scroll-proportion="0.6309403">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/QueryNotes.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="25" column="83" selection-start="333" selection-end="377" vertical-scroll-proportion="0.38948393">
+        <state line="46" column="103" selection-start="3098" selection-end="3098" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/templates/government.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="287" column="60" selection-start="12244" selection-end="12255" vertical-scroll-proportion="0.6926148">
+        <state line="269" column="40" selection-start="11106" selection-end="11106" vertical-scroll-proportion="-7.901961">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/government/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="137" column="51" selection-start="5541" selection-end="5541" vertical-scroll-proportion="0.7416174">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/government_search_results.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="40" column="20" selection-start="1089" selection-end="1089" vertical-scroll-proportion="21.76">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/QueryNotes.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="58" column="0" selection-start="1389" selection-end="1421" vertical-scroll-proportion="0.87536514">
           <folding />
         </state>
       </provider>

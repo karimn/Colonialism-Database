@@ -97,6 +97,14 @@ def govtsearch(request):
             print "Limiting by non_sveriegn"
             results = results.filter(location__location__pk__in=request.GET.getlist('non_sovereign'))
 
+        result_start_date = None
+        result_end_date = None
+
+        result_start_date = results.order_by('begin_date')[0].begin_date
+        result_end_date = results.order_by('end_date')[0].begin_date
+
+        print result_start_date
+
 
         if 'export' in request.GET:
             if request.GET.get('export') == 'CSV':
@@ -126,6 +134,8 @@ def govtsearch(request):
 
         return render_to_response("government_search_results.html",
             {
+                "result_start_date": result_start_date,
+                "result_end_date": result_end_date,
                 "locations_list":locations_list,
                 "searchlocations":searchlocations,
                 "startdate":startdate,

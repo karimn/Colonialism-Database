@@ -14,6 +14,37 @@
 
 <body>
 <h1>Politic Search Results - Dataset: {{ dataset }}</h1>
+{% ifnotequal paginator.count 0 %}
+    <div>
+        <table>
+            <tr>
+                <td>Total Observations:</td>
+                <td>{{ paginator.count }}</td>
+            </tr>
+            <tr>
+                <td>Total Unique Observations:</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Date Range of Observations:</td>
+                <td>{{ result_start_date }} through {{ result_end_date }}</td>
+            </tr>
+            <tr>
+                <td>Sources employed:</td>
+                <td>
+
+                </td>
+            </tr>
+            <tr>
+                <td>Locations:</td>
+                <td>
+                    
+                </td>
+            </tr>
+        </table>
+
+    </div>
+{% endifnotequal %}
 <p>
     <a href="{% url government %}">Back to Search</a> |
     {% ifnotequal paginator.count 0 %}
@@ -40,10 +71,10 @@
             <td nowwrap style="border: solid 1px #DDD;">Country Codes</td>
         {% endif %}
         {% if show_placename %}
-            <td nowwrap style="border: solid 1px #DDD;">Placename</td>
+            <td nowwrap style="border: solid 1px #DDD;">Location</td>
         {% endif %}
         {% if show_alternate_placenames %}
-            <td nowwrap style="border: solid 1px #DDD;">Alternate Placenames</td>
+            <td nowwrap style="border: solid 1px #DDD;">Alternate Locations</td>
         {% endif %}
         {% if show_uncertainty %}
             <td nowwrap style="border: solid 1px #DDD;">Uncertainty</td>
@@ -100,10 +131,10 @@
         {% endifequal %}
         {% ifequal dataset 'Land Area' %}
         {% endifequal %}
-<!--
+        <!--
             <td nowwrap style="border: solid 1px #DDD;">Spatial Page No</td>
             <td nowwrap style="border: solid 1px #DDD;">Military Page No</td>
-            -->
+        -->
     </tr>
 {% for data in results.object_list %}
     <tr style="border: solid 1px #DDD;">
@@ -210,7 +241,6 @@
         {% endif %}
         <span><a href="?search={{ search }}&page={{ results.paginator.num_pages }}&startdate={{ startdate }}&enddate={{ enddate }}&locations={{ searchlocations }}&sourceinput={{ sourceinput }}">&nbsp;&nbsp;last</a></span>
     </span>
-    There are a total of {{ paginator.count }} records matching your query.
 </div>
 {% else %}
     <h3>There were no records that matched your query.</h3>
