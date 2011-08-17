@@ -1,0 +1,44 @@
+from prod_settings import *
+
+DEBUG = True
+
+# TODO Put your database settings here
+DATABASES = {
+	'default' : {
+		'ENGINE' : 'django.contrib.gis.db.backends.postgis',
+		#'ENGINE' : 'postgresql_psycopg2',
+		'NAME' : ,
+		'USER' : ,
+		'PASSWORD' : ,
+		'PORT' : '5432',
+	}
+}
+
+"""
+DATABASE_ENGINE = 'postgresql_psycopg2'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+DATABASE_NAME = 'colonialismdb' #             # Or path to database file if using sqlite3.
+DATABASE_USER = 'colonialismdbadmin'             # Not used with sqlite3.
+DATABASE_PASSWORD = 'ColonialDb01'         # Not used with sqlite3.
+DATABASE_HOST = ''              # Set to empty string for localhost. Not used with sqlite3.
+DATABASE_PORT = '5432'             # Set to empty string for default. Not used with sqlite3.
+"""
+
+# TODO: Get a secret key string
+SECRET_KEY = ""
+
+TEMPLATE_DIRS = (
+    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
+    # Always use forward slashes, even on Windows.
+    # Don't forget to use absolute paths, not relative paths.
+    'C:/colonialismdb/Colonialism-Database/colonialismdb/templates'
+)
+
+MEDIA_ROOT = 'e:/colonialismdb_sources'
+
+MEDIA_URL = 'http://peanut.bu.edu/static/'
+
+STATIC_ROOT = 'c:/colonialismdb/Colonialism-Database/colonialismdb/static'
+
+# These were needed for Windows
+#GEOS_LIBRARY_PATH="c:/Program Files (x86)/PostgreSQL/8.4/bin/libgeos_c-1.dll"
+#GDAL_LIBRARY_PATH="c:/Program Files (x86)/FWTools2.4.7/bin/gdal_fw.dll"

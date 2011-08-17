@@ -1,0 +1,22 @@
+This document is a work in progress.  I'm hoping to keep adding more information on how to get the CLIO website up and running.
+
+Software
+--------
+This website requires:
+
+1. postgreSQL
+2. Python
+3. Django
+4. PostGIS
+
+Data
+----
+A backup of the current CLIO data is available at: http://dl.dropbox.com/u/2474433/clio.backup
+
+Django Code
+-----------
+The actual code used for the website is located in the "colonialismdb" folder.  Two this are needed:
+
+1. Copy local_settings.py.sample to local_settings.py and modify it according to your local settings (in particular the TODO parts)
+2. Use local_manage.py instead of manage.py 
+3. See what apps and middleware you need in settings.py
